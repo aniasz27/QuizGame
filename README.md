@@ -11,9 +11,6 @@ Add your own name (do not add the names for others!) to the section below.
 | Profile Picture | Name | Email |
 |---|---|---|
 | ![](https://eu.ui-avatars.com/api/?name=OOPP&length=4&size=50&color=DDD&background=777&font-size=0.325) | Your Name Here | Y.NameHere@student.tudelft.nl |
-
-| Profile Picture | Name | Email |
-|---|---|---|
 | ![](https://secure.gravatar.com/avatar/c7c2380d93047b2eef861080b7af7ec4?s=40&d=identicon) | Santiago de Heredia | S.A.deherediatenorio@student.tudelft.nl |
 
 ## How to run it
