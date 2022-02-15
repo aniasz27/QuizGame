@@ -11,6 +11,7 @@ Add your own name (do not add the names for others!) to the section below.
 | Profile Picture | Name | Email |
 |---|---|---|
 | ![](https://eu.ui-avatars.com/api/?name=OOPP&length=4&size=50&color=DDD&background=777&font-size=0.325) | Your Name Here | Y.NameHere@student.tudelft.nl |
+| ![](https://secure.gravatar.com/avatar/46f2a53214a98ce4cdda06c55c2cf62b?s=40&d=identicon) | Anna Szymkowiak | A.M.Szymkowiak@student.tudelft.nl |
 | ![](https://secure.gravatar.com/avatar/553291783a5c3c984536f965c0a15b9f?s=40&d=identicon) | Lucia Navarcikova | L.Navarcikova@student.tudelft.nl |
 | ![](https://secure.gravatar.com/avatar/c7c2380d93047b2eef861080b7af7ec4?s=40&d=identicon) | Santiago de Heredia | S.A.deherediatenorio@student.tudelft.nl |
 | ![](https://secure.gravatar.com/avatar/de2c8cce3c9d5f9e0ca0593bc3eb93b7?s=50&d=identicon) | Anthony Chen | A.Z.Chen@student.tudelft.nl |
