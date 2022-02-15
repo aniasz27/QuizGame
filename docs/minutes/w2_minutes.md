@@ -1,13 +1,13 @@
-#TA meeting minutes
+# TA meeting minutes
 
-##Agenda for the team meeting of OOPP Group 13
+## Agenda for the team meeting of OOPP Group 13
 
 Location: DZ PC1 Cubbicle 4  
 Date: 15.02.2022  
 Time: 13:45  
 Attendees: Andrei, Anna, Anthony, Kazek, Lucia, Santiago  
 
-###Agenda Items
+### Agenda Items
 
 - Opening by Chariperson\
     *No minutes.*
@@ -69,7 +69,7 @@ Everybody agrees with the agenda
 *No further questions*
 
 
-##TA points
+## TA points
 * Everyone should have a merge request on Gitlab by Friday 6pm
 * Deadlines -> see Schedule on the website
 * Talked about Requirements Eng.
