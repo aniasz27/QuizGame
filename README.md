@@ -12,12 +12,13 @@ Add your own name (do not add the names for others!) to the section below.
 |---|---|---|
 | ![](https://eu.ui-avatars.com/api/?name=OOPP&length=4&size=50&color=DDD&background=777&font-size=0.325) | Your Name Here | Y.NameHere@student.tudelft.nl |
 | ![](https://secure.gravatar.com/avatar/c87a70993d312931e28fff85d53a9adf?s=50&d=identicon) | Andrei Drăgoi | A.Dragoi@student.tudelft.nl |
+| ![](https://secure.gravatar.com/avatar/de2c8cce3c9d5f9e0ca0593bc3eb93b7?s=50&d=identicon) | Anthony Chen | A.Z.Chen@student.tudelft.nl |
 
 <!-- Instructions (remove once assignment has been completed -->
 <!-- - Add (only!) your own name to the table above (use Markdown formatting) -->
 <!-- - Mention your *student* email address -->
 <!-- - Preferably add a recognizable photo, otherwise add your GitLab photo -->
-<!-- - (please make sure the photos have the same size) --> 
+<!-- - (please make sure the photos have the same size) -->
 
 ## How to run it
 
