@@ -1,4 +1,4 @@
-﻿**Agenda - Meeting 15.2 (Lab Week 2)**
+**Agenda - Meeting 15.2 (Lab Week 2)**
 
 **Location :** 		DZ PC1 Cubicle 4
 
