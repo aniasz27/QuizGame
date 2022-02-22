@@ -64,7 +64,7 @@ Everybody agrees with the agenda
 
 
 ## TA points
-* Unformal feedback for Code Of COnduct on Brightspace
+* Unformal feedback for Code Of Conduct on Brightspace
 * Assignment description - not description of our final product 
 * Target and ambitious level - general goal for everyone
 * Minimal grade that we are working for and everyone is okay with
