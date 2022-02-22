@@ -12,7 +12,6 @@ Attendees: Andrei, Anna, Anthony, Kazek, Lucia, Santiago
 - Opening by Chairperson
     *No minutes.*
 
-
 - Approval of the agenda
 
 Everybody agrees with the agenda
@@ -22,8 +21,7 @@ Everybody agrees with the agenda
 - Check-in - week 2 assigments & current tasks
 
 1) Code of Conduct
-* solid, later through rubric
-2) HCI draft feedback from Alex
+2) HCI draft
 * everyone did their own part
 3) Backlog (issues on GitLab)
 * completely done
@@ -33,13 +31,14 @@ Everybody agrees with the agenda
    * Questions for Q&A
 
 - HCI final version
-    * feedback from about draft Alex - deadline Tuesday
+    * feedback about draft from Alex - deadline 1.03
+    * tasks allocated below
 
 
 - Code of Conduct
-  * everyone agrees 25
-
-- severity matrix
+  * everyone agrees
+  * deadline - 25.02
+  * later assesed according to the rubric
 
 - Summary of action points  
 
@@ -47,14 +46,12 @@ Everybody agrees with the agenda
 |:------------:|:-------------------:|:-----------:|
 | Next secretary | Kazek | Tuesday 1.03 |
 | Next chairman | Anthony | Tuesday 1.03 |
-template Thursday 
-final HCI 
-Introduction Lucia
-Methods Andrei, Anthony
-Results Kazek
-Conclusion Anna
-General Editor Santiago
-
+| Working template in Spring | Everyone | Tuesday 24.02 |
+| Introduction | Lucia | - |
+| Methods | Andrei, Anthony | - |
+| Results | Kazek | - |
+| Conclusion | Anna | - |
+| General Editor | Santiago | - |
 
 - Tips and tops
 *No minutes*
@@ -62,26 +59,24 @@ General Editor Santiago
 - Feedback round
 *We decided to not take notes*
 
-
-
 - Any questions?  
 *No further questions*
 
 
 ## TA points
-* Unformal feedback for CodeOfCOnduct on Brightspace
-* Not description for our final product Assignment description
-* General goal for everyone Target and ambitious level
+* Unformal feedback for Code Of COnduct on Brightspace
+* Assignment description - not description of our final product 
+* Target and ambitious level - general goal for everyone
 * Minimal grade that we are working for and everyone is okay with
-* Planning some quantifiry how task should be spread
-* Behaviour specify that works equally involved in everything
-* Commitment what we expect from chairman and secretary deadline for both
-* Consequences no division into minor and major warning, only 3 warnings, what face before reported to Alex
-* Backlog issues templates what that feature represent, what should happen after implementing this feature
-* Board to do, in process, done
-* Gitlab deadlines
-* check style rules
-* pipeline
+* Planning - how task should be allocated
+* Behaviour - specify that works equally involved in everything
+* Commitment - what we expect from chairman and secretary, deadline for both
+* Consequences - no division into minor and major warning, only 3 warnings, what face before reported to Alex
+* Backlog issues - what that feature represent, what should happen after implementing this feature
+* Board labels: to do, in process, done
+* Gitlab - deadlines (use this feature)
+* Check style rules
+* Pipeline (always green before pushing to main)
 * Friday one working endpoint (for person/per group don't know yet)
 
 
