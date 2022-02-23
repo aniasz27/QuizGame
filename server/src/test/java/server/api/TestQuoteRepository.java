@@ -39,6 +39,11 @@ public class TestQuoteRepository implements QuoteRepository {
     }
 
     @Override
+    public String findByPerson(String firstName) {
+        return null;
+    }
+
+    @Override
     public List<Quote> findAll() {
         calledMethods.add("findAll");
         return quotes;

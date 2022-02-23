@@ -16,7 +16,16 @@
 package server.database;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import commons.Quote;
 
-public interface QuoteRepository extends JpaRepository<Quote, Long> {}
+public interface QuoteRepository extends JpaRepository<Quote, Long> {
+    /**
+     * Query the first quote of the person whose firstName coincides with the given firstName
+     * @param firstName firstName of person
+     * @return quote associated to person with firstName
+     */
+    @Query("select q.quote from Quote q where q.person.firstName = ?1")
+    String findByPerson(String firstName);
+}

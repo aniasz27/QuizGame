@@ -46,6 +46,16 @@ public class QuoteController {
         return repo.findAll();
     }
 
+    /**
+     * Finds the first quote of the person whose firstName coincides with the given firstName
+     * @param firstName firstName of person
+     * @return ResponseEntity of the quote String associated to person with firstName
+     */
+    @GetMapping("/byname/{name}")
+    public ResponseEntity<String> getByName(@PathVariable("name") String name) {
+        return ResponseEntity.ok(repo.findByPerson(name));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Quote> getById(@PathVariable("id") long id) {
         if (id < 0 || !repo.existsById(id)) {
