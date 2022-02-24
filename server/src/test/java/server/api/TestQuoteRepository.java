@@ -50,6 +50,30 @@ public class TestQuoteRepository implements QuoteRepository {
   }
 
   @Override
+  public <S extends Quote> List<S> findAll(Example<S> example) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public <S extends Quote> List<S> findAll(Example<S> example, Sort sort) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Page<Quote> findAll(Pageable pageable) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public <S extends Quote> Page<S> findAll(Example<S> example, Pageable pageable) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
   public List<Quote> findAllById(Iterable<Long> ids) {
     // TODO Auto-generated method stub
     return null;
@@ -80,6 +104,12 @@ public class TestQuoteRepository implements QuoteRepository {
   }
 
   @Override
+  public void deleteAllInBatch() {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
   public void deleteAllInBatch(Iterable<Quote> entities) {
     // TODO Auto-generated method stub
 
@@ -87,12 +117,6 @@ public class TestQuoteRepository implements QuoteRepository {
 
   @Override
   public void deleteAllByIdInBatch(Iterable<Long> ids) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void deleteAllInBatch() {
     // TODO Auto-generated method stub
 
   }
@@ -111,24 +135,6 @@ public class TestQuoteRepository implements QuoteRepository {
 
   private Optional<Quote> find(Long id) {
     return quotes.stream().filter(q -> q.id == id).findFirst();
-  }
-
-  @Override
-  public <S extends Quote> List<S> findAll(Example<S> example) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public <S extends Quote> List<S> findAll(Example<S> example, Sort sort) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public Page<Quote> findAll(Pageable pageable) {
-    // TODO Auto-generated method stub
-    return null;
   }
 
   @Override
@@ -154,6 +160,12 @@ public class TestQuoteRepository implements QuoteRepository {
   @Override
   public long count() {
     return quotes.size();
+  }
+
+  @Override
+  public <S extends Quote> long count(Example<S> example) {
+    // TODO Auto-generated method stub
+    return 0;
   }
 
   @Override
@@ -190,18 +202,6 @@ public class TestQuoteRepository implements QuoteRepository {
   public <S extends Quote> Optional<S> findOne(Example<S> example) {
     // TODO Auto-generated method stub
     return null;
-  }
-
-  @Override
-  public <S extends Quote> Page<S> findAll(Example<S> example, Pageable pageable) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public <S extends Quote> long count(Example<S> example) {
-    // TODO Auto-generated method stub
-    return 0;
   }
 
   @Override
