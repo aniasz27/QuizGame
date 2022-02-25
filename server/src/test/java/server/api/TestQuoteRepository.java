@@ -215,4 +215,9 @@ public class TestQuoteRepository implements QuoteRepository {
     // TODO Auto-generated method stub
     return null;
   }
+
+  @Override
+  public int updateById(long id, String quote) {
+    return 0;
+  }
 }
