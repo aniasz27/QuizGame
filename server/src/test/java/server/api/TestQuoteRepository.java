@@ -171,6 +171,7 @@ public class TestQuoteRepository implements QuoteRepository {
   @Override
   public void deleteById(Long id) {
     // TODO Auto-generated method stub
+    quotes.remove(id);
 
   }
 
