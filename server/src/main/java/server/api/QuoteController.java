@@ -19,13 +19,16 @@ package server.api;
 import commons.Quote;
 import java.util.List;
 import java.util.Random;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import server.database.QuoteRepository;
 
@@ -46,12 +49,35 @@ public class QuoteController {
     return repo.findAll();
   }
 
+  /**
+   * Finds the first quote of the person whose firstName coincides with the given firstName
+   *
+   * @param firstName firstName of person
+   * @return ResponseEntity of the quote String associated to person with firstName
+   */
+  @GetMapping("/byname/{name}")
+  public ResponseEntity<String> getByName(@PathVariable("name") String firstName) {
+    return ResponseEntity.ok(repo.findByPerson(firstName));
+  }
+
   @GetMapping("/{id}")
   public ResponseEntity<Quote> getById(@PathVariable("id") long id) {
     if (id < 0 || !repo.existsById(id)) {
       return ResponseEntity.badRequest().build();
     }
     return ResponseEntity.ok(repo.getById(id));
+  }
+
+  @DeleteMapping("/{id}")
+  @ResponseStatus(HttpStatus.OK)
+  public ResponseEntity<String> deleteById(@PathVariable("id") long id) {
+    if (id < 0 || !repo.existsById(id)) {
+      return new ResponseEntity<>("Invalid Id", HttpStatus.BAD_REQUEST);
+    }
+    Quote deleted = repo.getById(id);
+    repo.deleteById(id);
+    return new ResponseEntity<>("Deletion Successful",
+      HttpStatus.OK);
   }
 
   @PostMapping(path = {"", "/"})

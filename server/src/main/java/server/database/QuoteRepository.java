@@ -25,6 +25,15 @@ import org.springframework.data.repository.query.Param;
 
 public interface QuoteRepository extends JpaRepository<Quote, Long> {
   /**
+   * Query the first quote of the person whose firstName coincides with the given firstName
+   *
+   * @param firstName firstName of person
+   * @return quote associated to person with firstName
+   */
+  @Query("select q.quote from Quote q where q.person.firstName = ?1")
+  String findByPerson(String firstName);
+
+  /**
    * Update the quote with the given id and quote
    *
    * @param id    id of the quote
@@ -35,5 +44,4 @@ public interface QuoteRepository extends JpaRepository<Quote, Long> {
   @Modifying
   @Query(value = "UPDATE Quote q SET q.quote = :quote WHERE q.id = :id", nativeQuery = true)
   int updateById(@Param("id") long id, @Param("quote") String quote);
-
 }
