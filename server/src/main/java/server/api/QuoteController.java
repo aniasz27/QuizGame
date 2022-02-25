@@ -20,7 +20,13 @@ import commons.Quote;
 import java.util.List;
 import java.util.Random;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import server.database.QuoteRepository;
 
 @RestController
@@ -72,6 +78,7 @@ public class QuoteController {
 
   /**
    * Updates a quote based on id
+   *
    * @param id id of the quote
    *           provided in the request url
    * @param quote New quote to replace the old quote
