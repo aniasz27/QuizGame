@@ -37,16 +37,16 @@ public class TestQuoteRepository implements QuoteRepository {
     calledMethods.add(name);
   }
 
-    @Override
-    public String findByPerson(String firstName) {
-        return null;
-    }
+  @Override
+  public String findByPerson(String firstName) {
+    return null;
+  }
 
-    @Override
-    public List<Quote> findAll() {
-        calledMethods.add("findAll");
-        return quotes;
-    }
+  @Override
+  public List<Quote> findAll() {
+    calledMethods.add("findAll");
+    return quotes;
+  }
 
   @Override
   public List<Quote> findAll(Sort sort) {
@@ -63,6 +63,11 @@ public class TestQuoteRepository implements QuoteRepository {
   @Override
   public <S extends Quote> List<S> findAll(Example<S> example, Sort sort) {
     // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public <S extends Quote> Page<S> findAll(Example<S> example, Pageable pageable) {
     return null;
   }
 
