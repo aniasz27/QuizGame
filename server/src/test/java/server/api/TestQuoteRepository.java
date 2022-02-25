@@ -38,6 +38,11 @@ public class TestQuoteRepository implements QuoteRepository {
   }
 
   @Override
+  public String findByPerson(String firstName) {
+    return null;
+  }
+
+  @Override
   public List<Quote> findAll() {
     calledMethods.add("findAll");
     return quotes;
@@ -62,13 +67,12 @@ public class TestQuoteRepository implements QuoteRepository {
   }
 
   @Override
-  public Page<Quote> findAll(Pageable pageable) {
-    // TODO Auto-generated method stub
+  public <S extends Quote> Page<S> findAll(Example<S> example, Pageable pageable) {
     return null;
   }
 
   @Override
-  public <S extends Quote> Page<S> findAll(Example<S> example, Pageable pageable) {
+  public Page<Quote> findAll(Pageable pageable) {
     // TODO Auto-generated method stub
     return null;
   }
