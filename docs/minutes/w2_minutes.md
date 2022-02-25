@@ -5,26 +5,23 @@
 Location: DZ PC1 Cubbicle 4  
 Date: 15.02.2022  
 Time: 13:45  
-Attendees: Andrei, Anna, Anthony, Kazek, Lucia, Santiago  
+Attendees: Andrei, Anna, Anthony, Kazek, Lucia, Santiago
 
 ### Agenda Items
 
 - Opening by Chariperson\
-    *No minutes.*
+  *No minutes.*
 
 
-- Approval of the agenda  
+- Approval of the agenda
 
 Everybody agrees with the agenda
 
-
-
-- Check-in - week 1 assignemnts & current tasks  
+- Check-in - week 1 assignemnts & current tasks
 
 1) Git assignement feedback from Alex
 2) Current tasks:
-   * backlog in progress
-   
+    * backlog in progress
 
 
 - Backlog - Format & Division of tasks
@@ -39,15 +36,15 @@ Everybody agrees with the agenda
     * Send user stories by Wednesday 6pm
 
 
-- Teamwork Assignment 2A and 2B - Discuss and record agreements  
-  * draft to Alex by Wednesday 6pm
+- Teamwork Assignment 2A and 2B - Discuss and record agreements
+    * draft to Alex by Wednesday 6pm
 
 
 - HCI assignments - timeline
+
 > to do later
 
-
-- Summary of action points  
+- Summary of action points
 
 | Action Items | Who is responsible? | Deadline    |
 |:------------:|:-------------------:|:-----------:|
@@ -57,19 +54,15 @@ Everybody agrees with the agenda
 | Next secretary | Anna | Tuesday 22.02 |
 | Next chairmen | Santiago | Tuesday 22.02 |
 
-
-
-
 - Feedback round\
-*We decided to not take notes*
-
+  *We decided to not take notes*
 
 
 - Any questions?  
-*No further questions*
-
+  *No further questions*
 
 ## TA points
+
 * Everyone should have a merge request on Gitlab by Friday 6pm
 * Deadlines -> see Schedule on the website
 * Talked about Requirements Eng.
@@ -77,4 +70,4 @@ Everybody agrees with the agenda
 
 
 - Closing\
-*No minutes.*
+  *No minutes.*
