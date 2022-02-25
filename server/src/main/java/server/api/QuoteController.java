@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package server.api;
 
 import java.util.List;
@@ -33,56 +34,57 @@ import server.database.QuoteRepository;
 @RequestMapping("/api/quotes")
 public class QuoteController {
 
-    private final Random random;
-    private final QuoteRepository repo;
+  private final Random random;
+  private final QuoteRepository repo;
 
-    public QuoteController(Random random, QuoteRepository repo) {
-        this.random = random;
-        this.repo = repo;
+  public QuoteController(Random random, QuoteRepository repo) {
+    this.random = random;
+    this.repo = repo;
+  }
+
+  @GetMapping(path = {"", "/"})
+  public List<Quote> getAll() {
+    return repo.findAll();
+  }
+
+  /**
+   * Finds the first quote of the person whose firstName coincides with the given firstName
+   *
+   * @param firstName firstName of person
+   * @return ResponseEntity of the quote String associated to person with firstName
+   */
+  @GetMapping("/byname/{name}")
+  public ResponseEntity<String> getByName(@PathVariable("name") String firstName) {
+    return ResponseEntity.ok(repo.findByPerson(firstName));
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<Quote> getById(@PathVariable("id") long id) {
+    if (id < 0 || !repo.existsById(id)) {
+      return ResponseEntity.badRequest().build();
+    }
+    return ResponseEntity.ok(repo.getById(id));
+  }
+
+  @PostMapping(path = {"", "/"})
+  public ResponseEntity<Quote> add(@RequestBody Quote quote) {
+
+    if (quote.person == null || isNullOrEmpty(quote.person.firstName) || isNullOrEmpty(quote.person.lastName)
+      || isNullOrEmpty(quote.quote)) {
+      return ResponseEntity.badRequest().build();
     }
 
-    @GetMapping(path = { "", "/" })
-    public List<Quote> getAll() {
-        return repo.findAll();
-    }
+    Quote saved = repo.save(quote);
+    return ResponseEntity.ok(saved);
+  }
 
-    /**
-     * Finds the first quote of the person whose firstName coincides with the given firstName
-     * @param firstName firstName of person
-     * @return ResponseEntity of the quote String associated to person with firstName
-     */
-    @GetMapping("/byname/{name}")
-    public ResponseEntity<String> getByName(@PathVariable("name") String name) {
-        return ResponseEntity.ok(repo.findByPerson(name));
-    }
+  private static boolean isNullOrEmpty(String s) {
+    return s == null || s.isEmpty();
+  }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Quote> getById(@PathVariable("id") long id) {
-        if (id < 0 || !repo.existsById(id)) {
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok(repo.getById(id));
-    }
-
-    @PostMapping(path = { "", "/" })
-    public ResponseEntity<Quote> add(@RequestBody Quote quote) {
-
-        if (quote.person == null || isNullOrEmpty(quote.person.firstName) || isNullOrEmpty(quote.person.lastName)
-                || isNullOrEmpty(quote.quote)) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        Quote saved = repo.save(quote);
-        return ResponseEntity.ok(saved);
-    }
-
-    private static boolean isNullOrEmpty(String s) {
-        return s == null || s.isEmpty();
-    }
-
-    @GetMapping("rnd")
-    public ResponseEntity<Quote> getRandom() {
-        var idx = random.nextInt((int) repo.count());
-        return ResponseEntity.ok(repo.getById((long) idx));
-    }
+  @GetMapping("rnd")
+  public ResponseEntity<Quote> getRandom() {
+    var idx = random.nextInt((int) repo.count());
+    return ResponseEntity.ok(repo.getById((long) idx));
+  }
 }
