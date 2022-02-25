@@ -220,4 +220,9 @@ public class TestQuoteRepository implements QuoteRepository {
     // TODO Auto-generated method stub
     return null;
   }
+
+  @Override
+  public String getAuthor(String quote) {
+    return null;
+  }
 }

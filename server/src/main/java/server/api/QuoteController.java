@@ -17,8 +17,11 @@
 package server.api;
 
 import commons.Quote;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Consumer;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -99,5 +102,23 @@ public class QuoteController {
   public ResponseEntity<Quote> getRandom() {
     var idx = random.nextInt((int) repo.count());
     return ResponseEntity.ok(repo.getById((long) idx));
+  }
+
+  /**
+   * Returns the name of the author for a certain quote
+   *
+   * @param quote to be searched for
+   * @return first name + last name of the author / "Quote not found!" if it doesn't exist
+   */
+  @GetMapping("/author/{quote}")
+  public ResponseEntity<String> getAuthor(@PathVariable("quote") String quote) {
+    Iterator<Quote> allq = repo.findAll().iterator();
+    while (allq.hasNext()) {
+      Quote cq = allq.next();
+      if (cq.quote.equals(quote)) {
+        return ResponseEntity.ok(cq.person.firstName + " " + cq.person.lastName);
+      }
+    }
+    return ResponseEntity.ok("Quote not found!");
   }
 }
