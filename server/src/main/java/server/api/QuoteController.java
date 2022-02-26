@@ -55,6 +55,17 @@ public class QuoteController {
   }
 
   /**
+   * Finds the first quote of the person with the given surname
+   *
+   * @param surname of the person to look for their quote
+   * @return String of the quote associated to person with the given surname
+   */
+  @GetMapping("/bysurname/{surname}")
+  public String getBySurname(@PathVariable("surname") String surname) {
+    return repo.findQuoteByPersonLastName(surname).quote;
+  }
+
+  /**
    * Finds the first quote of the person whose firstName coincides with the given firstName
    *
    * @param firstName firstName of person
