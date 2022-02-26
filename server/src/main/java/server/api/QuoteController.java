@@ -126,8 +126,8 @@ public class QuoteController {
   /**
    * Updates a quote based on id
    *
-   * @param id id of the quote
-   *           provided in the request url
+   * @param id    id of the quote
+   *              provided in the request url
    * @param quote New quote to replace the old quote
    *              provided in the request body
    * @return Number of updated entities
@@ -138,4 +138,5 @@ public class QuoteController {
       return ResponseEntity.badRequest().build();
     }
     return ResponseEntity.ok(repo.updateById(id, quote));
+  }
 }
