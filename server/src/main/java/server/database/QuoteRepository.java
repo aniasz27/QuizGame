@@ -17,8 +17,11 @@
 package server.database;
 
 import commons.Quote;
+import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface QuoteRepository extends JpaRepository<Quote, Long> {
 
@@ -34,4 +37,16 @@ public interface QuoteRepository extends JpaRepository<Quote, Long> {
    */
   @Query("select q.quote from Quote q where q.person.firstName = ?1")
   String findByPerson(String firstName);
+
+  /**
+   * Update the quote with the given id and quote
+   *
+   * @param id    id of the quote
+   * @param quote new quote
+   * @return Number of updated entities
+   */
+  @Transactional
+  @Modifying
+  @Query(value = "UPDATE Quote q SET q.quote = :quote WHERE q.id = :id", nativeQuery = true)
+  int updateById(@Param("id") long id, @Param("quote") String quote);
 }
