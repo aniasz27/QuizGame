@@ -222,6 +222,10 @@ public class TestQuoteRepository implements QuoteRepository {
   }
 
   @Override
+  public void updateNameById(long id, String firstName, String lastName) {
+  }
+    
+  @Override
   public String getAuthor(String quote) {
     return null;
   }
