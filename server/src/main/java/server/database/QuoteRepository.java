@@ -24,6 +24,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface QuoteRepository extends JpaRepository<Quote, Long> {
+
+  @Query(value = "select p.first_Name, p.last_name from Person p join quote q on q.person_id = p.id where q.quote = ?1",
+    nativeQuery = true)
+  String getAuthor(String quote);
+
   /**
    * Query the first quote of the person whose firstName coincides with the given firstName
    *

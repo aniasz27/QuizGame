@@ -222,6 +222,11 @@ public class TestQuoteRepository implements QuoteRepository {
   }
 
   @Override
+  public String getAuthor(String quote) {
+    return null;
+  }
+
+  @Override
   public int updateById(long id, String quote) {
     return 0;
   }
