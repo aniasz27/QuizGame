@@ -69,4 +69,12 @@ public interface QuoteRepository extends JpaRepository<Quote, Long> {
   @Modifying
   @Query(value = "UPDATE Quote q SET q.quote = :quote WHERE q.id = :id", nativeQuery = true)
   int updateById(@Param("id") long id, @Param("quote") String quote);
+
+  /**
+   * Query that finds the first quote of the person with the given surname
+   *
+   * @param lastName of the person to look for their quote
+   * @return Quote associated to person with the given surname
+   */
+  Quote findQuoteByPersonLastName(String lastName);
 }

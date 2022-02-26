@@ -224,7 +224,7 @@ public class TestQuoteRepository implements QuoteRepository {
   @Override
   public void updateNameById(long id, String firstName, String lastName) {
   }
-    
+
   @Override
   public String getAuthor(String quote) {
     return null;
@@ -233,5 +233,10 @@ public class TestQuoteRepository implements QuoteRepository {
   @Override
   public int updateById(long id, String quote) {
     return 0;
+  }
+
+  @Override
+  public Quote findQuoteByPersonLastName(String lastName) {
+    return null;
   }
 }
