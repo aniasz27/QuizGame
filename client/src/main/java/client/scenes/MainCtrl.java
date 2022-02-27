@@ -16,8 +16,11 @@
 
 package client.scenes;
 
+import java.awt.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -32,6 +35,29 @@ public class MainCtrl {
   private Scene add;
   private ConnectScreenCtrl connectCtrl;
   private Scene connect;
+
+  //if false, the player plays in singleplayer mode
+  // if true, the player plays in multiplayer mode
+  private boolean multi;
+
+  @FXML
+  private Button buttonMulti;
+
+  @FXML
+  private Button buttonSingle;
+
+  @FXML
+  public void multiplayerFalse() {
+    this.multi = false;
+    showConnect();
+  }
+
+  @FXML
+  public void multiplayerTrue() {
+    this.multi = true;
+    showConnect();
+  }
+
 
   public void initialize(Stage primaryStage, Pair<QuoteOverviewCtrl, Parent> overview,
                          Pair<AddQuoteCtrl, Parent> add, Pair<ConnectScreenCtrl, Parent> connect) {
@@ -52,6 +78,12 @@ public class MainCtrl {
     primaryStage.show();
   }
 
+  public void showSplash() {
+    primaryStage.setTitle("Quizzzz");
+    primaryStage.setScene(overview);
+    overviewCtrl.refresh();
+  }
+
   public void showOverview() {
     primaryStage.setTitle("Quotes: Overview");
     primaryStage.setScene(overview);
@@ -64,8 +96,10 @@ public class MainCtrl {
     add.setOnKeyPressed(e -> addCtrl.keyPressed(e));
   }
 
-  public void showSplash() {
-    // TODO: Show the splash screen
+  private void showConnect() {
+    primaryStage.setTitle("Connect");
+    primaryStage.setScene(add);
+    /* TODO */
   }
 
   public void showWaiting() {

@@ -50,4 +50,15 @@ public class Main extends Application {
     var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
     mainCtrl.initialize(primaryStage, overview, add, connectScreen);
   }
+
+  //The real application
+  /* @Override
+  public void start(Stage primaryStage) throws IOException {
+    var overview = FXML.load(QuoteOverviewCtrl.class, "client", "scenes", "Splash.fxml");
+    var add = FXML.load(AddQuoteCtrl.class, "client", "scenes", "AddQuote.fxml");
+    // to be replaced with the connect screen
+    var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
+    mainCtrl.initialize(primaryStage, overview, add);
+
+  }*/
 }
