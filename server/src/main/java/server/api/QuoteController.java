@@ -18,9 +18,14 @@ package server.api;
 
 import commons.Person;
 import commons.Quote;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 import java.util.function.Consumer;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -167,5 +172,52 @@ public class QuoteController {
       return ResponseEntity.badRequest().build();
     }
     return ResponseEntity.ok(repo.updateById(id, quote));
+  }
+
+  private Map<String, LocalDateTime> clients = new HashMap<>();
+
+  /**
+   * Generates uniqueId for the client when they first connect
+   * Put this Id in the map along with the time
+   *
+   * @return String uniqueId for the client
+   */
+  @GetMapping("/connect")
+  public String addClient() {
+    String uniqueID = UUID.randomUUID().toString();
+    clients.put(uniqueID, LocalDateTime.now());
+    return uniqueID;
+  }
+
+  /**
+   * Update time for the given clientId
+   *
+   * @param clientId uniqueId for the client
+   * @return String uniqueId for the client
+   */
+  @PostMapping("/keepAlive")
+  public String updateClient(@RequestBody String clientId) {
+    clients.put(clientId, LocalDateTime.now());
+    return clientId;
+  }
+
+  /**
+   * Iterates over the map and checks which client disconnected
+   * Removes the disconnected client from the map
+   *
+   * @return number of active connections (even after closing the window)
+   */
+  @GetMapping("/playerCounter")
+  public int getPlayerCounter() {
+    Iterator<String> iter = clients.keySet().iterator();
+    while (iter.hasNext()) {
+      String key = iter.next();
+      LocalDateTime value = clients.get(key);
+      if (Duration.between(LocalDateTime.now(), value).abs().getSeconds() > 1) {
+        clients.remove(key);
+        iter = clients.keySet().iterator();
+      }
+    }
+    return clients.size();
   }
 }

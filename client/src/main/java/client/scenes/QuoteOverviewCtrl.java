@@ -36,6 +36,8 @@ public class QuoteOverviewCtrl implements Initializable {
 
   private ObservableList<Quote> data;
 
+  private String clientId;
+
   @FXML
   private TableView<Quote> table;
   @FXML
@@ -66,5 +68,14 @@ public class QuoteOverviewCtrl implements Initializable {
     var quotes = server.getQuotes();
     data = FXCollections.observableList(quotes);
     table.setItems(data);
+  }
+
+  /**
+   * Client connects to the server for the first time
+   */
+  public void connect() {
+    this.clientId = server.connectFirst();
+    ThreadKeepAlive thread = new ThreadKeepAlive(clientId, server);
+    thread.start();
   }
 }

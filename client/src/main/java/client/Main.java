@@ -44,5 +44,7 @@ public class Main extends Application {
 
     var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
     mainCtrl.initialize(primaryStage, overview, add);
+    //connects client to the server for the first time
+    overview.getKey().connect();
   }
 }
