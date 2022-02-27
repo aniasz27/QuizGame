@@ -1,0 +1,121 @@
+@font-face {
+    font-family: 'Futura';
+    font-weight: 200;
+    src: url('../fonts/FuturaPTLight.otf');
+}
+
+@font-face {
+    font-family: 'Futura';
+    font-weight: 200;
+    font-style: italic;
+    src: url('../fonts/FuturaPTLightOblique.otf');
+}
+
+@font-face {
+    font-family: 'Futura';
+    font-weight: 300;
+    src: url('../fonts/FuturaPTBook.otf');
+}
+
+@font-face {
+    font-family: 'Futura';
+    font-weight: 300;
+    font-style: italic;
+    src: url('../fonts/FuturaPTBookOblique.otf');
+}
+
+@font-face {
+    font-family: 'Futura';
+    font-weight: 400;
+    src: url('../fonts/FuturaPTMedium.otf');
+}
+
+@font-face {
+    font-family: 'Futura';
+    font-weight: 400;
+    font-style: italic;
+    src: url('../fonts/FuturaPTMediumOblique.otf');
+}
+
+@font-face {
+    font-family: 'Futura';
+    font-weight: 500;
+    src: url('../fonts/FuturaPTHeavy.otf');
+}
+
+@font-face {
+    font-family: 'Futura';
+    font-weight: 500;
+    font-style: italic;
+    src: url('../fonts/FuturaPTHeavyOblique.otf');
+}
+
+@font-face {
+    font-family: 'Futura';
+    font-weight: 600;
+    src: url('../fonts/FuturaPTDemi.otf');
+}
+
+@font-face {
+    font-family: 'Futura';
+    font-weight: 600;
+    font-style: italic;
+    src: url('../fonts/FuturaPTDemiOblique.otf');
+}
+
+@font-face {
+    font-family: 'Futura';
+    font-weight: 700;
+    src: url('../fonts/FuturaPTBold.otf');
+}
+
+@font-face {
+    font-family: 'Futura';
+    font-weight: 700;
+    font-style: italic;
+    src: url('../fonts/FuturaPTBoldOblique.otf');
+}
+
+@font-face {
+    font-family: 'Futura';
+    font-weight: 800;
+    src: url('../fonts/FuturaPTExtraBold.otf');
+}
+
+@font-face {
+    font-family: 'Futura';
+    font-weight: 800;
+    font-style: italic;
+    src: url('../fonts/FuturaPTExtraBoldOblique.otf');
+}
+
+* {
+    -fx-background-color: #100625;
+    -fx-fill: #fff;
+    /*-fx-text-fill: #fff;*/
+    -fx-font-family: 'Futura';
+}
+
+.border {
+    -fx-border-color: #0586E3;
+    -fx-border-width: 5px;
+}
+
+.rounded {
+    -fx-border-radius: 20px;
+    -fx-background-radius: 22px;
+}
+
+.rounded * {
+    -fx-background-radius: 20px;
+}
+
+.drop-shadow {
+    -fx-effect: dropshadow(one-pass-box, #0094FF, 10, 0, 0, 0);
+}
+
+.title {
+    -fx-font-family: Futura;
+    /*-fx-font-weight: 400;*/
+    -fx-font-size: 60px;
+}
