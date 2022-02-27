@@ -30,16 +30,24 @@ public class MainCtrl {
 
   private AddQuoteCtrl addCtrl;
   private Scene add;
+  private ConnectScreenCtrl connectCtrl;
+  private Scene connect;
 
   public void initialize(Stage primaryStage, Pair<QuoteOverviewCtrl, Parent> overview,
-                         Pair<AddQuoteCtrl, Parent> add) {
+                         Pair<AddQuoteCtrl, Parent> add, Pair<ConnectScreenCtrl, Parent> connect) {
     this.primaryStage = primaryStage;
+
+    // TODO: remove addCtrl and overviewCtrl
     this.overviewCtrl = overview.getKey();
     this.overview = new Scene(overview.getValue());
 
     this.addCtrl = add.getKey();
     this.add = new Scene(add.getValue());
 
+    this.connectCtrl = connect.getKey();
+    this.connect = new Scene(connect.getValue());
+
+    // TODO: Show splash screen first.
     showOverview();
     primaryStage.show();
   }
@@ -54,5 +62,13 @@ public class MainCtrl {
     primaryStage.setTitle("Quotes: Adding Quote");
     primaryStage.setScene(add);
     add.setOnKeyPressed(e -> addCtrl.keyPressed(e));
+  }
+
+  public void showSplash() {
+    // TODO: Show the splash screen
+  }
+
+  public void showWaiting() {
+    // TODO: Show the waiting screen
   }
 }
