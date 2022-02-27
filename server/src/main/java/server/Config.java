@@ -16,9 +16,20 @@
 
 package server;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import commons.Activity;
+import java.io.IOException;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.Random;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import server.api.ActivityController;
+
 
 @Configuration
 public class Config {
@@ -27,4 +38,29 @@ public class Config {
   public Random getRandom() {
     return new Random();
   }
+
+  /**
+   * Every time the server is started, the activity db is cleared and all the activities are imported again.
+   *
+   * @param activityController dependency injection
+   */
+  @Bean
+  CommandLineRunner commandLineRunner(ActivityController activityController) {
+    return args -> {
+      activityController.deleteAll();
+
+      try {
+        String activitiespath = "server/src/main/resources/JSON/activities.json";
+        Gson gson = new Gson();
+        Reader reader = Files.newBufferedReader(Paths.get(activitiespath));
+        List<Activity> activities = gson.fromJson(reader, new TypeToken<List<Activity>>() {
+        }.getType());
+        reader.close();
+        activityController.saveAll(activities);
+      } catch (IOException e) {
+        System.out.println("Something went wrong when importing activities: " + e.getMessage());
+      }
+    };
+  }
+
 }
