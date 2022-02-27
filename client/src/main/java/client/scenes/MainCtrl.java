@@ -102,10 +102,6 @@ public class MainCtrl {
     /* TODO */
   }
 
-  public void showSplash() {
-    // TODO: Show the splash screen
-  }
-
   public void showWaiting() {
     // TODO: Show the waiting screen
   }
