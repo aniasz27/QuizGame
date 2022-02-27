@@ -1,0 +1,51 @@
+[
+    {
+        "id": "00-smartphone",
+        "image_path": "00/smartphone.png",
+        "title": "Charging your smartphone at night",
+        "consumption_in_wh": 10,
+        "source": "https://9to5mac.com/2021/09/16/iphone-13-battery-life/"
+    },
+    {
+        "id": "00-playstation",
+        "image_path": "00/playstation.png",
+        "title": "Playing a game for 3h on your gaming console",
+        "consumption_in_wh": 420,
+        "source": "https://www.thehomehacksdiy.com/how-much-electricity-does-a-ps4-use/"
+    },
+    {
+        "id": "00-vacuuming",
+        "image_path": "00/vacuuming.jpeg",
+        "title": "Vacuuming your home for 30min",
+        "consumption_in_wh": 900,
+        "source": "https://www.philips.com.sg/c-p/FC9350_61/3000-series-bagless-vacuum-cleaner"
+    },
+    {
+        "id": "00-fridge",
+        "image_path": "00/fridge.png",
+        "title": "Using a refridgerator for 1 month",
+        "consumption_in_wh": 40000,
+        "source": "https://www.kompulsa.com/refrigerator-power-consumption-deciphering-the-label/"
+    },
+    {
+        "id": "00-shower",
+        "image_path": "00/shower.png",
+        "title": "Taking a hot shower for 6 minutes",
+        "consumption_in_wh": 4000,
+        "source": "https://www.quora.com/How-can-I-estimate-the-kWh-of-electricity-when-I-take-a-shower"
+    },
+    {
+        "id": "00-scooter",
+        "image_path": "00/scooter.png",
+        "title": "Riding your electric scooter to university (10km)",
+        "consumption_in_wh": 330,
+        "source": "https://dx.doi.org/10.1016/j.apenergy.2013.10.043"
+    },
+    {
+        "id": "00-hotplate",
+        "image_path": "00/hotplate.png",
+        "title": "Boiling one liter of water using a hotplate",
+        "consumption_in_wh": 183,
+        "source": "https://www.iforgotitswednesday.com/how-many-kilowatts-does-it-take-to-boil-1-litre-of-water/"
+    }
+]
