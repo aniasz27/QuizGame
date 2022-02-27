@@ -59,7 +59,7 @@ public class QuoteOverviewCtrl implements Initializable {
   }
 
   public void addQuote() {
-    mainCtrl.showAdd();
+    mainCtrl.showAdd(); // to be replaced with showConnect();
   }
 
   public void refresh() {
