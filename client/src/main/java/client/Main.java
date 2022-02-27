@@ -19,13 +19,16 @@ package client;
 import static com.google.inject.Guice.createInjector;
 
 import client.scenes.AddQuoteCtrl;
+import client.scenes.ConnectScreenCtrl;
 import client.scenes.MainCtrl;
 import client.scenes.QuoteOverviewCtrl;
 import com.google.inject.Injector;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import javafx.application.Application;
+import javafx.scene.Parent;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 
 public class Main extends Application {
 
@@ -39,11 +42,13 @@ public class Main extends Application {
   @Override
   public void start(Stage primaryStage) throws IOException {
 
+    // TODO: remove overview and add scenes
     var overview = FXML.load(QuoteOverviewCtrl.class, "client", "scenes", "QuoteOverview.fxml");
     var add = FXML.load(AddQuoteCtrl.class, "client", "scenes", "AddQuote.fxml");
+    var connectScreen = FXML.load(ConnectScreenCtrl.class, "client", "scenes", "ConnectScreen.fxml");
 
     var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-    mainCtrl.initialize(primaryStage, overview, add);
+    mainCtrl.initialize(primaryStage, overview, add, connectScreen);
   }
 
   //The real application
