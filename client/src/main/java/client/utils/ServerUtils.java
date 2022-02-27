@@ -59,4 +59,31 @@ public class ServerUtils {
       .accept(APPLICATION_JSON) //
       .post(Entity.entity(quote, APPLICATION_JSON), Quote.class);
   }
+
+  /**
+   * When user connects first time to the server
+   *
+   * @return String uniqueId for the client
+   */
+  public String connectFirst() {
+    return ClientBuilder.newClient(new ClientConfig()) //
+      .target(SERVER).path("api/quotes/connect") //
+      .request(APPLICATION_JSON) //
+      .accept(APPLICATION_JSON) //
+      .get(String.class);
+  }
+
+  /**
+   * Client sends http request to the server with their uniqueId
+   *
+   * @param clientId uniqueId for the client
+   * @return String uniqueId for the client
+   */
+  public String keepAlive(String clientId) {
+    return ClientBuilder.newClient(new ClientConfig()) //
+      .target(SERVER).path("api/quotes/keepAlive") //
+      .request(APPLICATION_JSON) //
+      .accept(APPLICATION_JSON) //
+      .post(Entity.entity(clientId, APPLICATION_JSON), String.class);
+  }
 }
