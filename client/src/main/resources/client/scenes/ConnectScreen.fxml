@@ -9,44 +9,33 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1024.0"
-            prefWidth="1440.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="client.scenes.ConnectScreenCtrl">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1024.0" prefWidth="1440.0" style="-fx-background-color: #1E0A49;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.ConnectScreenCtrl">
     <children>
-        <ImageView fx:id="backButton" fitHeight="150.0" fitWidth="200.0" layoutX="36.0" layoutY="30.0"
-                   onMouseClicked="#back" pickOnBounds="true" preserveRatio="true">
+        <ImageView fx:id="backButton" fitHeight="150.0" fitWidth="200.0" layoutX="36.0" layoutY="30.0" onMouseClicked="#back" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@client/scenes/img/button.png"/>
+                <Image url="@client/scenes/img/button.png" />
             </image>
         </ImageView>
-        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1e0a49" height="141.0" layoutX="280.0" layoutY="615.0"
-                   stroke="BLACK" strokeType="INSIDE"
-                   style="-fx-arc-width: 20; -fx-arc-height: 20; -fx-effect: dropshadow(three-pass-box, #0094FF, 0, 0, 10, 2);"
-                   width="917.0"/>
-        <TextField fx:id="serverField" layoutX="303.0" layoutY="637.0" prefHeight="96.0" prefWidth="870.0"
-                   promptText="Server IP" style="-fx-background-color: transparent; -fx-text-fill: #5250C0;">
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1e0a49" height="141.0" layoutX="280.0" layoutY="615.0" stroke="BLACK" strokeType="INSIDE" style="-fx-arc-width: 20; -fx-arc-height: 20; -fx-effect: dropshadow(three-pass-box, #0094FF, 0, 0, 10, 2);" width="917.0" />
+        <TextField fx:id="serverField" layoutX="303.0" layoutY="637.0" prefHeight="96.0" prefWidth="870.0" promptText="Server IP" style="-fx-background-color: transparent; -fx-text-fill: #5250C0;">
             <font>
-                <Font size="36.0"/>
+                <Font size="36.0" />
             </font>
         </TextField>
-        <Text layoutX="532.0" layoutY="278.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Quizzzzz">
+        <Text fill="WHITE" layoutX="532.0" layoutY="278.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Quizzzzz">
             <font>
-                <Font size="96.0"/>
+                <Font size="96.0" />
             </font>
         </Text>
-        <Button fx:id="playButton" layoutX="623.0" layoutY="796.0" mnemonicParsing="false" onAction="#play" text="Play">
+        <Button fx:id="playButton" layoutX="580.0" layoutY="800.0" maxWidth="-Infinity" mnemonicParsing="false" onAction="#play" prefHeight="99.0" prefWidth="314.0" text="Play">
             <font>
-                <Font size="72.0"/>
+                <Font size="72.0" />
             </font>
         </Button>
-        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1e0a49" height="141.0" layoutX="279.0" layoutY="441.0"
-                   stroke="BLACK" strokeType="INSIDE"
-                   style="-fx-arc-width: 20; -fx-arc-height: 20; -fx-effect: dropshadow(three-pass-box, #0094FF, 0, 0, 10, 2);"
-                   width="917.0"/>
-        <TextField fx:id="nameField" layoutX="302.0" layoutY="463.0" prefHeight="96.0" prefWidth="870.0"
-                   promptText="Name (Optional)" style="-fx-background-color: transparent; -fx-text-fill: #5250C0;">
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1e0a49" height="141.0" layoutX="279.0" layoutY="441.0" stroke="BLACK" strokeType="INSIDE" style="-fx-arc-width: 20; -fx-arc-height: 20; -fx-effect: dropshadow(three-pass-box, #0094FF, 0, 0, 10, 2);" width="917.0" />
+        <TextField fx:id="nameField" layoutX="302.0" layoutY="463.0" prefHeight="96.0" prefWidth="870.0" promptText="Name (Optional)" style="-fx-background-color: transparent; -fx-text-fill: #5250C0;">
             <font>
-                <Font size="36.0"/>
+                <Font size="36.0" />
             </font>
         </TextField>
     </children>
