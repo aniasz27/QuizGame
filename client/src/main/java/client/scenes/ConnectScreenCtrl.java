@@ -35,8 +35,6 @@ public class ConnectScreenCtrl {
 
   @FXML
   private void play(ActionEvent actionEvent) {
-    mainCtrl.showWaiting();
+    mainCtrl.showWaitingRoom();
   }
-
-
 }

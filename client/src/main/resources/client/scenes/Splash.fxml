@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
-
-
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.Splash">
-   <children>
-      <Button layoutX="221.0" layoutY="275.0" mnemonicParsing="false" onMouseClicked="#multiplayerTrue" prefHeight="25.0" prefWidth="158.0" text="Multiplayer" />
-      <Button layoutX="222.0" layoutY="226.0" mnemonicParsing="false" onMouseClicked="#multiplayerFalse" prefHeight="25.0" prefWidth="158.0" text="Singleplayer" />
-      <Label layoutX="274.0" layoutY="101.0" prefHeight="17.0" prefWidth="53.0" text="Quizzzzz" />
-   </children>
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="client.scenes.SplashCtrl">
+  <Button layoutX="221.0" layoutY="275.0" mnemonicParsing="false" onMouseClicked="#playMultiplayer" prefHeight="25.0"
+          prefWidth="158.0" text="Multiplayer"/>
+  <Button layoutX="222.0" layoutY="226.0" mnemonicParsing="false" onMouseClicked="#playSingleplayer" prefHeight="25.0"
+          prefWidth="158.0" text="Singleplayer"/>
+  <Label layoutX="274.0" layoutY="101.0" prefHeight="17.0" prefWidth="53.0" text="Quizzzzz"/>
 </AnchorPane>
