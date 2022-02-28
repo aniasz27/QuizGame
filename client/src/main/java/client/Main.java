@@ -18,9 +18,10 @@ package client;
 
 import static com.google.inject.Guice.createInjector;
 
-import client.scenes.AddQuoteCtrl;
+import client.scenes.ConnectScreenCtrl;
 import client.scenes.MainCtrl;
-import client.scenes.QuoteOverviewCtrl;
+import client.scenes.SplashCtrl;
+import client.scenes.WaitingRoomCtrl;
 import com.google.inject.Injector;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -38,13 +39,35 @@ public class Main extends Application {
 
   @Override
   public void start(Stage primaryStage) throws IOException {
+    var splash = FXML.load(
+      SplashCtrl.class,
+      "client/scenes/Splash.fxml",
+      null
+    );
+    var connectScreen = FXML.load(
+      ConnectScreenCtrl.class,
+      "client/scenes/ConnectScreen.fxml",
+      null
+    );
+    var waitingRoom = FXML.load(
+      WaitingRoomCtrl.class,
+      "client/scenes/WaitingRoom.fxml",
+      "client/css/WaitingRoom.css"
+    );
 
-    var overview = FXML.load(QuoteOverviewCtrl.class, "client", "scenes", "QuoteOverview.fxml");
+    var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
+    mainCtrl.initialize(primaryStage, splash, connectScreen, waitingRoom);
+  }
+
+  //The real application
+  /* @Override
+  public void start(Stage primaryStage) throws IOException {
+    var overview = FXML.load(QuoteOverviewCtrl.class, "client", "scenes", "Splash.fxml");
     var add = FXML.load(AddQuoteCtrl.class, "client", "scenes", "AddQuote.fxml");
-
+    // to be replaced with the connect screen
     var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
     mainCtrl.initialize(primaryStage, overview, add);
     //connects client to the server for the first time
     overview.getKey().connect();
-  }
+  }*/
 }
