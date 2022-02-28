@@ -1,0 +1,84 @@
+@font-face {
+  src: url('../fonts/FuturaPTLight.otf');
+}
+
+@font-face {
+  src: url('../fonts/FuturaPTLightOblique.otf');
+}
+
+@font-face {
+  src: url('../fonts/FuturaPTBook.otf');
+}
+
+@font-face {
+  src: url('../fonts/FuturaPTBookOblique.otf');
+}
+
+@font-face {
+  src: url('../fonts/FuturaPTMedium.otf');
+}
+
+@font-face {
+  src: url('../fonts/FuturaPTMediumOblique.otf');
+}
+
+@font-face {
+  src: url('../fonts/FuturaPTHeavy.otf');
+}
+
+@font-face {
+  src: url('../fonts/FuturaPTHeavyOblique.otf');
+}
+
+@font-face {
+  src: url('../fonts/FuturaPTDemi.otf');
+}
+
+@font-face {
+  src: url('../fonts/FuturaPTDemiOblique.otf');
+}
+
+@font-face {
+  src: url('../fonts/FuturaPTBold.otf');
+}
+
+@font-face {
+  src: url('../fonts/FuturaPTBoldOblique.otf');
+}
+
+@font-face {
+  src: url('../fonts/FuturaPTExtraBold.otf');
+}
+
+@font-face {
+  src: url('../fonts/FuturaPTExtraBoldOblique.otf');
+}
+
+* {
+  -fx-background-color: #100625;
+  -fx-fill: #fff;
+  /*-fx-text-fill: #fff;*/
+  -fx-font-family: 'Futura PT Medium';
+}
+
+.border {
+  -fx-border-color: #0586E3;
+  -fx-border-width: 5px;
+}
+
+.rounded {
+  -fx-border-radius: 20px;
+  -fx-background-radius: 22px;
+}
+
+.rounded * {
+  -fx-background-radius: 20px;
+}
+
+.drop-shadow {
+  -fx-effect: dropshadow(one-pass-box, #0094FF, 10, 0, 0, 0);
+}
+
+.title {
+  -fx-font-size: 60px;
+}

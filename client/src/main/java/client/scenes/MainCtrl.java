@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package client.scenes;
 
 import javafx.scene.Parent;
@@ -22,36 +23,68 @@ import javafx.util.Pair;
 
 public class MainCtrl {
 
-    private Stage primaryStage;
+  private Stage primaryStage;
 
-    private QuoteOverviewCtrl overviewCtrl;
-    private Scene overview;
+  private SplashCtrl splashCtrl;
+  private Scene splash;
 
-    private AddQuoteCtrl addCtrl;
-    private Scene add;
+  private ConnectScreenCtrl connectCtrl;
+  private Scene connect;
 
-    public void initialize(Stage primaryStage, Pair<QuoteOverviewCtrl, Parent> overview,
-            Pair<AddQuoteCtrl, Parent> add) {
-        this.primaryStage = primaryStage;
-        this.overviewCtrl = overview.getKey();
-        this.overview = new Scene(overview.getValue());
+  private WaitingRoomCtrl waitingRoomCtrl;
+  private Scene waitingRoom;
 
-        this.addCtrl = add.getKey();
-        this.add = new Scene(add.getValue());
+  //if false, the player plays in singleplayer mode
+  // if true, the player plays in multiplayer mode
+  private boolean multiplayer;
 
-        showOverview();
-        primaryStage.show();
-    }
+  public boolean isMultiplayer() {
+    return multiplayer;
+  }
 
-    public void showOverview() {
-        primaryStage.setTitle("Quotes: Overview");
-        primaryStage.setScene(overview);
-        overviewCtrl.refresh();
-    }
+  public void setMultiplayer(boolean multiplayer) {
+    this.multiplayer = multiplayer;
+  }
 
-    public void showAdd() {
-        primaryStage.setTitle("Quotes: Adding Quote");
-        primaryStage.setScene(add);
-        add.setOnKeyPressed(e -> addCtrl.keyPressed(e));
-    }
+
+  public void initialize(
+    Stage primaryStage,
+    Pair<SplashCtrl, Parent> splash,
+    Pair<ConnectScreenCtrl, Parent> connect,
+    Pair<WaitingRoomCtrl, Parent> waitingRoom
+  ) {
+    this.primaryStage = primaryStage;
+
+    this.splashCtrl = splash.getKey();
+    this.splash = new Scene(splash.getValue());
+
+    this.connectCtrl = connect.getKey();
+    this.connect = new Scene(connect.getValue());
+
+    this.waitingRoomCtrl = waitingRoom.getKey();
+    this.waitingRoom = new Scene(waitingRoom.getValue());
+
+    primaryStage.setTitle("Quizzzzz");
+
+    showSplash();
+    primaryStage.show();
+    primaryStage.setFullScreen(true);
+  }
+
+  public void showSplash() {
+    primaryStage.setScene(splash);
+    primaryStage.setFullScreen(true);
+  }
+
+  public void showConnect() {
+    primaryStage.setScene(connect);
+    primaryStage.setFullScreen(true);
+    /* TODO */
+  }
+
+  public void showWaitingRoom() {
+    primaryStage.setScene(waitingRoom);
+    primaryStage.setFullScreen(true);
+    waitingRoomCtrl.refresh();
+  }
 }
