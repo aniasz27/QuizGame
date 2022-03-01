@@ -57,6 +57,12 @@ public class Main extends Application {
 
     var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
     mainCtrl.initialize(primaryStage, splash, connectScreen, waitingRoom);
+
+    splash.getKey().connect();
+    //stops the thread when user closes the window
+    primaryStage.setOnCloseRequest(e -> {
+      splash.getKey().stop();
+    });
   }
 
   //The real application
