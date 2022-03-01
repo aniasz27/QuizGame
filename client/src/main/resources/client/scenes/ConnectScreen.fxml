@@ -20,7 +20,7 @@
   <!--  </ImageView>-->
   <StackPane styleClass="pad, margin">
     <Button
-      fx:id="back"
+      fx:id="backButton"
       styleClass="border, rounded, drop-shadow"
       StackPane.alignment="TOP_LEFT"
       onAction="#back"

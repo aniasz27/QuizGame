@@ -14,7 +14,7 @@
 >
   <StackPane styleClass="pad, margin">
     <Button
-      fx:id="back"
+      fx:id="backButton"
       styleClass="border, rounded, drop-shadow"
       StackPane.alignment="TOP_LEFT"
       onAction="#back"
@@ -22,14 +22,22 @@
     />
   </StackPane>
   <VBox maxWidth="640" StackPane.alignment="CENTER" alignment="CENTER">
-    <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="20"/>
+    <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="20" minHeight="20"/>
     <Text styleClass="title" text="Waiting for players..." textAlignment="CENTER" StackPane.alignment="CENTER"/>
-    <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="20"/>
-    <ScrollPane styleClass="border, rounded, drop-shadow" VBox.vgrow="ALWAYS">
-      <!-- TODO: players -->
+    <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="20" minHeight="20"/>
+    <ScrollPane
+      styleClass="border, rounded, drop-shadow, no-pad"
+      VBox.vgrow="ALWAYS"
+      fitToWidth="true"
+      hbarPolicy="NEVER"
+      vbarPolicy="NEVER"
+    >
+      <VBox fx:id="playerListDisplay" maxWidth="Infinity">
+        <!-- List of players -->
+      </VBox>
     </ScrollPane>
-    <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="20"/>
+    <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="20" minHeight="20"/>
     <Button styleClass="border, rounded, drop-shadow" text="Start"/>
-    <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="20"/>
+    <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="20" minHeight="20"/>
   </VBox>
 </StackPane>

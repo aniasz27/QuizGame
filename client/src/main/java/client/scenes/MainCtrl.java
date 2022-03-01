@@ -16,6 +16,8 @@
 
 package client.scenes;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCombination;
@@ -37,16 +39,19 @@ public class MainCtrl {
 
   //if false, the player plays in singleplayer mode
   // if true, the player plays in multiplayer mode
-  private boolean multiplayer;
+  public boolean multiplayer;
 
-  public boolean isMultiplayer() {
-    return multiplayer;
-  }
+  /**
+   * Map of all players and their scores in the current game
+   * Null if not in a game
+   */
+  public Map<String, Integer> players = null;
 
-  public void setMultiplayer(boolean multiplayer) {
-    this.multiplayer = multiplayer;
-  }
-
+  /**
+   * The user's name in the current game.
+   * Null if not in a game
+   */
+  public String name = null;
 
   public void initialize(
     Stage primaryStage,
@@ -77,16 +82,47 @@ public class MainCtrl {
 
   // instead of swapping entire scene, just swap parent
   public void showSplash() {
+    // reset name and list of players if coming out of a game
+    name = null;
+    players = null;
     primaryStage.getScene().setRoot(splashParent);
   }
 
   public void showConnect() {
+    // reset name and list of players if coming out of a game
+    name = null;
+    players = null;
     primaryStage.getScene().setRoot(connectParent);
-    /* TODO */
   }
 
   public void showWaitingRoom() {
     primaryStage.getScene().setRoot(waitingRoomParent);
-    waitingRoomCtrl.refresh();
+    // TODO: replace with getting players from the server
+    name = "Player 1";
+    players = new LinkedHashMap<>();
+    players.put(name, 0);
+    players.put("Nikola Tesla", 0);
+    players.put("Player 2", 0);
+    players.put("Player 3", 0);
+    players.put("Player 4", 0);
+    players.put("Player 5", 0);
+    players.put("James Watt", 0);
+    players.put("Player 6", 0);
+    players.put("Thomas Edison", 0);
+    players.put("Player 7", 0);
+    players.put("Player 8", 0);
+    players.put("Player 9", 0);
+    players.put("Player 10", 0);
+    players.put("Player 11", 0);
+    players.put("Player 12", 0);
+    players.put("Player 13", 0);
+    players.put("Player 14", 0);
+    players.put("Player 15", 0);
+    // ---------------------------------------------------
+    waitingRoomCtrl.refresh(players);
+  }
+
+  public void play() {
+    // TODO
   }
 }
