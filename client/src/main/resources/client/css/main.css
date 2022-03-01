@@ -76,9 +76,49 @@
 }
 
 .drop-shadow {
-  -fx-effect: dropshadow(one-pass-box, #0094FF, 10, 0, 0, 0);
+  -fx-effect: dropshadow(one-pass-box, #0094FF, 20, 0, 0, 0);
 }
 
-.title {
-  -fx-font-size: 60px;
+.button {
+  -fx-background-color: #1E0A49;
+  -fx-font-size: 30px;
+  -fx-padding: 10px 50px;
+  -fx-cursor: hand;
+}
+
+.button:hover {
+  -fx-background-color: #2B145B;
+  -fx-padding: 10px 55px;
+}
+
+.text-field {
+  -fx-background-color: #1E0A49;
+  -fx-font-size: 30px;
+  -fx-padding: 10px 50px;
+  -fx-cursor: hand;
+  -fx-text-fill: #fff;
+  -fx-prompt-text-fill: #fff;
+}
+
+.text-field * {
+  -fx-background-color: transparent;
+}
+
+.margin {
+  -fx-background-color: transparent;
+}
+
+.pad {
+  -fx-padding: 20px;
+}
+
+#back {
+  /*-fx-min-height: 50px;*/
+  /*-fx-max-height: 50px;*/
+  /*-fx-min-width: 50px;*/
+  /*-fx-max-width: 50px;*/
+}
+
+#back:hover {
+  -fx-padding: 10px 50px;
 }

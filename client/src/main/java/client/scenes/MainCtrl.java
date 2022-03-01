@@ -18,6 +18,7 @@ package client.scenes;
 
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -26,13 +27,13 @@ public class MainCtrl {
   private Stage primaryStage;
 
   private SplashCtrl splashCtrl;
-  private Scene splash;
+  private Parent splashParent;
 
   private ConnectScreenCtrl connectCtrl;
-  private Scene connect;
+  private Parent connectParent;
 
   private WaitingRoomCtrl waitingRoomCtrl;
-  private Scene waitingRoom;
+  private Parent waitingRoomParent;
 
   //if false, the player plays in singleplayer mode
   // if true, the player plays in multiplayer mode
@@ -56,35 +57,36 @@ public class MainCtrl {
     this.primaryStage = primaryStage;
 
     this.splashCtrl = splash.getKey();
-    this.splash = new Scene(splash.getValue());
+    this.splashParent = splash.getValue();
 
     this.connectCtrl = connect.getKey();
-    this.connect = new Scene(connect.getValue());
+    this.connectParent = connect.getValue();
 
     this.waitingRoomCtrl = waitingRoom.getKey();
-    this.waitingRoom = new Scene(waitingRoom.getValue());
+    this.waitingRoomParent = waitingRoom.getValue();
 
     primaryStage.setTitle("Quizzzzz");
+    // never exit full screen
+    primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
-    showSplash();
+    // set initial scene (splash) and show
+    primaryStage.setScene(new Scene(splashParent));
     primaryStage.show();
     primaryStage.setFullScreen(true);
   }
 
+  // instead of swapping entire scene, just swap parent
   public void showSplash() {
-    primaryStage.setScene(splash);
-    primaryStage.setFullScreen(true);
+    primaryStage.getScene().setRoot(splashParent);
   }
 
   public void showConnect() {
-    primaryStage.setScene(connect);
-    primaryStage.setFullScreen(true);
+    primaryStage.getScene().setRoot(connectParent);
     /* TODO */
   }
 
   public void showWaitingRoom() {
-    primaryStage.setScene(waitingRoom);
-    primaryStage.setFullScreen(true);
+    primaryStage.getScene().setRoot(waitingRoomParent);
     waitingRoomCtrl.refresh();
   }
 }
