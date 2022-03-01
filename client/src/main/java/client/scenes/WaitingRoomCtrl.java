@@ -4,6 +4,8 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
 public class WaitingRoomCtrl implements Initializable {
@@ -19,6 +21,11 @@ public class WaitingRoomCtrl implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+  }
+
+  @FXML
+  private void back(ActionEvent actionEvent) {
+    mainCtrl.showConnect();
   }
 
   public void refresh() {

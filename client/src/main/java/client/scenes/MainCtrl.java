@@ -18,6 +18,7 @@ package client.scenes;
 
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -65,6 +66,8 @@ public class MainCtrl {
     this.waitingRoom = new Scene(waitingRoom.getValue());
 
     primaryStage.setTitle("Quizzzzz");
+    // never exit full screen
+    primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
     showSplash();
     primaryStage.show();

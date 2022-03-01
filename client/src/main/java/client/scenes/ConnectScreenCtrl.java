@@ -7,7 +7,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 
 public class ConnectScreenCtrl {
   private final ServerUtils server;
@@ -29,7 +28,7 @@ public class ConnectScreenCtrl {
   }
 
   @FXML
-  private void back(MouseEvent actionEvent) {
+  private void back(ActionEvent actionEvent) {
     mainCtrl.showSplash();
   }
 

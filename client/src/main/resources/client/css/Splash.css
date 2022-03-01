@@ -1,0 +1,13 @@
+@import 'main.css';
+
+.title {
+  -fx-font-size: 100px;
+}
+
+.button {
+  -fx-max-width: 600px;
+}
+
+.button:hover {
+  -fx-max-width: 620px;
+}

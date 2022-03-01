@@ -42,12 +42,12 @@ public class Main extends Application {
     var splash = FXML.load(
       SplashCtrl.class,
       "client/scenes/Splash.fxml",
-      null
+      "client/css/Splash.css"
     );
     var connectScreen = FXML.load(
       ConnectScreenCtrl.class,
       "client/scenes/ConnectScreen.fxml",
-      null
+      "client/css/ConnectScreen.css"
     );
     var waitingRoom = FXML.load(
       WaitingRoomCtrl.class,
