@@ -55,7 +55,7 @@ public class SplashCtrl implements Initializable {
    * Client connects to the server for the first time
    */
   public void connect() {
-    this.clientId = server.connectFirst();
+    this.clientId = server.connectFirst("ooo");
     keepAlive();
   }
 
