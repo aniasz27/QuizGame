@@ -13,6 +13,7 @@ public class Activity {
   @Id
   public String id;
 
+  public String author;
   public String image_path;
   public String title;
   public long consumption_in_wh;
@@ -24,11 +25,12 @@ public class Activity {
   }
 
   @SuppressWarnings("unused")
-  public Activity(String id, String image_path, String title, long consumption_in_wh, String source) {
+  public Activity(String id, String author, String image_path, String title, long consumption_in_wh, String source) {
     this.id = id;
+    this.author = author;
     this.image_path = image_path;
     this.title = title;
-    this.consumption_in_wh = this.consumption_in_wh;
+    this.consumption_in_wh = consumption_in_wh;
     this.source = source;
   }
 
@@ -42,19 +44,20 @@ public class Activity {
       return false;
     }
     Activity activity = (Activity) o;
-    return consumption_in_wh == activity.consumption_in_wh && id.equals(activity.id)
+    return consumption_in_wh == activity.consumption_in_wh && id.equals(activity.id) && author.equals(activity.author)
       && image_path.equals(activity.image_path) && title.equals(activity.title) && source.equals(activity.source);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, image_path, title, consumption_in_wh, source);
+    return Objects.hash(id, author, image_path, title, consumption_in_wh, source);
   }
 
   @Override
   public String toString() {
     return "Activity{"
       + "id='" + id + '\''
+      + ", author='" + author + '\''
       + ", image_path='" + image_path + '\''
       + ", title='" + title + '\''
       + ", consumption_in_wh=" + consumption_in_wh

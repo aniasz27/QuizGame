@@ -50,7 +50,7 @@ public class Config {
       activityController.deleteAll();
 
       try {
-        String activitiespath = "server/src/main/resources/JSON/activities.json";
+        String activitiespath = "src/main/resources/JSON/activities.json";
         Gson gson = new Gson();
         Reader reader = Files.newBufferedReader(Paths.get(activitiespath));
         List<Activity> activities = gson.fromJson(reader, new TypeToken<List<Activity>>() {
