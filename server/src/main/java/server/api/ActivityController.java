@@ -15,7 +15,7 @@ import server.database.ActivityRepository;
 
 /**
  * Class controls the repository for the activity bank
- * Maping at /api/activity
+ * Mapping at /api/activity
  */
 @RestController
 @RequestMapping("/api/activity")
@@ -82,6 +82,14 @@ public class ActivityController {
     repo.deleteAll();
   }
 
+  /**
+   * Creates or updates an activity in the db
+   * If the id in the request body already exists, it will update
+   * If not it will create a new activity
+   *
+   * @param activity The activity to add or update in json format
+   * @return The created or updated activity
+   */
   @PutMapping("/update")
   public ResponseEntity<Activity> updateActivity(@RequestBody Activity activity) {
     return ResponseEntity.ok(repo.save(activity));
