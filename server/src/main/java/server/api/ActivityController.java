@@ -6,6 +6,8 @@ import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import server.database.ActivityRepository;
@@ -78,5 +80,10 @@ public class ActivityController {
    */
   public void deleteAll() {
     repo.deleteAll();
+  }
+
+  @PutMapping("/update")
+  public ResponseEntity<Activity> updateActivity(@RequestBody Activity activity) {
+    return ResponseEntity.ok(repo.save(activity));
   }
 }
