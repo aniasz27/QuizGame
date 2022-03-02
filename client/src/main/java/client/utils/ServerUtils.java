@@ -65,12 +65,12 @@ public class ServerUtils {
    *
    * @return String uniqueId for the client
    */
-  public String connectFirst() {
+  public String connectFirst(String username) {
     return ClientBuilder.newClient(new ClientConfig()) //
-      .target(SERVER).path("api/quotes/connect") //
+      .target(SERVER).path("api/player/connect") //
       .request(APPLICATION_JSON) //
       .accept(APPLICATION_JSON) //
-      .get(String.class);
+      .post(Entity.entity(username, APPLICATION_JSON), String.class);
   }
 
   /**
@@ -81,9 +81,9 @@ public class ServerUtils {
    */
   public String keepAlive(String clientId) {
     return ClientBuilder.newClient(new ClientConfig()) //
-      .target(SERVER).path("api/quotes/keepAlive") //
+      .target(SERVER).path("api/player/keepAlive") //
       .request(APPLICATION_JSON) //
       .accept(APPLICATION_JSON) //
-      .post(Entity.entity(clientId, APPLICATION_JSON), String.class);
+      .put(Entity.entity(clientId, APPLICATION_JSON), String.class);
   }
 }
