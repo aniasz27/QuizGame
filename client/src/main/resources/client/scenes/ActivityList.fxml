@@ -9,7 +9,7 @@
 <StackPane
   id="root" xmlns="http://javafx.com/javafx"
   xmlns:fx="http://javafx.com/fxml"
-  fx:controller="client.scenes.WaitingRoomCtrl"
+  fx:controller="client.scenes.ActivityListCtrl"
   prefHeight="1080.0" prefWidth="1920.0"
 >
   <StackPane styleClass="pad, margin">
@@ -23,7 +23,7 @@
   </StackPane>
   <VBox maxWidth="640" StackPane.alignment="CENTER" alignment="CENTER">
     <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="20" minHeight="20"/>
-    <Text styleClass="title" text="Waiting for players..." textAlignment="CENTER" StackPane.alignment="CENTER"/>
+    <Text styleClass="title" text="Activity Bank" textAlignment="CENTER" StackPane.alignment="CENTER"/>
     <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="20" minHeight="20"/>
     <ScrollPane
       styleClass="border, rounded, drop-shadow, no-pad, transparent"
@@ -32,12 +32,11 @@
       hbarPolicy="NEVER"
       vbarPolicy="NEVER"
     >
-      <VBox fx:id="playerListDisplay" maxWidth="Infinity">
-        <!-- List of players -->
+      <VBox fx:id="activityListDisplay" maxWidth="Infinity">
+        <!-- List of activities -->
       </VBox>
     </ScrollPane>
     <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="20" minHeight="20"/>
-    <Button styleClass="border, rounded, drop-shadow" text="Start"/>
-    <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="20" minHeight="20"/>
   </VBox>
 </StackPane>
+

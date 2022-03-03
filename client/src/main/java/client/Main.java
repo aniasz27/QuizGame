@@ -18,6 +18,7 @@ package client;
 
 import static com.google.inject.Guice.createInjector;
 
+import client.scenes.ActivityListCtrl;
 import client.scenes.ConnectScreenCtrl;
 import client.scenes.MainCtrl;
 import client.scenes.SplashCtrl;
@@ -54,9 +55,14 @@ public class Main extends Application {
       "client/scenes/WaitingRoom.fxml",
       "client/css/WaitingRoom.css"
     );
+    var activityList = FXML.load(
+      ActivityListCtrl.class,
+      "client/scenes/ActivityList.fxml",
+      "client/css/ActivityList.css"
+    );
 
     var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-    mainCtrl.initialize(primaryStage, splash, connectScreen, waitingRoom);
+    mainCtrl.initialize(primaryStage, splash, connectScreen, waitingRoom, activityList);
 
     splash.getKey().connect();
     //stops the thread when user closes the window

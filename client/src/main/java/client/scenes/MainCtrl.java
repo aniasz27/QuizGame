@@ -17,6 +17,7 @@
 package client.scenes;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -37,9 +38,22 @@ public class MainCtrl {
   private WaitingRoomCtrl waitingRoomCtrl;
   private Parent waitingRoomParent;
 
-  //if false, the player plays in singleplayer mode
-  // if true, the player plays in multiplayer mode
-  public boolean multiplayer;
+  private ActivityListCtrl activityListCtrl;
+  private Parent activityListParent;
+
+  public enum Mode {
+    MULTI(0),
+    SINGLE(1),
+    ADMIN(2);
+
+    private final int mode;
+
+    private Mode(int m) {
+      mode = m;
+    }
+  }
+
+  public Mode mode;
 
   /**
    * Map of all players and their scores in the current game
@@ -57,7 +71,8 @@ public class MainCtrl {
     Stage primaryStage,
     Pair<SplashCtrl, Parent> splash,
     Pair<ConnectScreenCtrl, Parent> connect,
-    Pair<WaitingRoomCtrl, Parent> waitingRoom
+    Pair<WaitingRoomCtrl, Parent> waitingRoom,
+    Pair<ActivityListCtrl, Parent> activityList
   ) {
     this.primaryStage = primaryStage;
 
@@ -69,6 +84,9 @@ public class MainCtrl {
 
     this.waitingRoomCtrl = waitingRoom.getKey();
     this.waitingRoomParent = waitingRoom.getValue();
+
+    this.activityListCtrl = activityList.getKey();
+    this.activityListParent = activityList.getValue();
 
     primaryStage.setTitle("Quizzzzz");
     // never exit full screen
@@ -124,5 +142,11 @@ public class MainCtrl {
 
   public void play() {
     // TODO
+  }
+
+  public void showActivityList() {
+    // reset name and list of players if coming out of a game
+    primaryStage.getScene().setRoot(activityListParent);
+    activityListCtrl.refresh(List.of(new String[] {"What"}));
   }
 }

@@ -33,10 +33,12 @@ public class ConnectScreenCtrl {
 
   @FXML
   private void play(ActionEvent actionEvent) {
-    if (mainCtrl.multiplayer) {
+    if (mainCtrl.mode == MainCtrl.Mode.MULTI) {
       mainCtrl.showWaitingRoom();
-    } else {
+    } else if (mainCtrl.mode == MainCtrl.Mode.SINGLE) {
       mainCtrl.play();
+    } else {
+      mainCtrl.showActivityList();
     }
   }
 }

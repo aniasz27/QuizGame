@@ -56,11 +56,11 @@ public class WaitingRoomCtrl implements Initializable {
     playerListDisplay.getChildren().removeAll(playerListDisplay.getChildren());
     int[] i = {0};
     players.forEach((player, score) -> {
-      Label l = new Label(player.equals(mainCtrl.name) ? player + " (You)" : player);
-      l.getStyleClass().add("player");
+      Label l = new Label(player.equals(mainCtrl.name) ? "You (" + player + ")" : player);
+      l.getStyleClass().add("list-item");
       l.getStyleClass().add("border-bottom");
       if (i[0]++ == 0) {
-        l.getStyleClass().add("player-top");
+        l.getStyleClass().add("list-item-top");
       }
       playerListDisplay.getChildren().add(l);
     });

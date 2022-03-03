@@ -55,10 +55,13 @@
 }
 
 * {
-  -fx-background-color: #100625;
   -fx-fill: #fff;
   /*-fx-text-fill: #fff;*/
   -fx-font-family: 'Futura PT Medium';
+}
+
+.root {
+  -fx-background-color: #100625;
 }
 
 .border {
@@ -84,6 +87,10 @@
   -fx-effect: dropshadow(one-pass-box, #0094FF, 20, 0, 0, 0);
 }
 
+.clickable {
+  -fx-cursor: hand;
+}
+
 .button {
   -fx-background-color: #1E0A49;
   -fx-font-size: 30px;
@@ -93,13 +100,13 @@
 
 .button:hover {
   -fx-background-color: #2B145B;
-  -fx-padding: 10px 55px;
+  /*-fx-padding: 10px 55px;*/
 }
 
 .text-field {
   -fx-background-color: #1E0A49;
   -fx-font-size: 30px;
-  -fx-padding: 10px 50px;
+  -fx-padding: 10px 20px;
   -fx-cursor: hand;
   -fx-text-fill: #fff;
   -fx-prompt-text-fill: #fff;
@@ -110,6 +117,14 @@
 }
 
 .margin {
+  -fx-background-color: transparent;
+}
+
+.transparent {
+  -fx-background-color: transparent;
+}
+
+.transparent * {
   -fx-background-color: transparent;
 }
 
@@ -133,7 +148,7 @@
   -fx-padding: 10px 50px;
 }
 
-.player {
+.list-item {
   -fx-background-color: #1E0A49;
   -fx-font-size: 30px;
   -fx-padding: 10px 10px;
@@ -141,6 +156,23 @@
   -fx-background-radius: 0;
 }
 
-.player.player-top {
-  -fx-background-radius: 22px 22px 0 0 !important;
+.list-item.list-item-top {
+  -fx-background-radius: 18px 18px 0 0 !important;
+}
+
+.list-item .label {
+  -fx-padding: 0px 10px;
+}
+
+.list-item .expand {
+  -fx-max-width: Infinity;
+}
+
+/* TODO: make this work lol */
+.list-item .hover-show {
+  visibility: hidden;
+}
+
+.list-item:hover .hover-show {
+  visibility: visible;
 }

@@ -28,13 +28,14 @@
     />
   </StackPane>
   <VBox maxWidth="640" StackPane.alignment="CENTER" alignment="CENTER">
+    <Region styleClass="margin" VBox.vgrow="ALWAYS"/>
     <Text styleClass="title" text="Quizzzzz" textAlignment="CENTER" BorderPane.alignment="CENTER"/>
-    <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="160"/>
+    <Region styleClass="margin" VBox.vgrow="ALWAYS"/>
     <TextField styleClass="border, rounded, drop-shadow" fx:id="nameField" promptText="Name (Optional)"/>
     <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="40"/>
     <TextField styleClass="border, rounded, drop-shadow" fx:id="serverField" promptText="Server IP"/>
     <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="40"/>
     <Button styleClass="border, rounded, drop-shadow" fx:id="playButton" onAction="#play" text="Play"/>
-    <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="40"/>
+    <Region styleClass="margin" VBox.vgrow="ALWAYS"/>
   </VBox>
 </StackPane>

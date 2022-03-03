@@ -35,13 +35,19 @@ public class SplashCtrl implements Initializable {
 
   @FXML
   public void playMultiplayer() {
-    mainCtrl.multiplayer = true;
+    mainCtrl.mode = MainCtrl.Mode.MULTI;
     mainCtrl.showConnect();
   }
 
   @FXML
   public void playSingleplayer() {
-    mainCtrl.multiplayer = false;
+    mainCtrl.mode = MainCtrl.Mode.SINGLE;
+    mainCtrl.showConnect();
+  }
+    
+  @FXML
+  public void showAdmin() {
+    mainCtrl.mode = MainCtrl.Mode.ADMIN;
     mainCtrl.showConnect();
   }
 
