@@ -16,16 +16,41 @@
 
 package client.utils;
 
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
+import org.glassfish.jersey.client.ClientConfig;
+
 public class ServerUtils {
 
   private static final String SERVER = "http://localhost:8080/";
 
-  //public List<Quote> getPlayers() {
-  //  return ClientBuilder.newClient(new ClientConfig())
-  //    .target(SERVER).path("api/players") // TODO: change api path
-  //    .request(APPLICATION_JSON)
-  //    .accept(APPLICATION_JSON)
-  //    .get(new GenericType<List<Quote>>() {
-  //    });
-  //}
+
+  /**
+   * When user connects first time to the server
+   *
+   * @return String uniqueId for the client
+   */
+  public String connectFirst(String username) {
+    return ClientBuilder.newClient(new ClientConfig()) //
+      .target(SERVER).path("api/player/connect") //
+      .request(APPLICATION_JSON) //
+      .accept(APPLICATION_JSON) //
+      .post(Entity.entity(username, APPLICATION_JSON), String.class);
+  }
+
+  /**
+   * Client sends http request to the server with their uniqueId
+   *
+   * @param clientId uniqueId for the client
+   * @return String uniqueId for the client
+   */
+  public String keepAlive(String clientId) {
+    return ClientBuilder.newClient(new ClientConfig()) //
+      .target(SERVER).path("api/player/keepAlive") //
+      .request(APPLICATION_JSON) //
+      .accept(APPLICATION_JSON) //
+      .put(Entity.entity(clientId, APPLICATION_JSON), String.class);
+  }
 }
