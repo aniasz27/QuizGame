@@ -6,38 +6,22 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
-<StackPane
-  id="root" xmlns="http://javafx.com/javafx"
-  xmlns:fx="http://javafx.com/fxml"
-  fx:controller="client.scenes.WaitingRoomCtrl"
-  prefHeight="1080.0" prefWidth="1920.0"
->
+
+<StackPane id="root" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.WaitingRoomCtrl">
   <StackPane styleClass="pad, margin">
-    <Button
-      fx:id="backButton"
-      styleClass="border, rounded, drop-shadow"
-      StackPane.alignment="TOP_LEFT"
-      onAction="#back"
-      text="Back"
-    />
+    <Button fx:id="backButton" onAction="#back" styleClass="border, rounded, drop-shadow" text="Back" StackPane.alignment="TOP_LEFT" />
   </StackPane>
-  <VBox maxWidth="640" StackPane.alignment="CENTER" alignment="CENTER">
-    <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="20" minHeight="20"/>
-    <Text styleClass="title" text="Waiting for players..." textAlignment="CENTER" StackPane.alignment="CENTER"/>
-    <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="20" minHeight="20"/>
-    <ScrollPane
-      styleClass="border, rounded, drop-shadow, no-pad"
-      VBox.vgrow="ALWAYS"
-      fitToWidth="true"
-      hbarPolicy="NEVER"
-      vbarPolicy="NEVER"
-    >
+  <VBox alignment="CENTER" maxWidth="640" StackPane.alignment="CENTER">
+    <Region maxHeight="20" minHeight="20" styleClass="margin" VBox.vgrow="ALWAYS" />
+    <Text styleClass="title" text="Waiting for players..." textAlignment="CENTER" StackPane.alignment="CENTER" />
+    <Region maxHeight="20" minHeight="20" styleClass="margin" VBox.vgrow="ALWAYS" />
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="border, rounded, drop-shadow, no-pad" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
       <VBox fx:id="playerListDisplay" maxWidth="Infinity">
         <!-- List of players -->
       </VBox>
     </ScrollPane>
-    <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="20" minHeight="20"/>
-    <Button styleClass="border, rounded, drop-shadow" text="Start"/>
-    <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="20" minHeight="20"/>
+    <Region maxHeight="20" minHeight="20" styleClass="margin" VBox.vgrow="ALWAYS" />
+    <Button fx:id="startButton" onAction="#start" styleClass="border, rounded, drop-shadow" text="Start" />
+    <Region maxHeight="20" minHeight="20" styleClass="margin" VBox.vgrow="ALWAYS" />
   </VBox>
 </StackPane>

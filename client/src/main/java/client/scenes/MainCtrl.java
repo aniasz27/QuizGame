@@ -18,6 +18,8 @@ package client.scenes;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import javafx.application.Platform;
+import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCombination;
@@ -36,6 +38,9 @@ public class MainCtrl {
 
   private WaitingRoomCtrl waitingRoomCtrl;
   private Parent waitingRoomParent;
+
+  private MultipleChoiceCtrl multipleChoiceCtrl;
+  private Parent multipleChoiceParent;
 
   //if false, the player plays in singleplayer mode
   // if true, the player plays in multiplayer mode
@@ -57,7 +62,8 @@ public class MainCtrl {
     Stage primaryStage,
     Pair<SplashCtrl, Parent> splash,
     Pair<ConnectScreenCtrl, Parent> connect,
-    Pair<WaitingRoomCtrl, Parent> waitingRoom
+    Pair<WaitingRoomCtrl, Parent> waitingRoom,
+    Pair<MultipleChoiceCtrl, Parent> multipleChoice
   ) {
     this.primaryStage = primaryStage;
 
@@ -70,14 +76,23 @@ public class MainCtrl {
     this.waitingRoomCtrl = waitingRoom.getKey();
     this.waitingRoomParent = waitingRoom.getValue();
 
+    this.multipleChoiceCtrl = multipleChoice.getKey();
+    this.multipleChoiceParent = multipleChoice.getValue();
+
     primaryStage.setTitle("Quizzzzz");
     // never exit full screen
     primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
     // set initial scene (splash) and show
-    primaryStage.setScene(new Scene(splashParent));
+    primaryStage.setScene(new Scene(connectParent));
     primaryStage.show();
     primaryStage.setFullScreen(true);
+  }
+
+  @FXML
+  public void exit() {
+    Platform.exit();
+    System.exit(0);
   }
 
   // instead of swapping entire scene, just swap parent
@@ -93,6 +108,10 @@ public class MainCtrl {
     name = null;
     players = null;
     primaryStage.getScene().setRoot(connectParent);
+  }
+
+  public void showMultipleChoice() {
+    primaryStage.getScene().setRoot(multipleChoiceParent);
   }
 
   public void showWaitingRoom() {

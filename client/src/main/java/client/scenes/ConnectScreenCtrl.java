@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -27,16 +28,12 @@ public class ConnectScreenCtrl {
   }
 
   @FXML
-  private void back(ActionEvent actionEvent) {
-    mainCtrl.showSplash();
+  public void exit() {
+    mainCtrl.exit();
   }
 
   @FXML
   private void play(ActionEvent actionEvent) {
-    if (mainCtrl.multiplayer) {
-      mainCtrl.showWaitingRoom();
-    } else {
-      mainCtrl.play();
-    }
+    mainCtrl.showSplash();
   }
 }
