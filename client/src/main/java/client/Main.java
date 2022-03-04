@@ -19,8 +19,8 @@ package client;
 import static com.google.inject.Guice.createInjector;
 
 import client.scenes.ConnectScreenCtrl;
-import client.scenes.MainCtrl;
 import client.scenes.HowMuchCtrl;
+import client.scenes.MainCtrl;
 import client.scenes.SplashCtrl;
 import client.scenes.WaitingRoomCtrl;
 import com.google.inject.Injector;
