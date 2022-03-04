@@ -8,23 +8,25 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<StackPane id="root" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.ConnectScreenCtrl">
-  <!--  <ImageView StackPane.alignment="TOP_LEFT" fx:id="backButton" fitHeight="150.0" fitWidth="200.0"-->
-  <!--             onMouseClicked="#back" pickOnBounds="true" preserveRatio="true">-->
-  <!--    &lt;!&ndash;suppress XmlPathReference &ndash;&gt;-->
-  <!--    <Image url="client/img/button.png"/>-->
-  <!--  </ImageView>-->
-  <StackPane styleClass="pad, margin">
-    <Button fx:id="backButton" onAction="#exit" styleClass="border, rounded, drop-shadow" text="Back" StackPane.alignment="TOP_LEFT" />
-  </StackPane>
-  <VBox alignment="CENTER" maxWidth="640" StackPane.alignment="CENTER">
-    <Text styleClass="title" text="Quizzzzz" textAlignment="CENTER" BorderPane.alignment="CENTER" />
-    <Region maxHeight="160" styleClass="margin" VBox.vgrow="ALWAYS" />
-    <TextField fx:id="nameField" promptText="Name (Optional)" styleClass="border, rounded, drop-shadow" />
-    <Region maxHeight="40" styleClass="margin" VBox.vgrow="ALWAYS" />
-    <TextField fx:id="serverField" promptText="Server IP" styleClass="border, rounded, drop-shadow" />
-    <Region maxHeight="40" styleClass="margin" VBox.vgrow="ALWAYS" />
-    <Button fx:id="playButton" onAction="#play" styleClass="border, rounded, drop-shadow" text="Play" />
-    <Region maxHeight="40" styleClass="margin" VBox.vgrow="ALWAYS" />
-  </VBox>
+<StackPane id="root" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.ConnectScreenCtrl">
+    <!--  <ImageView StackPane.alignment="TOP_LEFT" fx:id="backButton" fitHeight="150.0" fitWidth="200.0"-->
+    <!--             onMouseClicked="#back" pickOnBounds="true" preserveRatio="true">-->
+    <!--    &lt;!&ndash;suppress XmlPathReference &ndash;&gt;-->
+    <!--    <Image url="client/img/button.png"/>-->
+    <!--  </ImageView>-->
+    <StackPane styleClass="pad, margin">
+        <Button fx:id="backButton" onAction="#exit" styleClass="border, rounded, drop-shadow" text="Back"
+                StackPane.alignment="TOP_LEFT"/>
+    </StackPane>
+    <VBox alignment="CENTER" maxWidth="640" StackPane.alignment="CENTER">
+        <Text styleClass="title" text="Quizzzzz" textAlignment="CENTER" BorderPane.alignment="CENTER"/>
+        <Region maxHeight="160" styleClass="margin" VBox.vgrow="ALWAYS"/>
+        <TextField fx:id="nameField" promptText="Name (Optional)" styleClass="border, rounded, drop-shadow"/>
+        <Region maxHeight="40" styleClass="margin" VBox.vgrow="ALWAYS"/>
+        <TextField fx:id="serverField" promptText="Server IP" styleClass="border, rounded, drop-shadow"/>
+        <Region maxHeight="40" styleClass="margin" VBox.vgrow="ALWAYS"/>
+        <Button fx:id="playButton" onAction="#play" styleClass="border, rounded, drop-shadow" text="Play"/>
+        <Region maxHeight="40" styleClass="margin" VBox.vgrow="ALWAYS"/>
+    </VBox>
 </StackPane>

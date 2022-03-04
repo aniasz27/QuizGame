@@ -1,146 +1,146 @@
 @font-face {
-  src: url('../fonts/FuturaPTLight.otf');
+    src: url('../fonts/FuturaPTLight.otf');
 }
 
 @font-face {
-  src: url('../fonts/FuturaPTLightOblique.otf');
+    src: url('../fonts/FuturaPTLightOblique.otf');
 }
 
 @font-face {
-  src: url('../fonts/FuturaPTBook.otf');
+    src: url('../fonts/FuturaPTBook.otf');
 }
 
 @font-face {
-  src: url('../fonts/FuturaPTBookOblique.otf');
+    src: url('../fonts/FuturaPTBookOblique.otf');
 }
 
 @font-face {
-  src: url('../fonts/FuturaPTMedium.otf');
+    src: url('../fonts/FuturaPTMedium.otf');
 }
 
 @font-face {
-  src: url('../fonts/FuturaPTMediumOblique.otf');
+    src: url('../fonts/FuturaPTMediumOblique.otf');
 }
 
 @font-face {
-  src: url('../fonts/FuturaPTHeavy.otf');
+    src: url('../fonts/FuturaPTHeavy.otf');
 }
 
 @font-face {
-  src: url('../fonts/FuturaPTHeavyOblique.otf');
+    src: url('../fonts/FuturaPTHeavyOblique.otf');
 }
 
 @font-face {
-  src: url('../fonts/FuturaPTDemi.otf');
+    src: url('../fonts/FuturaPTDemi.otf');
 }
 
 @font-face {
-  src: url('../fonts/FuturaPTDemiOblique.otf');
+    src: url('../fonts/FuturaPTDemiOblique.otf');
 }
 
 @font-face {
-  src: url('../fonts/FuturaPTBold.otf');
+    src: url('../fonts/FuturaPTBold.otf');
 }
 
 @font-face {
-  src: url('../fonts/FuturaPTBoldOblique.otf');
+    src: url('../fonts/FuturaPTBoldOblique.otf');
 }
 
 @font-face {
-  src: url('../fonts/FuturaPTExtraBold.otf');
+    src: url('../fonts/FuturaPTExtraBold.otf');
 }
 
 @font-face {
-  src: url('../fonts/FuturaPTExtraBoldOblique.otf');
+    src: url('../fonts/FuturaPTExtraBoldOblique.otf');
 }
 
 * {
-  -fx-background-color: #100625;
-  -fx-fill: #fff;
-  /*-fx-text-fill: #fff;*/
-  -fx-font-family: 'Futura PT Medium';
+    -fx-background-color: #100625;
+    -fx-fill: #fff;
+    /*-fx-text-fill: #fff;*/
+    -fx-font-family: 'Futura PT Medium';
 }
 
 .border {
-  -fx-border-color: #0586E3;
-  -fx-border-width: 5px;
+    -fx-border-color: #0586E3;
+    -fx-border-width: 5px;
 }
 
 .border-bottom {
-  -fx-border-color: #0586E3;
-  -fx-border-width: 0 0 5px 0;
+    -fx-border-color: #0586E3;
+    -fx-border-width: 0 0 5px 0;
 }
 
 .rounded {
-  -fx-border-radius: 20px;
-  -fx-background-radius: 22px;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 22px;
 }
 
 .rounded * {
-  -fx-background-radius: 20px;
+    -fx-background-radius: 20px;
 }
 
 .drop-shadow {
-  -fx-effect: dropshadow(one-pass-box, #0094FF, 20, 0, 0, 0);
+    -fx-effect: dropshadow(one-pass-box, #0094FF, 20, 0, 0, 0);
 }
 
 .button {
-  -fx-background-color: #1E0A49;
-  -fx-font-size: 30px;
-  -fx-padding: 10px 50px;
-  -fx-cursor: hand;
+    -fx-background-color: #1E0A49;
+    -fx-font-size: 30px;
+    -fx-padding: 10px 50px;
+    -fx-cursor: hand;
 }
 
 .button:hover {
-  -fx-background-color: #2B145B;
-  -fx-padding: 10px 55px;
+    -fx-background-color: #2B145B;
+    -fx-padding: 10px 55px;
 }
 
 .text-field {
-  -fx-background-color: #1E0A49;
-  -fx-font-size: 30px;
-  -fx-padding: 10px 50px;
-  -fx-cursor: hand;
-  -fx-text-fill: #fff;
-  -fx-prompt-text-fill: #fff;
+    -fx-background-color: #1E0A49;
+    -fx-font-size: 30px;
+    -fx-padding: 10px 50px;
+    -fx-cursor: hand;
+    -fx-text-fill: #fff;
+    -fx-prompt-text-fill: #fff;
 }
 
 .text-field * {
-  -fx-background-color: transparent;
+    -fx-background-color: transparent;
 }
 
 .margin {
-  -fx-background-color: transparent;
+    -fx-background-color: transparent;
 }
 
 .pad {
-  -fx-padding: 20px;
+    -fx-padding: 20px;
 }
 
 .no-pad {
-  -fx-padding: 0px;
+    -fx-padding: 0px;
 }
 
 #backButton {
-  /* TODO: make this square */
-  /*-fx-min-height: 50px;*/
-  /*-fx-max-height: 50px;*/
-  /*-fx-min-width: 50px;*/
-  /*-fx-max-width: 50px;*/
+    /* TODO: make this square */
+    /*-fx-min-height: 50px;*/
+    /*-fx-max-height: 50px;*/
+    /*-fx-min-width: 50px;*/
+    /*-fx-max-width: 50px;*/
 }
 
 #backButton:hover {
-  -fx-padding: 10px 50px;
+    -fx-padding: 10px 50px;
 }
 
 .player {
-  -fx-background-color: #1E0A49;
-  -fx-font-size: 30px;
-  -fx-padding: 10px 10px;
-  -fx-max-width: Infinity;
-  -fx-background-radius: 0;
+    -fx-background-color: #1E0A49;
+    -fx-font-size: 30px;
+    -fx-padding: 10px 10px;
+    -fx-max-width: Infinity;
+    -fx-background-radius: 0;
 }
 
 .player.player-top {
-  -fx-background-radius: 22px 22px 0 0 !important;
+    -fx-background-radius: 22px 22px 0 0 !important;
 }
