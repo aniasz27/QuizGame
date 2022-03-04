@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
+import commons.Activity;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -11,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 public class ActivityListCtrl implements Initializable {
@@ -38,15 +40,10 @@ public class ActivityListCtrl implements Initializable {
   }
 
   /**
-   * Displays a list of activities from a hashmap.
-   *
-   * @param activities the map of activities to create the list from
+   * Displays activities retrieved from the server.
    */
-  public void refresh(List<String> activities) {
-    // TODO: get list of activities from server and display it
-    //var quotes = server.getPlayers();
-    //data = FXCollections.observableList(quotes);
-    //table.setItems(data);
+  public void refresh() {
+    List<Activity> activities = server.getActivities();
     if (activities == null) {
       mainCtrl.showConnect();
       return;
@@ -57,16 +54,19 @@ public class ActivityListCtrl implements Initializable {
     int[] i = {0};
     activities.forEach(a -> {
       HBox activity = new HBox();
-      Label l = new Label(a);
+      Label l = new Label(a.title);
       l.getStyleClass().add("expand");
       HBox.setHgrow(l, Priority.ALWAYS);
       activity.getChildren().add(l);
-      l = new Label("Edit");
+      l = new Label("\uF044"); // Edit icon
+      l.getStyleClass().add("icon");
       l.getStyleClass().add("hover-show");
+      l.setMinWidth(Region.USE_PREF_SIZE);
       activity.getChildren().add(l);
       activity.getStyleClass().add("clickable");
       activity.getStyleClass().add("list-item");
       activity.getStyleClass().add("border-bottom");
+      activity.onMouseClickedProperty().set(event -> mainCtrl.showEditActivity(a));
       if (i[0]++ == 0) {
         activity.getStyleClass().add("list-item-top");
       }

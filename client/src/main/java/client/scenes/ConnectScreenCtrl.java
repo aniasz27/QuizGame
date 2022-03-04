@@ -37,7 +37,7 @@ public class ConnectScreenCtrl {
       mainCtrl.showWaitingRoom();
     } else if (mainCtrl.mode == MainCtrl.Mode.SINGLE) {
       mainCtrl.play();
-    } else {
+    } else if (mainCtrl.mode == MainCtrl.Mode.ADMIN) {
       mainCtrl.showActivityList();
     }
   }

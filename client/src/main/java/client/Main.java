@@ -20,6 +20,7 @@ import static com.google.inject.Guice.createInjector;
 
 import client.scenes.ActivityListCtrl;
 import client.scenes.ConnectScreenCtrl;
+import client.scenes.EditActivityCtrl;
 import client.scenes.MainCtrl;
 import client.scenes.SplashCtrl;
 import client.scenes.WaitingRoomCtrl;
@@ -60,9 +61,14 @@ public class Main extends Application {
       "client/scenes/ActivityList.fxml",
       "client/css/ActivityList.css"
     );
+    var editActivity = FXML.load(
+      EditActivityCtrl.class,
+      "client/scenes/EditActivity.fxml",
+      "client/css/EditActivity.css"
+    );
 
     var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-    mainCtrl.initialize(primaryStage, splash, connectScreen, waitingRoom, activityList);
+    mainCtrl.initialize(primaryStage, splash, connectScreen, waitingRoom, activityList, editActivity);
 
     splash.getKey().connect();
     //stops the thread when user closes the window

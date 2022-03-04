@@ -1,0 +1,5 @@
+@import 'main.css';
+
+.title {
+  -fx-font-size: 100px;
+}

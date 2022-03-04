@@ -16,8 +16,8 @@
 
 package client.scenes;
 
+import commons.Activity;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -41,6 +41,9 @@ public class MainCtrl {
   private ActivityListCtrl activityListCtrl;
   private Parent activityListParent;
 
+  private EditActivityCtrl editActivityCtrl;
+  private Parent editActivityParent;
+
   public enum Mode {
     MULTI(0),
     SINGLE(1),
@@ -57,13 +60,13 @@ public class MainCtrl {
 
   /**
    * Map of all players and their scores in the current game
-   * Null if not in a game
+   * Null if not in a game.
    */
-  public Map<String, Integer> players = null;
+  //public Map<String, Integer> players = null;
 
   /**
    * The user's name in the current game.
-   * Null if not in a game
+   * Null if not in a game.
    */
   public String name = null;
 
@@ -72,21 +75,25 @@ public class MainCtrl {
     Pair<SplashCtrl, Parent> splash,
     Pair<ConnectScreenCtrl, Parent> connect,
     Pair<WaitingRoomCtrl, Parent> waitingRoom,
-    Pair<ActivityListCtrl, Parent> activityList
+    Pair<ActivityListCtrl, Parent> activityList,
+    Pair<EditActivityCtrl, Parent> editActivity
   ) {
     this.primaryStage = primaryStage;
 
-    this.splashCtrl = splash.getKey();
-    this.splashParent = splash.getValue();
-
     this.connectCtrl = connect.getKey();
     this.connectParent = connect.getValue();
+
+    this.splashCtrl = splash.getKey();
+    this.splashParent = splash.getValue();
 
     this.waitingRoomCtrl = waitingRoom.getKey();
     this.waitingRoomParent = waitingRoom.getValue();
 
     this.activityListCtrl = activityList.getKey();
     this.activityListParent = activityList.getValue();
+
+    this.editActivityCtrl = editActivity.getKey();
+    this.editActivityParent = editActivity.getValue();
 
     primaryStage.setTitle("Quizzzzz");
     // never exit full screen
@@ -102,18 +109,19 @@ public class MainCtrl {
   public void showSplash() {
     // reset name and list of players if coming out of a game
     name = null;
-    players = null;
+    //players = null;
     primaryStage.getScene().setRoot(splashParent);
   }
 
   public void showConnect() {
     // reset name and list of players if coming out of a game
     name = null;
-    players = null;
+    //players = null;
     primaryStage.getScene().setRoot(connectParent);
   }
 
   public void showWaitingRoom() {
+    Map<String, Integer> players = null;
     primaryStage.getScene().setRoot(waitingRoomParent);
     // TODO: replace with getting players from the server
     name = "Player 1";
@@ -147,6 +155,12 @@ public class MainCtrl {
   public void showActivityList() {
     // reset name and list of players if coming out of a game
     primaryStage.getScene().setRoot(activityListParent);
-    activityListCtrl.refresh(List.of(new String[] {"What"}));
+    activityListCtrl.refresh();
+  }
+
+  public void showEditActivity(Activity activity) {
+    // reset name and list of players if coming out of a game
+    primaryStage.getScene().setRoot(editActivityParent);
+    editActivityCtrl.refresh(activity);
   }
 }

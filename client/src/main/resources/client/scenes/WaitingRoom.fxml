@@ -15,11 +15,11 @@
   <StackPane styleClass="pad, margin">
     <Button
       fx:id="backButton"
-      styleClass="border, rounded, drop-shadow"
+      styleClass="icon, border, rounded, drop-shadow"
       StackPane.alignment="TOP_LEFT"
       onAction="#back"
-      text="Back"
-    />
+      text=""
+    /> <!-- text is \uf053 (back arrow in font awesome) -->
   </StackPane>
   <VBox maxWidth="640" StackPane.alignment="CENTER" alignment="CENTER">
     <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="20" minHeight="20"/>

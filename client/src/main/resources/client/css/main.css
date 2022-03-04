@@ -54,9 +54,13 @@
   src: url('../fonts/FuturaPTExtraBoldOblique.otf');
 }
 
+@font-face {
+  src: url('../fonts/FontAwesome6Free-Solid-900.otf');
+}
+
 * {
   -fx-fill: #fff;
-  /*-fx-text-fill: #fff;*/
+  -fx-text-fill: #fff;
   -fx-font-family: 'Futura PT Medium';
 }
 
@@ -87,6 +91,16 @@
   -fx-effect: dropshadow(one-pass-box, #0094FF, 20, 0, 0, 0);
 }
 
+.bad {
+  -fx-border-color: #EF2858;
+  -fx-effect: dropshadow(one-pass-box, #EF2858, 20, 0, 0, 0);
+}
+
+.good {
+  -fx-border-color: #19E275;
+  -fx-effect: dropshadow(one-pass-box, #19E275, 20, 0, 0, 0);
+}
+
 .clickable {
   -fx-cursor: hand;
 }
@@ -107,9 +121,9 @@
   -fx-background-color: #1E0A49;
   -fx-font-size: 30px;
   -fx-padding: 10px 20px;
-  -fx-cursor: hand;
+  -fx-cursor: text;
   -fx-text-fill: #fff;
-  -fx-prompt-text-fill: #fff;
+  -fx-prompt-text-fill: #481f9f;
 }
 
 .text-field * {
@@ -138,14 +152,11 @@
 
 #backButton {
   /* TODO: make this square */
-  /*-fx-min-height: 50px;*/
-  /*-fx-max-height: 50px;*/
-  /*-fx-min-width: 50px;*/
-  /*-fx-max-width: 50px;*/
-}
-
-#backButton:hover {
-  -fx-padding: 10px 50px;
+  /*-fx-min-height: 70px;*/
+  /*-fx-max-height: 70px;*/
+  /*-fx-min-width: 70px;*/
+  /*-fx-max-width: 70px;*/
+  -fx-padding: 5px 16px 10px 16px;
 }
 
 .list-item {
@@ -175,4 +186,13 @@
 
 .list-item:hover .hover-show {
   visibility: visible;
+}
+
+.icon * {
+  -fx-font-family: 'Font Awesome 6 Free Solid';
+  -fx-font-weight: 900;
+}
+
+.subtitle {
+  -fx-font-size: 20px;
 }
