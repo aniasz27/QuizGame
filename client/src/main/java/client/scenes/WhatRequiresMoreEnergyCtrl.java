@@ -32,10 +32,9 @@ public class WhatRequiresMoreEnergyCtrl implements Initializable {
   Activity[] activities;
 
   @Inject
-  WhatRequiresMoreEnergyCtrl(ServerUtils server, MainCtrl mainCtrl, Activity[] activities) {
+  WhatRequiresMoreEnergyCtrl(ServerUtils server, MainCtrl mainCtrl) {
     this.server = server;
     this.mainCtrl = mainCtrl;
-    this.activities = activities;
   }
 
 
@@ -92,6 +91,8 @@ public class WhatRequiresMoreEnergyCtrl implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+    //TODO: get 3 random activities from endpoint
+
     OptionalLong lowestConsumptionInWh = Arrays.stream(activities).mapToLong(
       Activity::getConsumptionInWh).min();
 
