@@ -36,7 +36,7 @@ public class WaitingRoomCtrl implements Initializable {
 
   @FXML
   public void back(ActionEvent actionEvent) {
-    mainCtrl.showSplash();
+    mainCtrl.goBackToMenu();
   }
 
   @FXML

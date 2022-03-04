@@ -22,6 +22,8 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -91,8 +93,25 @@ public class MainCtrl {
 
   @FXML
   public void exit() {
-    Platform.exit();
-    System.exit(0);
+    if (alert()) {
+      Platform.exit();
+      System.exit(0);
+    }
+  }
+
+  public boolean alert() {
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    alert.setTitle("Exit");
+    alert.setHeaderText("You are about to leave the game");
+    alert.setContentText("Are you sure?");
+    return alert.showAndWait().get() == ButtonType.OK;
+  }
+
+  @FXML
+  public void goBackToMenu() {
+    if (alert()) {
+      showSplash();
+    }
   }
 
   // instead of swapping entire scene, just swap parent

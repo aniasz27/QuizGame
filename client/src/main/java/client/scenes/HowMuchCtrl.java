@@ -4,6 +4,7 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
@@ -17,7 +18,7 @@ public class HowMuchCtrl {
   @FXML
   private Text question;
   @FXML
-  private ImageView image;
+  private ImageView imageView;
   @FXML
   private Text description;
   @FXML
@@ -26,6 +27,8 @@ public class HowMuchCtrl {
   private Button answer_2;
   @FXML
   private Button answer_3;
+  @FXML
+  private Image image;
 
   @Inject
   public HowMuchCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -35,6 +38,12 @@ public class HowMuchCtrl {
 
   @FXML
   public void back() {
-    mainCtrl.showSplash();
+    mainCtrl.goBackToMenu();
+  }
+
+  @FXML
+  public void showImage(String imageName) {
+    image = new Image(getClass().getResourceAsStream(imageName));
+    imageView.setImage(image);
   }
 }

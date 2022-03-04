@@ -47,8 +47,7 @@ public class SplashCtrl implements Initializable {
 
   @FXML
   public void exit() {
-    Platform.exit();
-    System.exit(0);
+    mainCtrl.exit();
   }
 
   /**
