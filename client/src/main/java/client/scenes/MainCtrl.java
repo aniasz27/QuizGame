@@ -39,8 +39,8 @@ public class MainCtrl {
   private WaitingRoomCtrl waitingRoomCtrl;
   private Parent waitingRoomParent;
 
-  private MultipleChoiceCtrl multipleChoiceCtrl;
-  private Parent multipleChoiceParent;
+  private HowMuchCtrl howMuchCtrl;
+  private Parent howMuchParent;
 
   //if false, the player plays in singleplayer mode
   // if true, the player plays in multiplayer mode
@@ -63,7 +63,7 @@ public class MainCtrl {
     Pair<SplashCtrl, Parent> splash,
     Pair<ConnectScreenCtrl, Parent> connect,
     Pair<WaitingRoomCtrl, Parent> waitingRoom,
-    Pair<MultipleChoiceCtrl, Parent> multipleChoice
+    Pair<HowMuchCtrl, Parent> howMuch
   ) {
     this.primaryStage = primaryStage;
 
@@ -76,8 +76,8 @@ public class MainCtrl {
     this.waitingRoomCtrl = waitingRoom.getKey();
     this.waitingRoomParent = waitingRoom.getValue();
 
-    this.multipleChoiceCtrl = multipleChoice.getKey();
-    this.multipleChoiceParent = multipleChoice.getValue();
+    this.howMuchCtrl = howMuch.getKey();
+    this.howMuchParent = howMuch.getValue();
 
     primaryStage.setTitle("Quizzzzz");
     // never exit full screen
@@ -110,8 +110,8 @@ public class MainCtrl {
     primaryStage.getScene().setRoot(connectParent);
   }
 
-  public void showMultipleChoice() {
-    primaryStage.getScene().setRoot(multipleChoiceParent);
+  public void showHowMuch() {
+    primaryStage.getScene().setRoot(howMuchParent);
   }
 
   public void showWaitingRoom() {

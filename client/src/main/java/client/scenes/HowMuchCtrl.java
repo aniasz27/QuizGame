@@ -4,12 +4,10 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
-public class MultipleChoiceCtrl {
+public class HowMuchCtrl {
 
   private final ServerUtils server;
   private final MainCtrl mainCtrl;
@@ -30,7 +28,7 @@ public class MultipleChoiceCtrl {
   private Button answer_3;
 
   @Inject
-  public MultipleChoiceCtrl(ServerUtils server, MainCtrl mainCtrl) {
+  public HowMuchCtrl(ServerUtils server, MainCtrl mainCtrl) {
     this.server = server;
     this.mainCtrl = mainCtrl;
   }

@@ -42,7 +42,7 @@ public class SplashCtrl implements Initializable {
   @FXML
   public void playSingleplayer() {
     mainCtrl.multiplayer = false;
-    mainCtrl.showMultipleChoice();
+    mainCtrl.showHowMuch();
   }
 
   @FXML

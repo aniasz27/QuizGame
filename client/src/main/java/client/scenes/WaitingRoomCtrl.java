@@ -35,12 +35,13 @@ public class WaitingRoomCtrl implements Initializable {
   }
 
   @FXML
-  private void back(ActionEvent actionEvent) {
+  public void back(ActionEvent actionEvent) {
     mainCtrl.showSplash();
   }
 
-  public void start() {
-    mainCtrl.showMultipleChoice();
+  @FXML
+  public void start(ActionEvent actionEvent) {
+    mainCtrl.showHowMuch();
   }
 
   /**

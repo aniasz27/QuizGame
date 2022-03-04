@@ -20,7 +20,7 @@ import static com.google.inject.Guice.createInjector;
 
 import client.scenes.ConnectScreenCtrl;
 import client.scenes.MainCtrl;
-import client.scenes.MultipleChoiceCtrl;
+import client.scenes.HowMuchCtrl;
 import client.scenes.SplashCtrl;
 import client.scenes.WaitingRoomCtrl;
 import com.google.inject.Injector;
@@ -55,14 +55,14 @@ public class Main extends Application {
       "client/scenes/WaitingRoom.fxml",
       "client/css/WaitingRoom.css"
     );
-    var multipleChoice = FXML.load(
-      MultipleChoiceCtrl.class,
-      "client/scenes/MultipleChoice.fxml",
-      "client/css/MultipleChoice.css"
+    var howMuch = FXML.load(
+      HowMuchCtrl.class,
+      "client/scenes/HowMuch.fxml",
+      "client/css/HowMuch.css"
     );
 
     var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-    mainCtrl.initialize(primaryStage, splash, connectScreen, waitingRoom, multipleChoice);
+    mainCtrl.initialize(primaryStage, splash, connectScreen, waitingRoom, howMuch);
 
     splash.getKey().connect();
     //stops the thread when user closes the window
