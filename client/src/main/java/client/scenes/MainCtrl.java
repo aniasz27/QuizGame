@@ -37,6 +37,9 @@ public class MainCtrl {
   private WaitingRoomCtrl waitingRoomCtrl;
   private Parent waitingRoomParent;
 
+  private GuessCtrl guessCtrl;
+  private Parent guessParent;
+
   //if false, the player plays in singleplayer mode
   // if true, the player plays in multiplayer mode
   public boolean multiplayer;
@@ -57,7 +60,8 @@ public class MainCtrl {
     Stage primaryStage,
     Pair<SplashCtrl, Parent> splash,
     Pair<ConnectScreenCtrl, Parent> connect,
-    Pair<WaitingRoomCtrl, Parent> waitingRoom
+    Pair<WaitingRoomCtrl, Parent> waitingRoom,
+    Pair<GuessCtrl, Parent> guess
   ) {
     this.primaryStage = primaryStage;
 
@@ -69,6 +73,9 @@ public class MainCtrl {
 
     this.waitingRoomCtrl = waitingRoom.getKey();
     this.waitingRoomParent = waitingRoom.getValue();
+
+    this.guessCtrl = guess.getKey();
+    this.guessParent = guess.getValue();
 
     primaryStage.setTitle("Quizzzzz");
     // never exit full screen
@@ -124,5 +131,10 @@ public class MainCtrl {
 
   public void play() {
     // TODO
+  }
+
+  public void showGuess() throws InterruptedException {
+    primaryStage.getScene().setRoot(guessParent);
+    guessCtrl.start();
   }
 }

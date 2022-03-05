@@ -19,6 +19,7 @@ package client;
 import static com.google.inject.Guice.createInjector;
 
 import client.scenes.ConnectScreenCtrl;
+import client.scenes.GuessCtrl;
 import client.scenes.MainCtrl;
 import client.scenes.SplashCtrl;
 import client.scenes.WaitingRoomCtrl;
@@ -55,8 +56,15 @@ public class Main extends Application {
       "client/css/WaitingRoom.css"
     );
 
+    var guess = FXML.load(
+      GuessCtrl.class,
+      "client/scenes/Guess.fxml",
+      "client/css/Guess.css"
+    );
+
+
     var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-    mainCtrl.initialize(primaryStage, splash, connectScreen, waitingRoom);
+    mainCtrl.initialize(primaryStage, splash, connectScreen, waitingRoom, guess);
 
     splash.getKey().connect();
     //stops the thread when user closes the window
@@ -65,15 +73,5 @@ public class Main extends Application {
     });
   }
 
-  //The real application
-  /* @Override
-  public void start(Stage primaryStage) throws IOException {
-    var overview = FXML.load(QuoteOverviewCtrl.class, "client", "scenes", "Splash.fxml");
-    var add = FXML.load(AddQuoteCtrl.class, "client", "scenes", "AddQuote.fxml");
-    // to be replaced with the connect screen
-    var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-    mainCtrl.initialize(primaryStage, overview, add);
-    //connects client to the server for the first time
-    overview.getKey().connect();
-  }*/
+
 }
