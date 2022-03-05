@@ -44,7 +44,7 @@
       </VBox>
     </ScrollPane>
     <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="20" minHeight="20"/>
-    <Button styleClass="border, rounded, drop-shadow" text="Start"/>
+    <Button fx:id="startButton" onMouseClicked="#play" styleClass="border, rounded, drop-shadow" text="Start"/>
     <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="20" minHeight="20"/>
   </VBox>
 </StackPane>

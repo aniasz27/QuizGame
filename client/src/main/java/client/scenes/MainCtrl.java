@@ -17,8 +17,6 @@
 package client.scenes;
 
 import commons.Activity;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCombination;
@@ -27,7 +25,6 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 
 public class MainCtrl {
-
   private Stage primaryStage;
 
   private SplashCtrl splashCtrl;
@@ -47,6 +44,8 @@ public class MainCtrl {
 
   private HelpOverlayCtrl helpOverlayCtrl;
   private Parent helpOverlayParent;
+
+  public String clientId;
 
   public enum Mode {
     MULTI(0),
@@ -129,31 +128,8 @@ public class MainCtrl {
   }
 
   public void showWaitingRoom() {
-    Map<String, Integer> players = null;
     primaryStage.getScene().setRoot(waitingRoomParent);
-    // TODO: replace with getting players from the server
-    name = "Player 1";
-    players = new LinkedHashMap<>();
-    players.put(name, 0);
-    players.put("Nikola Tesla", 0);
-    players.put("Player 2", 0);
-    players.put("Player 3", 0);
-    players.put("Player 4", 0);
-    players.put("Player 5", 0);
-    players.put("James Watt", 0);
-    players.put("Player 6", 0);
-    players.put("Thomas Edison", 0);
-    players.put("Player 7", 0);
-    players.put("Player 8", 0);
-    players.put("Player 9", 0);
-    players.put("Player 10", 0);
-    players.put("Player 11", 0);
-    players.put("Player 12", 0);
-    players.put("Player 13", 0);
-    players.put("Player 14", 0);
-    players.put("Player 15", 0);
-    // ---------------------------------------------------
-    waitingRoomCtrl.refresh(players);
+    waitingRoomCtrl.refresh();
   }
 
   public void play() {

@@ -77,4 +77,20 @@ public class ServerUtils {
       .put(Entity.entity(activity, APPLICATION_JSON), Activity.class);
   }
 
+  public List<String> getPlayers() {
+    return ClientBuilder.newClient(new ClientConfig())
+      .target(SERVER).path("api/player/list")
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
+      .get(new GenericType<>() {
+      });
+  }
+
+  public String getName(String id) {
+    return ClientBuilder.newClient(new ClientConfig())
+      .target(SERVER).path("api/player/" + id)
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
+      .get(String.class);
+  }
 }

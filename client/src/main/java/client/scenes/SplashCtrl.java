@@ -16,8 +16,6 @@ public class SplashCtrl implements Initializable {
   private final ServerUtils server;
   private final MainCtrl mainCtrl;
 
-  private String clientId;
-
   @FXML
   private Button buttonMulti;
   @FXML
@@ -44,7 +42,7 @@ public class SplashCtrl implements Initializable {
     mainCtrl.mode = MainCtrl.Mode.SINGLE;
     mainCtrl.showConnect();
   }
-    
+
   @FXML
   public void showAdmin() {
     mainCtrl.mode = MainCtrl.Mode.ADMIN;
@@ -61,7 +59,7 @@ public class SplashCtrl implements Initializable {
    * Client connects to the server for the first time
    */
   public void connect() {
-    this.clientId = server.connectFirst("ooo");
+    mainCtrl.clientId = server.connectFirst("ooo");
     keepAlive();
   }
 
@@ -74,7 +72,7 @@ public class SplashCtrl implements Initializable {
     EXEC.scheduleAtFixedRate(new Runnable() {
       @Override
       public void run() {
-        server.keepAlive(clientId);
+        server.keepAlive(mainCtrl.clientId);
       }
     }, 0, 1, TimeUnit.SECONDS);
   }
