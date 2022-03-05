@@ -22,6 +22,7 @@ import client.scenes.ConnectScreenCtrl;
 import client.scenes.MainCtrl;
 import client.scenes.SplashCtrl;
 import client.scenes.WaitingRoomCtrl;
+import client.scenes.WhatRequiresMoreEnergyCtrl;
 import com.google.inject.Injector;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -55,8 +56,14 @@ public class Main extends Application {
       "client/css/WaitingRoom.css"
     );
 
+    var whatRequiresMoreEnergy = FXML.load(
+      WhatRequiresMoreEnergyCtrl.class,
+      "client/scenes/WhatRequiresMoreEnergyScreen.fxml",
+      "client/css/WhatRequiresMoreEnergy.css"
+    );
+
     var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-    mainCtrl.initialize(primaryStage, splash, connectScreen, waitingRoom);
+    mainCtrl.initialize(primaryStage, splash, connectScreen, waitingRoom, whatRequiresMoreEnergy);
 
     splash.getKey().connect();
     //stops the thread when user closes the window

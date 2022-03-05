@@ -9,32 +9,35 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane id="root" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.SplashCtrl">
+<BorderPane id="root" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.WhatRequiresMoreEnergyCtrl">
   <center>
     <VBox alignment="CENTER" maxWidth="640" BorderPane.alignment="CENTER">
          <Button fx:id="backButton" onAction="#back" styleClass="border, rounded, drop-shadow" text="Exit" />
       <Region prefHeight="0.0" prefWidth="640.0" styleClass="margin" VBox.vgrow="ALWAYS" />
       <Text styleClass="question-title" text="What requires more energy?" textAlignment="CENTER" BorderPane.alignment="CENTER" />
-         <HBox prefHeight="212.0" prefWidth="1140.0">
+         <HBox prefHeight="594.0" prefWidth="640.0">
             <children>
-               <Button fx:id="button0" mnemonicParsing="false" HBox.hgrow="ALWAYS">
+               <Button fx:id="button0" mnemonicParsing="false" onAction="#checkCorrectAnswer" HBox.hgrow="ALWAYS">
                   <styleClass>
                      <String fx:value="border" />
                      <String fx:value="rounded" />
                      <String fx:value="drop-shadow" />
+                     <String fx:value="button" />
                   </styleClass></Button>
-               <Button fx:id="button1" mnemonicParsing="false" HBox.hgrow="ALWAYS">
+               <Button fx:id="button1" mnemonicParsing="false" onAction="#checkCorrectAnswer" style="-fx-wrap-text: true;" HBox.hgrow="ALWAYS">
                   <styleClass>
                      <String fx:value="border" />
                      <String fx:value="rounded" />
                      <String fx:value="drop-shadow" />
+                     <String fx:value="button" />
                   </styleClass>
                </Button>
-               <Button fx:id="button2" mnemonicParsing="false" HBox.hgrow="ALWAYS">
+               <Button fx:id="button2" mnemonicParsing="false" onAction="#checkCorrectAnswer" HBox.hgrow="ALWAYS">
                   <styleClass>
                      <String fx:value="border" />
                      <String fx:value="rounded" />
                      <String fx:value="drop-shadow" />
+                     <String fx:value="button" />
                   </styleClass>
                </Button>
             </children>

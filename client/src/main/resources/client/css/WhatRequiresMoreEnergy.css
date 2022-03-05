@@ -5,6 +5,7 @@
 }
 
 .button {
+  -fx-wrap-text: true;
   -fx-max-width: 600px;
 }
 

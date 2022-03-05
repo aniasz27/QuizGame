@@ -37,6 +37,9 @@ public class MainCtrl {
   private WaitingRoomCtrl waitingRoomCtrl;
   private Parent waitingRoomParent;
 
+  private WhatRequiresMoreEnergyCtrl whatRequiresMoreEnergyCtrl;
+  private Parent whatRequiresMoreEnergyParent;
+
   //if false, the player plays in singleplayer mode
   // if true, the player plays in multiplayer mode
   public boolean multiplayer;
@@ -57,7 +60,8 @@ public class MainCtrl {
     Stage primaryStage,
     Pair<SplashCtrl, Parent> splash,
     Pair<ConnectScreenCtrl, Parent> connect,
-    Pair<WaitingRoomCtrl, Parent> waitingRoom
+    Pair<WaitingRoomCtrl, Parent> waitingRoom,
+    Pair<WhatRequiresMoreEnergyCtrl, Parent> whatRequiresMoreEnergy
   ) {
     this.primaryStage = primaryStage;
 
@@ -69,6 +73,9 @@ public class MainCtrl {
 
     this.waitingRoomCtrl = waitingRoom.getKey();
     this.waitingRoomParent = waitingRoom.getValue();
+
+    this.whatRequiresMoreEnergyCtrl = whatRequiresMoreEnergy.getKey();
+    this.whatRequiresMoreEnergyParent = whatRequiresMoreEnergy.getValue();
 
     primaryStage.setTitle("Quizzzzz");
     // never exit full screen

@@ -18,6 +18,7 @@ package client;
 
 import client.scenes.MainCtrl;
 import client.scenes.WaitingRoomCtrl;
+import client.scenes.WhatRequiresMoreEnergyCtrl;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
@@ -28,5 +29,6 @@ public class MyModule implements Module {
   public void configure(Binder binder) {
     binder.bind(MainCtrl.class).in(Scopes.SINGLETON);
     binder.bind(WaitingRoomCtrl.class).in(Scopes.SINGLETON);
+    binder.bind(WhatRequiresMoreEnergyCtrl.class).in(Scopes.SINGLETON);
   }
 }

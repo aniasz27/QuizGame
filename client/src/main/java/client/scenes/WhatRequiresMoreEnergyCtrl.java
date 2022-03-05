@@ -11,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 
@@ -28,7 +29,7 @@ public class WhatRequiresMoreEnergyCtrl implements Initializable {
   ServerUtils server;
   MainCtrl mainCtrl;
 
-  Button[] buttons = {button0, button1, button2};
+  Button[] buttons;
   Activity[] activities;
 
   @Inject
@@ -54,11 +55,7 @@ public class WhatRequiresMoreEnergyCtrl implements Initializable {
     }
     ;
     for (Button button : buttons) {
-      if ((boolean) button.getUserData()) {
-        showButtonCorrect(button);
-      } else {
-        showButtonIncorrect(button);
-      }
+      showButtonCorrectness(button);
     }
   }
 
@@ -71,27 +68,26 @@ public class WhatRequiresMoreEnergyCtrl implements Initializable {
   }
 
   /**
-   * Sets button color to red, to show that the answer was incorrect.
+   * Sets button color to appropriate given correctness of answer
    *
-   * @param button button to show correctness of.
+   * @param button button to assign color
    */
-  private void showButtonCorrect(Button button) {
-    button.setStyle("-fx-background-color: #ff1717;");
-  }
+  private void showButtonCorrectness(Button button) {
+    // set color to green (#2dff26) if answer was correct,
+    // set it to red (#ff1717) otherwise
+    String style = "-fx-background-color: "
+      + (((boolean) button.getUserData()) ? "#2dff26" : "#ff1717")
+      + ";";
 
-  /**
-   * Sets button color to green, to show that the answer was correct.
-   *
-   * @param button button to show correctness of.
-   */
-  private void showButtonIncorrect(Button button) {
-    button.setStyle("-fx-background-color: #2dff26;");
+    button.setStyle(style);
   }
 
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     //TODO: get 3 random activities from endpoint
+    buttons = new Button[] {button0, button1, button2};
+    activities = Test.activities;
 
     OptionalLong lowestConsumptionInWh = Arrays.stream(activities).mapToLong(
       Activity::getConsumptionInWh).min();
@@ -99,14 +95,24 @@ public class WhatRequiresMoreEnergyCtrl implements Initializable {
     for (int i = 0; i < buttons.length; i++) {
       Activity activity = activities[i];
 
+      // get image
       ImageView imageView =
         new ImageView(getClass()
           .getResource(activity.getImagePath()).toExternalForm());
+      // resize image
+      imageView.setFitWidth(1140 / 3.0);
+      imageView.setFitHeight(1140 / 3.0);
+
+      //set image
       buttons[i].setGraphic(imageView);
+
+      // image is displayed on top of text
+      buttons[i].setContentDisplay(ContentDisplay.TOP);
+
 
       buttons[i].setText(activity.getTitle());
       buttons[i].setUserData(
-        lowestConsumptionInWh.equals(activity.getConsumptionInWh())
+        lowestConsumptionInWh.getAsLong() == activity.getConsumptionInWh()
       );
     }
   }
