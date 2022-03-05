@@ -21,6 +21,8 @@ public class WaitingRoomCtrl implements Initializable {
   private VBox playerListDisplay;
   @FXML
   private Button backButton;
+  @FXML
+  private Button helpButton;
 
   @Inject
   public WaitingRoomCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -35,6 +37,11 @@ public class WaitingRoomCtrl implements Initializable {
   @FXML
   private void back(ActionEvent actionEvent) {
     mainCtrl.showConnect();
+  }
+
+  @FXML
+  private void help(ActionEvent actionEvent) {
+    mainCtrl.openHelp();
   }
 
   /**

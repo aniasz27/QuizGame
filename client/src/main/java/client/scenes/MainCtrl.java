@@ -22,6 +22,7 @@ import java.util.Map;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -43,6 +44,9 @@ public class MainCtrl {
 
   private EditActivityCtrl editActivityCtrl;
   private Parent editActivityParent;
+
+  private HelpOverlayCtrl helpOverlayCtrl;
+  private Parent helpOverlayParent;
 
   public enum Mode {
     MULTI(0),
@@ -76,7 +80,8 @@ public class MainCtrl {
     Pair<ConnectScreenCtrl, Parent> connect,
     Pair<WaitingRoomCtrl, Parent> waitingRoom,
     Pair<ActivityListCtrl, Parent> activityList,
-    Pair<EditActivityCtrl, Parent> editActivity
+    Pair<EditActivityCtrl, Parent> editActivity,
+    Pair<HelpOverlayCtrl, Parent> helpOverlay
   ) {
     this.primaryStage = primaryStage;
 
@@ -94,6 +99,9 @@ public class MainCtrl {
 
     this.editActivityCtrl = editActivity.getKey();
     this.editActivityParent = editActivity.getValue();
+
+    this.helpOverlayCtrl = helpOverlay.getKey();
+    this.helpOverlayParent = helpOverlay.getValue();
 
     primaryStage.setTitle("Quizzzzz");
     // never exit full screen
@@ -162,5 +170,13 @@ public class MainCtrl {
     // reset name and list of players if coming out of a game
     primaryStage.getScene().setRoot(editActivityParent);
     editActivityCtrl.refresh(activity);
+  }
+
+  public void openHelp() {
+    ((StackPane) primaryStage.getScene().getRoot()).getChildren().add(helpOverlayParent);
+  }
+
+  public void closeHelp() {
+    ((StackPane) primaryStage.getScene().getRoot()).getChildren().remove(helpOverlayParent);
   }
 }
