@@ -18,8 +18,12 @@ package client.scenes;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import javafx.application.Platform;
+import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -36,6 +40,9 @@ public class MainCtrl {
 
   private WaitingRoomCtrl waitingRoomCtrl;
   private Parent waitingRoomParent;
+
+  private HowMuchCtrl howMuchCtrl;
+  private Parent howMuchParent;
 
   //if false, the player plays in singleplayer mode
   // if true, the player plays in multiplayer mode
@@ -57,7 +64,8 @@ public class MainCtrl {
     Stage primaryStage,
     Pair<SplashCtrl, Parent> splash,
     Pair<ConnectScreenCtrl, Parent> connect,
-    Pair<WaitingRoomCtrl, Parent> waitingRoom
+    Pair<WaitingRoomCtrl, Parent> waitingRoom,
+    Pair<HowMuchCtrl, Parent> howMuch
   ) {
     this.primaryStage = primaryStage;
 
@@ -70,14 +78,40 @@ public class MainCtrl {
     this.waitingRoomCtrl = waitingRoom.getKey();
     this.waitingRoomParent = waitingRoom.getValue();
 
+    this.howMuchCtrl = howMuch.getKey();
+    this.howMuchParent = howMuch.getValue();
+
     primaryStage.setTitle("Quizzzzz");
     // never exit full screen
     primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
     // set initial scene (splash) and show
-    primaryStage.setScene(new Scene(splashParent));
+    primaryStage.setScene(new Scene(connectParent));
     primaryStage.show();
     primaryStage.setFullScreen(true);
+  }
+
+  @FXML
+  public void exit() {
+    if (alert()) {
+      Platform.exit();
+      System.exit(0);
+    }
+  }
+
+  public boolean alert() {
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    alert.setTitle("Exit");
+    alert.setHeaderText("You are about to leave the game");
+    alert.setContentText("Are you sure?");
+    return alert.showAndWait().get() == ButtonType.OK;
+  }
+
+  @FXML
+  public void goBackToMenu() {
+    if (alert()) {
+      showSplash();
+    }
   }
 
   // instead of swapping entire scene, just swap parent
@@ -93,6 +127,10 @@ public class MainCtrl {
     name = null;
     players = null;
     primaryStage.getScene().setRoot(connectParent);
+  }
+
+  public void showHowMuch() {
+    primaryStage.getScene().setRoot(howMuchParent);
   }
 
   public void showWaitingRoom() {

@@ -50,11 +50,8 @@ public class PlayerController {
   /**
    * Iterates over the map and checks which client disconnected
    * Removes the disconnected client from the map
-   *
-   * @return number of active connections (even after closing the window)
    */
-  @GetMapping("/playerCounter")
-  public int getPlayerCounter() {
+  public void update() {
     Iterator<String> iter = clients.keySet().iterator();
     while (iter.hasNext()) {
       String key = iter.next();
@@ -64,11 +61,25 @@ public class PlayerController {
         iter = clients.keySet().iterator();
       }
     }
+  }
+
+  /**
+   * @return number of active connections (even after closing the window)
+   */
+  @GetMapping("/playerCounter")
+  public int getPlayerCounter() {
+    update();
     return clients.size();
   }
 
+  /**
+   * Add the clients to the list
+   *
+   * @return list of ID and username of clients
+   */
   @GetMapping("/players")
-  public List<String> getPlayes() {
+  public List<String> getPlayers() {
+    update();
     List<String> players = new ArrayList<>();
     Iterator<String> iter = clients.keySet().iterator();
     while (iter.hasNext()) {
