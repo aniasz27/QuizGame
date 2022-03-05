@@ -87,7 +87,6 @@ public class WhatRequiresMoreEnergyCtrl implements Initializable {
   public void initialize(URL location, ResourceBundle resources) {
     //TODO: get 3 random activities from endpoint
     buttons = new Button[] {button0, button1, button2};
-    activities = Test.activities;
 
     OptionalLong lowestConsumptionInWh = Arrays.stream(activities).mapToLong(
       Activity::getConsumptionInWh).min();
