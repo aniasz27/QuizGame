@@ -90,10 +90,10 @@ public class MainCtrl {
     private Mode(int m) {
       mode = m;
     }
-
   }
 
   public Mode mode;
+  
 
   /**
    * Map of all players and their scores in the current game
@@ -237,6 +237,7 @@ public class MainCtrl {
           break;
       }
     }
+
   }
 
 

@@ -41,14 +41,12 @@ public class WaitingRoomCtrl implements Initializable {
   private void back(ActionEvent actionEvent) {
     stop();
     mainCtrl.showConnect();
-
   }
 
   @FXML
   public void start(ActionEvent actionEvent) {
     mainCtrl.start();
   }
-
 
   @FXML
   private void help(ActionEvent actionEvent) {

@@ -117,7 +117,9 @@ public class ServerUtils {
       .request(APPLICATION_JSON)
       .accept(APPLICATION_JSON)
       .get().readEntity(Question.class);
+
   }
+
 
   /**
    * Get all activities from the server
