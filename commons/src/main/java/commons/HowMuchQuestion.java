@@ -28,8 +28,7 @@ public class HowMuchQuestion extends Question {
   private void computeWrong() {
     long correct = this.activity.consumption_in_wh;
     int factor = 0;
-    while (factor < 10)  //make factor at least 10
-    {
+    while (factor < 10) { //make factor at least 10
       factor = random.nextInt(50); // percentage to modify
     }
     int direction = random.nextInt(2); // 0 for going down, 1 for up
@@ -41,8 +40,7 @@ public class HowMuchQuestion extends Question {
     }
 
     factor = 0;
-    while (factor < 10)  //make factor at least 10
-    {
+    while (factor < 10) { //make factor at least 10
       factor = random.nextInt(50); // percentage to modify
     }
     direction = random.nextInt(2); // 0 for going down, 1 for up
