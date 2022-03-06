@@ -16,6 +16,8 @@
 
 package client.scenes;
 
+import client.utils.ServerUtils;
+import commons.Question;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCombination;
@@ -24,6 +26,7 @@ import javafx.util.Pair;
 
 public class MainCtrl {
 
+  private final ServerUtils server;
   private Stage primaryStage;
 
   private SplashCtrl splashCtrl;
@@ -38,6 +41,10 @@ public class MainCtrl {
   //if false, the player plays in singleplayer mode
   // if true, the player plays in multiplayer mode
   private boolean multiplayer;
+
+  public MainCtrl(ServerUtils server) {
+    this.server = server;
+  }
 
   public boolean isMultiplayer() {
     return multiplayer;
@@ -54,6 +61,7 @@ public class MainCtrl {
     Pair<ConnectScreenCtrl, Parent> connect,
     Pair<WaitingRoomCtrl, Parent> waitingRoom
   ) {
+
     this.primaryStage = primaryStage;
 
     this.splashCtrl = splash.getKey();
@@ -87,6 +95,28 @@ public class MainCtrl {
 
   public void showWaitingRoom() {
     primaryStage.getScene().setRoot(waitingRoomParent);
+    waitingRoomCtrl.connect();
     waitingRoomCtrl.refresh();
+  }
+
+  public void play() {
+    Question question = server.nextQuestion();
+    if (question == null) {
+      //TODO: Show end screen
+    } else {
+      switch (question.type) {
+        case MULTICHOICE:
+          //TODO show multiple choice screen
+          break;
+
+        case ESTIMATE:
+          //TODO show estimate screen
+          break;
+
+        default:
+          //TODO do something if it doesn't work
+          break;
+      }
+    }
   }
 }
