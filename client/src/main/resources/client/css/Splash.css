@@ -1,13 +1,15 @@
 @import 'main.css';
 
 .title {
-    -fx-font-size: 100px;
+  -fx-font-size: 100px;
 }
 
 .button {
-    -fx-max-width: 600px;
+  /*-fx-max-width: 600px;*/
+  -fx-max-width: Infinity;
 }
 
 .button:hover {
-    -fx-max-width: 620px;
+  /*-fx-max-width: 620px;*/
+  -fx-max-width: Infinity;
 }

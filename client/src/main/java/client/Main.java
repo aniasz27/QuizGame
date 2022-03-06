@@ -18,8 +18,11 @@ package client;
 
 import static com.google.inject.Guice.createInjector;
 
+import client.scenes.ActivityListCtrl;
 import client.scenes.ConnectScreenCtrl;
+import client.scenes.EditActivityCtrl;
 import client.scenes.GuessCtrl;
+import client.scenes.HelpOverlayCtrl;
 import client.scenes.HowMuchCtrl;
 import client.scenes.MainCtrl;
 import client.scenes.SplashCtrl;
@@ -75,9 +78,25 @@ public class Main extends Application {
       "client/css/Guess.css"
     );
 
+    var activityList = FXML.load(
+      ActivityListCtrl.class,
+      "client/scenes/ActivityList.fxml",
+      "client/css/ActivityList.css"
+    );
+    var editActivity = FXML.load(
+      EditActivityCtrl.class,
+      "client/scenes/EditActivity.fxml",
+      "client/css/EditActivity.css"
+    );
+    var helpOverlay = FXML.load(
+      HelpOverlayCtrl.class,
+      "client/scenes/HelpOverlay.fxml",
+      "client/css/HelpOverlay.css"
+    );
 
     var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-    mainCtrl.initialize(primaryStage, splash, connectScreen, waitingRoom, howMuch, whatRequiresMoreEnergy, guess);
+    mainCtrl.initialize(primaryStage, splash, connectScreen, waitingRoom, howMuch,
+      whatRequiresMoreEnergy, guess, activityList, editActivity, helpOverlay);
 
     splash.getKey().connect();
     //stops the thread when user closes the window

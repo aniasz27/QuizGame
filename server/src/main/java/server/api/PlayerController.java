@@ -2,14 +2,14 @@ package server.api;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.springframework.data.util.Pair;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,41 +50,29 @@ public class PlayerController {
   /**
    * Iterates over the map and checks which client disconnected
    * Removes the disconnected client from the map
-   */
-  public void update() {
-    Iterator<String> iter = clients.keySet().iterator();
-    while (iter.hasNext()) {
-      String key = iter.next();
-      LocalDateTime value = clients.get(key).getFirst();
-      if (Duration.between(LocalDateTime.now(), value).abs().getSeconds() > 1) {
-        clients.remove(key);
-        iter = clients.keySet().iterator();
-      }
-    }
-  }
-
-  /**
+   *
    * @return number of active connections (even after closing the window)
    */
   @GetMapping("/playerCounter")
   public int getPlayerCounter() {
-    update();
+    prunePlayers();
     return clients.size();
   }
 
-  /**
-   * Add the clients to the list
-   *
-   * @return list of ID and username of clients
-   */
-  @GetMapping("/players")
+  @GetMapping("/list")
   public List<String> getPlayers() {
-    update();
-    List<String> players = new ArrayList<>();
-    Iterator<String> iter = clients.keySet().iterator();
-    while (iter.hasNext()) {
-      players.add(clients.get(iter.next()).getSecond());
-    }
-    return players;
+    prunePlayers();
+    return clients.values().stream().map(Pair::getSecond).collect(Collectors.toList());
+  }
+
+  @GetMapping("/{id}")
+  public String getPlayers(@PathVariable("id") String id) {
+    return clients.get(id).getSecond();
+  }
+
+  private void prunePlayers() {
+    clients = clients.entrySet().stream().filter(
+      x -> Duration.between(x.getValue().getFirst(), LocalDateTime.now()).getSeconds() <= 1
+    ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
   }
 }

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Text?>
+<StackPane
+  styleClass="pad, bg"
+  xmlns="http://javafx.com/javafx"
+  xmlns:fx="http://javafx.com/fxml"
+  fx:controller="client.scenes.HelpOverlayCtrl"
+>
+  <HBox spacing="20" alignment="TOP_CENTER">
+    <Button
+      fx:id="closeButton"
+      styleClass="icon, border, rounded, drop-shadow"
+      StackPane.alignment="TOP_LEFT"
+      onAction="#close"
+      text=""
+    /> <!-- text is \uf00d (x in font awesome) -->
+    <ScrollPane
+      styleClass="border, rounded, drop-shadow, pad, bg-light"
+      hbarPolicy="NEVER"
+      vbarPolicy="NEVER"
+      maxWidth="Infinity"
+      maxHeight="Infinity"
+      HBox.hgrow="ALWAYS"
+    >
+      <Text styleClass="help-text" text="TODO"/>
+    </ScrollPane>
+  </HBox>
+</StackPane>

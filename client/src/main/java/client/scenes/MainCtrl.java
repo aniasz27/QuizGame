@@ -16,8 +16,7 @@
 
 package client.scenes;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import commons.Activity;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -25,11 +24,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
 public class MainCtrl {
-
   private Stage primaryStage;
 
   private SplashCtrl splashCtrl;
@@ -54,15 +53,40 @@ public class MainCtrl {
   // if true, the player plays in multiplayer mode
   public boolean multiplayer;
 
+  private ActivityListCtrl activityListCtrl;
+  private Parent activityListParent;
+
+  private EditActivityCtrl editActivityCtrl;
+  private Parent editActivityParent;
+
+  private HelpOverlayCtrl helpOverlayCtrl;
+  private Parent helpOverlayParent;
+
+  public String clientId;
+
+  public enum Mode {
+    MULTI(0),
+    SINGLE(1),
+    ADMIN(2);
+
+    private final int mode;
+
+    private Mode(int m) {
+      mode = m;
+    }
+  }
+
+  public Mode mode;
+
   /**
    * Map of all players and their scores in the current game
-   * Null if not in a game
+   * Null if not in a game.
    */
-  public Map<String, Integer> players = null;
+  //public Map<String, Integer> players = null;
 
   /**
    * The user's name in the current game.
-   * Null if not in a game
+   * Null if not in a game.
    */
   public String name = null;
 
@@ -73,15 +97,18 @@ public class MainCtrl {
     Pair<WaitingRoomCtrl, Parent> waitingRoom,
     Pair<HowMuchCtrl, Parent> howMuch,
     Pair<WhatRequiresMoreEnergyCtrl, Parent> whatRequiresMoreEnergy,
-    Pair<GuessCtrl, Parent> guess
+    Pair<GuessCtrl, Parent> guess,
+    Pair<ActivityListCtrl, Parent> activityList,
+    Pair<EditActivityCtrl, Parent> editActivity,
+    Pair<HelpOverlayCtrl, Parent> helpOverlay
   ) {
     this.primaryStage = primaryStage;
 
-    this.splashCtrl = splash.getKey();
-    this.splashParent = splash.getValue();
-
     this.connectCtrl = connect.getKey();
     this.connectParent = connect.getValue();
+
+    this.splashCtrl = splash.getKey();
+    this.splashParent = splash.getValue();
 
     this.waitingRoomCtrl = waitingRoom.getKey();
     this.waitingRoomParent = waitingRoom.getValue();
@@ -94,6 +121,15 @@ public class MainCtrl {
 
     this.guessCtrl = guess.getKey();
     this.guessParent = guess.getValue();
+
+    this.activityListCtrl = activityList.getKey();
+    this.activityListParent = activityList.getValue();
+
+    this.editActivityCtrl = editActivity.getKey();
+    this.editActivityParent = editActivity.getValue();
+
+    this.helpOverlayCtrl = helpOverlay.getKey();
+    this.helpOverlayParent = helpOverlay.getValue();
 
     primaryStage.setTitle("Quizzzzz");
     // never exit full screen
@@ -132,14 +168,14 @@ public class MainCtrl {
   public void showSplash() {
     // reset name and list of players if coming out of a game
     name = null;
-    players = null;
+    //players = null;
     primaryStage.getScene().setRoot(splashParent);
   }
 
   public void showConnect() {
     // reset name and list of players if coming out of a game
     name = null;
-    players = null;
+    //players = null;
     primaryStage.getScene().setRoot(connectParent);
   }
 
@@ -149,29 +185,7 @@ public class MainCtrl {
 
   public void showWaitingRoom() {
     primaryStage.getScene().setRoot(waitingRoomParent);
-    // TODO: replace with getting players from the server
-    name = "Player 1";
-    players = new LinkedHashMap<>();
-    players.put(name, 0);
-    players.put("Nikola Tesla", 0);
-    players.put("Player 2", 0);
-    players.put("Player 3", 0);
-    players.put("Player 4", 0);
-    players.put("Player 5", 0);
-    players.put("James Watt", 0);
-    players.put("Player 6", 0);
-    players.put("Thomas Edison", 0);
-    players.put("Player 7", 0);
-    players.put("Player 8", 0);
-    players.put("Player 9", 0);
-    players.put("Player 10", 0);
-    players.put("Player 11", 0);
-    players.put("Player 12", 0);
-    players.put("Player 13", 0);
-    players.put("Player 14", 0);
-    players.put("Player 15", 0);
-    // ---------------------------------------------------
-    waitingRoomCtrl.refresh(players);
+    waitingRoomCtrl.refresh();
   }
 
   public void play() {
@@ -181,5 +195,25 @@ public class MainCtrl {
   public void showGuess() throws InterruptedException {
     primaryStage.getScene().setRoot(guessParent);
     guessCtrl.start();
+  }
+
+  public void showActivityList() {
+    // reset name and list of players if coming out of a game
+    primaryStage.getScene().setRoot(activityListParent);
+    activityListCtrl.refresh();
+  }
+
+  public void showEditActivity(Activity activity) {
+    // reset name and list of players if coming out of a game
+    primaryStage.getScene().setRoot(editActivityParent);
+    editActivityCtrl.refresh(activity);
+  }
+
+  public void openHelp() {
+    ((StackPane) primaryStage.getScene().getRoot()).getChildren().add(helpOverlayParent);
+  }
+
+  public void closeHelp() {
+    ((StackPane) primaryStage.getScene().getRoot()).getChildren().remove(helpOverlayParent);
   }
 }
