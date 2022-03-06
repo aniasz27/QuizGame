@@ -16,12 +16,11 @@ public class SplashCtrl implements Initializable {
   private final ServerUtils server;
   private final MainCtrl mainCtrl;
 
-  private String clientId;
-
   @FXML
   private Button buttonMulti;
   @FXML
   private Button buttonSingle;
+
 
   @Inject
   public SplashCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -34,28 +33,46 @@ public class SplashCtrl implements Initializable {
   }
 
   @FXML
-  public void playMultiplayer() {
-    mainCtrl.setMultiplayer(true);
-    mainCtrl.showConnect();
+  public void playMultiplayer() throws InterruptedException {
+    mainCtrl.multiplayer = true;
+    mainCtrl.showWaitingRoom();
   }
 
   @FXML
   public void playSingleplayer() {
-    mainCtrl.setMultiplayer(false);
+    mainCtrl.multiplayer = false;
+    mainCtrl.showHowMuch();
+
+    mainCtrl.mode = MainCtrl.Mode.SINGLE;
+  }
+
+  @FXML
+  public void showAdmin() {
+    mainCtrl.mode = MainCtrl.Mode.ADMIN;
     mainCtrl.showConnect();
   }
 
   @FXML
+  public void reconnect() {
+    //TODO
+  }
+
+  @FXML
+  public void showAdminPanel() {
+    //TODO
+  }
+
+
+  @FXML
   public void exit() {
-    Platform.exit();
-    System.exit(0);
+    mainCtrl.exit();
   }
 
   /**
    * Client connects to the server for the first time
    */
   public void connect() {
-    this.clientId = server.connectFirst("ooo");
+    mainCtrl.clientId = server.connectFirst("ooo");
     keepAlive();
   }
 
@@ -68,7 +85,7 @@ public class SplashCtrl implements Initializable {
     EXEC.scheduleAtFixedRate(new Runnable() {
       @Override
       public void run() {
-        server.keepAlive(clientId);
+        server.keepAlive(mainCtrl.clientId);
       }
     }, 0, 1, TimeUnit.SECONDS);
   }

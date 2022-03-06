@@ -1,0 +1,9 @@
+@import 'main.css';
+
+.title {
+    -fx-font-size: 80px;
+}
+
+.description {
+    -fx-font-size: 40px;
+}
