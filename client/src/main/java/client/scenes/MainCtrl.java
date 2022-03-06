@@ -23,6 +23,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import javax.inject.Inject;
 
 public class MainCtrl {
 
@@ -42,6 +43,7 @@ public class MainCtrl {
   // if true, the player plays in multiplayer mode
   private boolean multiplayer;
 
+  @Inject
   public MainCtrl(ServerUtils server) {
     this.server = server;
   }
@@ -99,7 +101,16 @@ public class MainCtrl {
     waitingRoomCtrl.refresh();
   }
 
+  public void start() {
+    server.startGame();
+  }
+
   public void play() {
+    nextQuestion();
+  }
+
+  // TODO: Long polling
+  private void nextQuestion() {
     Question question = server.nextQuestion();
     if (question == null) {
       //TODO: Show end screen
@@ -110,9 +121,11 @@ public class MainCtrl {
           break;
 
         case ESTIMATE:
-          //TODO show estimate screen
+          /** showGuess(); */
           break;
-
+        case HOWMUCH:
+          /** showHowMuch(); */
+          break;
         default:
           //TODO do something if it doesn't work
           break;

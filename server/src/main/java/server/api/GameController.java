@@ -1,6 +1,7 @@
 package server.api;
 
 import commons.EstimateQuestion;
+import commons.HowMuchQuestion;
 import commons.MultipleChoiceQuestion;
 import commons.Question;
 import java.util.HashMap;
@@ -41,6 +42,12 @@ public class GameController {
     this.playerController = playerController;
   }
 
+  /**
+   * Endpoint to start a game with all players from the waiting room
+   * Generates unique game id and moves all players from waiting room (the playerController) to the gameController
+   *
+   * @return generated game id
+   */
   @PostMapping("/play")
   public String play() {
     String uniqueServerID = UUID.randomUUID().toString();
@@ -52,6 +59,14 @@ public class GameController {
     return uniqueServerID;
   }
 
+  /**
+   * TODO: implement long polling
+   * <p>
+   * Endpoint to check if a user has been assigned to a game or not
+   *
+   * @param userID - unique id of player
+   * @return the game id or null if not assigned yet
+   */
   @PutMapping("/isGameActive")
   public String isGameActive(@RequestBody String userID) {
     for (String key : games.keySet()) {
@@ -62,6 +77,14 @@ public class GameController {
     return null;
   }
 
+  /**
+   * Endpoint to get the next question
+   * Randomly selects a type of question and return it
+   * <p>
+   * Returns NULL to indicate the end of the game
+   *
+   * @return ResponseEntity < Question > or null
+   */
   @GetMapping("/next")
   public ResponseEntity<Question> nextStep() {
     if (questionCounter >= 20) {
@@ -71,21 +94,24 @@ public class GameController {
     }
     Question question = null;
 
-    switch (random.nextInt(2)) {
+    switch (random.nextInt(3)) {
+
       case 0: // Multiple choice
         question = new MultipleChoiceQuestion(
           activityController.getRandomActivity().getBody(),
           activityController.getRandomActivity().getBody(),
           activityController.getRandomActivity().getBody()
         );
-
         break;
+
       case 1: // Estimate
         question = new EstimateQuestion(activityController.getRandomActivity().getBody());
         break;
-      case 2: // Type 3
 
+      case 2: // How much
+        question = new HowMuchQuestion(activityController.getRandomActivity().getBody());
         break;
+
       default:
         break;
     }

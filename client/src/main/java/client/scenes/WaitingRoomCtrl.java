@@ -32,6 +32,11 @@ public class WaitingRoomCtrl implements Initializable {
     mainCtrl.showConnect();
   }
 
+  @FXML
+  public void start(ActionEvent actionEvent) {
+    mainCtrl.start();
+  }
+
   public void refresh() {
     // TODO: get list of players from server and display it
     //var quotes = server.getPlayers();
@@ -72,19 +77,16 @@ public class WaitingRoomCtrl implements Initializable {
   public void checkGameActive() {
     try {
       EXECGameStarted = Executors.newSingleThreadScheduledExecutor();
-      EXECGameStarted.scheduleAtFixedRate(new Runnable() {
-        @Override
-        public void run() {
-          String gameId = server.isGameActive(server.getClientId());
-          if (gameId != null) {
-            server.setGameId(gameId);
-            stop();
-            mainCtrl.play();
-          }
+      EXECGameStarted.scheduleAtFixedRate(() -> {
+        String gameId = server.isGameActive(server.getClientId());
+        if (gameId != null) {
+          server.setGameId(gameId);
+          stop();
+          mainCtrl.play();
         }
       }, 0, 1, TimeUnit.SECONDS);
     } catch (Exception e) {
-      System.out.println(e.getCause());
+      System.out.println(e.getCause().toString());
     }
   }
 

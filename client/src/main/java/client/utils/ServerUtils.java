@@ -74,6 +74,13 @@ public class ServerUtils {
       .put(Entity.entity(clientId, APPLICATION_JSON), String.class);
   }
 
+  /**
+   * Returns a game id or null if
+   * A game has started for that player or no game started yet respectively
+   *
+   * @param clientId - unique id of the player
+   * @return game id or NULL
+   */
   public String isGameActive(String clientId) {
     return ClientBuilder.newClient(new ClientConfig()) //
       .target(SERVER).path("api/game/isGameActive") //
@@ -82,15 +89,25 @@ public class ServerUtils {
       .put(Entity.entity(clientId, APPLICATION_JSON), String.class);
   }
 
+  /**
+   * Request to take all players from the waiting room and assign them to a game
+   *
+   * @return unique generated game id
+   */
   public String startGame() {
     return ClientBuilder.newClient(new ClientConfig())
       .target(SERVER)
-      .path("api/game/start")
+      .path("api/game/play")
       .request(APPLICATION_JSON)
       .accept(APPLICATION_JSON)
       .post(Entity.entity("START GAME", APPLICATION_JSON), String.class);
   }
 
+  /**
+   * Request to get a new question from the server
+   *
+   * @return new Question / null if game ended (after 20 questions)
+   */
   public Question nextQuestion() {
     return ClientBuilder.newClient(new ClientConfig())
       .target(SERVER)

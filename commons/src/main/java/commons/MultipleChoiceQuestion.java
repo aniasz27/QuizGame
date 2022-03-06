@@ -31,7 +31,7 @@ public class MultipleChoiceQuestion extends Question {
    */
   private void computeCorrectAnswer() {
     long maxWh =
-      Arrays.stream(activities).sequential().mapToLong(a -> a.consumption_in_wh).max().orElse(0);
+      Arrays.stream(activities).mapToLong(a -> a.consumption_in_wh).max().orElse(0);
     for (int i = 0; i < 3; i++) {
       correct[i] = (activities[i].consumption_in_wh == maxWh);
     }
