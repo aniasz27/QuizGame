@@ -54,16 +54,29 @@
   src: url('../fonts/FuturaPTExtraBoldOblique.otf');
 }
 
+@font-face {
+  src: url('../fonts/FontAwesome6Free-Solid-900.otf');
+}
+
 * {
-  -fx-background-color: #100625;
   -fx-fill: #fff;
-  /*-fx-text-fill: #fff;*/
+  -fx-text-fill: #fff;
   -fx-font-family: 'Futura PT Medium';
+  -fx-font-size: 30px;
+}
+
+.root {
+  -fx-background-color: #100625;
 }
 
 .border {
   -fx-border-color: #0586E3;
   -fx-border-width: 5px;
+}
+
+.border-bottom {
+  -fx-border-color: #0586E3;
+  -fx-border-width: 0 0 5px 0;
 }
 
 .rounded {
@@ -76,9 +89,121 @@
 }
 
 .drop-shadow {
-  -fx-effect: dropshadow(one-pass-box, #0094FF, 10, 0, 0, 0);
+  -fx-effect: dropshadow(one-pass-box, #0094FF, 20, 0, 0, 0);
 }
 
-.title {
-  -fx-font-size: 60px;
+.bad {
+  -fx-border-color: #EF2858;
+  -fx-effect: dropshadow(one-pass-box, #EF2858, 20, 0, 0, 0);
+}
+
+.good {
+  -fx-border-color: #19E275;
+  -fx-effect: dropshadow(one-pass-box, #19E275, 20, 0, 0, 0);
+}
+
+.clickable {
+  -fx-cursor: hand;
+}
+
+.button {
+  -fx-background-color: #1E0A49;
+  -fx-padding: 10px 50px;
+  -fx-cursor: hand;
+}
+
+.button:hover {
+  -fx-background-color: #2B145B;
+  -fx-padding: 10px 55px;
+}
+
+.text-field {
+  -fx-background-color: #1E0A49;
+  -fx-font-size: 30px;
+  -fx-padding: 10px 20px;
+  -fx-cursor: text;
+  -fx-text-fill: #fff;
+  -fx-prompt-text-fill: #481f9f;
+}
+
+.text-field * {
+  -fx-background-color: transparent;
+}
+
+.margin {
+  -fx-background-color: transparent;
+}
+
+.bg {
+  -fx-background-color: #100625;
+}
+
+.bg-light, .bg-light > * {
+  -fx-background-color: #1E0A49;
+}
+
+.transparent {
+  -fx-background-color: transparent;
+}
+
+.transparent * {
+  -fx-background-color: transparent;
+}
+
+.pad {
+  -fx-padding: 20px;
+}
+
+.no-pad {
+  -fx-padding: 0px;
+}
+
+#backButton, #closeButton {
+  -fx-padding: 5px 16px 10px 16px;
+}
+
+#helpButton {
+  -fx-padding: 5px 10px 10px 10px;
+}
+
+.list-item {
+  -fx-background-color: #1E0A49;
+  -fx-font-size: 30px;
+  -fx-padding: 10px 10px;
+  -fx-max-width: Infinity;
+  -fx-background-radius: 0;
+}
+
+.list-item.list-item-top {
+  -fx-background-radius: 18px 18px 0 0 !important;
+}
+
+.list-item .label {
+  -fx-padding: 0px 10px;
+}
+
+.list-item .expand {
+  -fx-max-width: Infinity;
+}
+
+/* TODO: make this work lol */
+.list-item .hover-show {
+  visibility: hidden;
+}
+
+.list-item:hover .hover-show {
+  visibility: visible;
+}
+
+.icon * {
+  -fx-font-family: 'Font Awesome 6 Free Solid';
+  -fx-font-weight: 900;
+}
+
+.subtitle {
+  -fx-font-size: 20px;
+}
+
+.overlay {
+  -fx-background-color: rgba(51, 67, 86, 0.6);
 }

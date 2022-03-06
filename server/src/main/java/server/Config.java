@@ -38,29 +38,5 @@ public class Config {
   public Random getRandom() {
     return new Random();
   }
-
-  /**
-   * Every time the server is started, the activity db is cleared and all the activities are imported again.
-   *
-   * @param activityController dependency injection
-   */
-  @Bean
-  CommandLineRunner commandLineRunner(ActivityController activityController) {
-    return args -> {
-      activityController.deleteAll();
-
-      try {
-        String activitiespath = "server/src/main/resources/JSON/activities.json";
-        Gson gson = new Gson();
-        Reader reader = Files.newBufferedReader(Paths.get(activitiespath));
-        List<Activity> activities = gson.fromJson(reader, new TypeToken<List<Activity>>() {
-        }.getType());
-        reader.close();
-        activityController.saveAll(activities);
-      } catch (IOException e) {
-        System.out.println("Something went wrong when importing activities: " + e.getMessage());
-      }
-    };
-  }
-
+  
 }

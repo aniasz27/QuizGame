@@ -18,14 +18,11 @@ package client.utils;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
-import commons.Quote;
+import commons.Activity;
+import commons.Question;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.List;
 import org.glassfish.jersey.client.ClientConfig;
 
@@ -33,31 +30,23 @@ public class ServerUtils {
 
   private static final String SERVER = "http://localhost:8080/";
 
-  public void getQuotesTheHardWay() throws IOException {
-    var url = new URL("http://localhost:8080/api/quotes");
-    var is = url.openConnection().getInputStream();
-    var br = new BufferedReader(new InputStreamReader(is));
-    String line;
-    while ((line = br.readLine()) != null) {
-      System.out.println(line);
-    }
+  private String clientId;
+  private String gameId;
+
+  public String getGameId() {
+    return gameId;
   }
 
-  public List<Quote> getQuotes() {
-    return ClientBuilder.newClient(new ClientConfig()) //
-      .target(SERVER).path("api/quotes") //
-      .request(APPLICATION_JSON) //
-      .accept(APPLICATION_JSON) //
-      .get(new GenericType<List<Quote>>() {
-      });
+  public void setGameId(String gameId) {
+    this.gameId = gameId;
   }
 
-  public Quote addQuote(Quote quote) {
-    return ClientBuilder.newClient(new ClientConfig()) //
-      .target(SERVER).path("api/quotes") //
-      .request(APPLICATION_JSON) //
-      .accept(APPLICATION_JSON) //
-      .post(Entity.entity(quote, APPLICATION_JSON), Quote.class);
+  public String getClientId() {
+    return clientId;
+  }
+
+  public void setClientId(String clientId) {
+    this.clientId = clientId;
   }
 
   /**
@@ -65,12 +54,12 @@ public class ServerUtils {
    *
    * @return String uniqueId for the client
    */
-  public String connectFirst() {
-    return ClientBuilder.newClient(new ClientConfig()) //
-      .target(SERVER).path("api/quotes/connect") //
-      .request(APPLICATION_JSON) //
-      .accept(APPLICATION_JSON) //
-      .get(String.class);
+  public String connectFirst(String username) {
+    return ClientBuilder.newClient(new ClientConfig())
+      .target(SERVER).path("api/player/connect")
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
+      .post(Entity.entity(username, APPLICATION_JSON), String.class);
   }
 
   /**
@@ -80,10 +69,90 @@ public class ServerUtils {
    * @return String uniqueId for the client
    */
   public String keepAlive(String clientId) {
+    return ClientBuilder.newClient(new ClientConfig())
+      .target(SERVER).path("api/player/keepAlive")
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
+      .put(Entity.entity(clientId, APPLICATION_JSON), String.class);
+  }
+
+  /**
+   * Returns a game id or null if
+   * A game has started for that player or no game started yet respectively
+   *
+   * @param clientId - unique id of the player
+   * @return game id or NULL
+   */
+  public String isGameActive(String clientId) {
     return ClientBuilder.newClient(new ClientConfig()) //
-      .target(SERVER).path("api/quotes/keepAlive") //
+      .target(SERVER).path("api/game/isGameActive") //
       .request(APPLICATION_JSON) //
       .accept(APPLICATION_JSON) //
-      .post(Entity.entity(clientId, APPLICATION_JSON), String.class);
+      .put(Entity.entity(clientId, APPLICATION_JSON), String.class);
+  }
+
+  /**
+   * Request to take all players from the waiting room and assign them to a game
+   *
+   * @return unique generated game id
+   */
+  public String startGame() {
+    return ClientBuilder.newClient(new ClientConfig())
+      .target(SERVER)
+      .path("api/game/play")
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
+      .post(Entity.entity("START GAME", APPLICATION_JSON), String.class);
+  }
+
+  /**
+   * Request to get a new question from the server
+   *
+   * @return new Question / null if game ended (after 20 questions)
+   */
+  public Question nextQuestion() {
+    return ClientBuilder.newClient(new ClientConfig())
+      .target(SERVER)
+      .path("/api/game/next")
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
+      .get().readEntity(Question.class);
+  }
+
+  /**
+   * Get all activities from the server
+   */
+  public List<Activity> getActivities() {
+    return ClientBuilder.newClient(new ClientConfig())
+      .target(SERVER).path("api/activity/list")
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
+      .get(new GenericType<>() {
+      });
+  }
+
+  public Activity updateActivity(Activity activity) {
+    return ClientBuilder.newClient(new ClientConfig())
+      .target(SERVER).path("api/activity/update")
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
+      .put(Entity.entity(activity, APPLICATION_JSON), Activity.class);
+  }
+
+  public List<String> getPlayers() {
+    return ClientBuilder.newClient(new ClientConfig())
+      .target(SERVER).path("api/player/list")
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
+      .get(new GenericType<>() {
+      });
+  }
+
+  public String getName(String id) {
+    return ClientBuilder.newClient(new ClientConfig())
+      .target(SERVER).path("api/player/" + id)
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
+      .get(String.class);
   }
 }

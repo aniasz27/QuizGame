@@ -1,0 +1,14 @@
+@import 'main.css';
+
+.title {
+    -fx-font-size: 40px;
+}
+
+#timebar {
+    -fx-background-color: yellow;
+    -fx-accent: red;
+    -fx-fill: white;
+    -fx-border-width: 2px;
+    -fx-color-label-visible: visible;
+}
+
