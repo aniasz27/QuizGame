@@ -5,7 +5,6 @@ import com.google.gson.reflect.TypeToken;
 import commons.Activity;
 import java.io.IOException;
 import java.io.Reader;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -13,8 +12,6 @@ import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,9 +29,6 @@ public class ActivityController {
 
   private final ActivityRepository repo;
   private final Random random;
-
-  private final int firstNumLimit = 0;
-  private final int secondNumLimit = 0;
 
   /**
    * Constructor
@@ -66,7 +60,11 @@ public class ActivityController {
    * @return a response entity with the selected Activity
    */
   @GetMapping("/random")
+  @SuppressWarnings("all")
   public ResponseEntity<Activity> getRandomActivity() {
+    int firstNumLimit = 0;
+    int secondNumLimit = 0;
+
     int firstNum = random.nextInt(firstNumLimit + 1);
     int secondNum = random.nextInt(secondNumLimit + 1);
     String group = String.valueOf(firstNum) + String.valueOf(secondNum) + "%";
@@ -128,6 +126,6 @@ public class ActivityController {
 
     return ResponseEntity.ok("Activities imported successfully!");
   }
-  
+
 
 }
