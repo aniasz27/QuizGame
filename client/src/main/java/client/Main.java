@@ -18,10 +18,16 @@ package client;
 
 import static com.google.inject.Guice.createInjector;
 
+import client.scenes.ActivityListCtrl;
 import client.scenes.ConnectScreenCtrl;
+import client.scenes.EditActivityCtrl;
+import client.scenes.GuessCtrl;
+import client.scenes.HelpOverlayCtrl;
+import client.scenes.HowMuchCtrl;
 import client.scenes.MainCtrl;
 import client.scenes.SplashCtrl;
 import client.scenes.WaitingRoomCtrl;
+import client.scenes.WhatRequiresMoreEnergyCtrl;
 import com.google.inject.Injector;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -54,9 +60,43 @@ public class Main extends Application {
       "client/scenes/WaitingRoom.fxml",
       "client/css/WaitingRoom.css"
     );
+    var howMuch = FXML.load(
+      HowMuchCtrl.class,
+      "client/scenes/HowMuch.fxml",
+      "client/css/HowMuch.css"
+    );
+
+    var whatRequiresMoreEnergy = FXML.load(
+      WhatRequiresMoreEnergyCtrl.class,
+      "client/scenes/WhatRequiresMoreEnergyScreen.fxml",
+      "client/css/WhatRequiresMoreEnergy.css"
+    );
+
+    var guess = FXML.load(
+      GuessCtrl.class,
+      "client/scenes/Guess.fxml",
+      "client/css/Guess.css"
+    );
+
+    var activityList = FXML.load(
+      ActivityListCtrl.class,
+      "client/scenes/ActivityList.fxml",
+      "client/css/ActivityList.css"
+    );
+    var editActivity = FXML.load(
+      EditActivityCtrl.class,
+      "client/scenes/EditActivity.fxml",
+      "client/css/EditActivity.css"
+    );
+    var helpOverlay = FXML.load(
+      HelpOverlayCtrl.class,
+      "client/scenes/HelpOverlay.fxml",
+      "client/css/HelpOverlay.css"
+    );
 
     var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-    mainCtrl.initialize(primaryStage, splash, connectScreen, waitingRoom);
+    mainCtrl.initialize(primaryStage, splash, connectScreen, waitingRoom, howMuch,
+      whatRequiresMoreEnergy, guess, activityList, editActivity, helpOverlay);
 
     //waitingRoom.getKey().connect();
     //stops the thread when user closes the window
@@ -64,16 +104,4 @@ public class Main extends Application {
       waitingRoom.getKey().stop();
     });
   }
-
-  //The real application
-  /* @Override
-  public void start(Stage primaryStage) throws IOException {
-    var overview = FXML.load(QuoteOverviewCtrl.class, "client", "scenes", "Splash.fxml");
-    var add = FXML.load(AddQuoteCtrl.class, "client", "scenes", "AddQuote.fxml");
-    // to be replaced with the connect screen
-    var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-    mainCtrl.initialize(primaryStage, overview, add);
-    //connects client to the server for the first time
-    overview.getKey().connect();
-  }*/
 }
