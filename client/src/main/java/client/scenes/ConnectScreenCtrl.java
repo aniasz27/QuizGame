@@ -17,6 +17,8 @@ public class ConnectScreenCtrl {
   @FXML
   private Button backButton;
   @FXML
+  private Button helpButton;
+  @FXML
   private TextField nameField;
   @FXML
   private TextField serverField;
@@ -30,6 +32,11 @@ public class ConnectScreenCtrl {
   @FXML
   public void exit() {
     mainCtrl.exit();
+  }
+
+  @FXML
+  public void help() {
+    //TODO: implement help screen
   }
 
   @FXML
