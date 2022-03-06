@@ -23,6 +23,7 @@ public class SplashCtrl implements Initializable {
   @FXML
   private Button buttonSingle;
 
+
   @Inject
   public SplashCtrl(ServerUtils server, MainCtrl mainCtrl) {
     this.server = server;
@@ -34,7 +35,7 @@ public class SplashCtrl implements Initializable {
   }
 
   @FXML
-  public void playMultiplayer() {
+  public void playMultiplayer() throws InterruptedException {
     mainCtrl.multiplayer = true;
     mainCtrl.showWaitingRoom();
   }
@@ -44,6 +45,17 @@ public class SplashCtrl implements Initializable {
     mainCtrl.multiplayer = false;
     mainCtrl.showHowMuch();
   }
+
+  @FXML
+  public void reconnect() {
+    //TODO
+  }
+
+  @FXML
+  public void showAdminPanel() {
+    //TODO
+  }
+
 
   @FXML
   public void exit() {

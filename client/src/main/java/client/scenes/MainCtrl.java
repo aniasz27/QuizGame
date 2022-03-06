@@ -47,6 +47,9 @@ public class MainCtrl {
   private WhatRequiresMoreEnergyCtrl whatRequiresMoreEnergyCtrl;
   private Parent whatRequiresMoreEnergyParent;
 
+  private GuessCtrl guessCtrl;
+  private Parent guessParent;
+
   //if false, the player plays in singleplayer mode
   // if true, the player plays in multiplayer mode
   public boolean multiplayer;
@@ -69,7 +72,8 @@ public class MainCtrl {
     Pair<ConnectScreenCtrl, Parent> connect,
     Pair<WaitingRoomCtrl, Parent> waitingRoom,
     Pair<HowMuchCtrl, Parent> howMuch,
-    Pair<WhatRequiresMoreEnergyCtrl, Parent> whatRequiresMoreEnergy
+    Pair<WhatRequiresMoreEnergyCtrl, Parent> whatRequiresMoreEnergy,
+    Pair<GuessCtrl, Parent> guess
   ) {
     this.primaryStage = primaryStage;
 
@@ -87,6 +91,9 @@ public class MainCtrl {
 
     this.whatRequiresMoreEnergyCtrl = whatRequiresMoreEnergy.getKey();
     this.whatRequiresMoreEnergyParent = whatRequiresMoreEnergy.getValue();
+
+    this.guessCtrl = guess.getKey();
+    this.guessParent = guess.getValue();
 
     primaryStage.setTitle("Quizzzzz");
     // never exit full screen
@@ -169,5 +176,10 @@ public class MainCtrl {
 
   public void play() {
     // TODO
+  }
+
+  public void showGuess() throws InterruptedException {
+    primaryStage.getScene().setRoot(guessParent);
+    guessCtrl.start();
   }
 }

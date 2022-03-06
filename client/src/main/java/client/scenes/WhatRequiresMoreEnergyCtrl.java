@@ -86,14 +86,15 @@ public class WhatRequiresMoreEnergyCtrl implements Initializable {
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     // TODO: get 3 random activities from endpoint
-    // activities =
+    // activities = <Activity[] array here>
 
     buttons = new Button[] {button0, button1, button2};
-    
-    OptionalLong lowestConsumptionInWh = Arrays.stream(activities).mapToLong(
-      Activity::getConsumptionInWh).min();
 
-    for (int i = 0; i < buttons.length; i++) {
+    //OptionalLong lowestConsumptionInWh = Arrays.stream(activities).mapToLong(
+    //  Activity::getConsumptionInWh).min();
+
+    //TODO: change i < 0 -> i < buttons.length when activities can be get
+    for (int i = 0; i < 0; i++) {
       Activity activity = activities[i];
 
       // get image
@@ -112,9 +113,8 @@ public class WhatRequiresMoreEnergyCtrl implements Initializable {
 
 
       buttons[i].setText(activity.getTitle());
-      buttons[i].setUserData(
-        lowestConsumptionInWh.getAsLong() == activity.getConsumptionInWh()
-      );
+      // TODO: buttons[i].setUserData(), put if answer is correct or not
+      // buttons[i].setUserData();
     }
   }
 }

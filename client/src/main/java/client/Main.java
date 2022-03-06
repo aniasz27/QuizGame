@@ -19,6 +19,7 @@ package client;
 import static com.google.inject.Guice.createInjector;
 
 import client.scenes.ConnectScreenCtrl;
+import client.scenes.GuessCtrl;
 import client.scenes.HowMuchCtrl;
 import client.scenes.MainCtrl;
 import client.scenes.SplashCtrl;
@@ -68,8 +69,15 @@ public class Main extends Application {
       "client/css/WhatRequiresMoreEnergy.css"
     );
 
+    var guess = FXML.load(
+      GuessCtrl.class,
+      "client/scenes/Guess.fxml",
+      "client/css/Guess.css"
+    );
+
+
     var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-    mainCtrl.initialize(primaryStage, splash, connectScreen, waitingRoom, howMuch, whatRequiresMoreEnergy);
+    mainCtrl.initialize(primaryStage, splash, connectScreen, waitingRoom, howMuch, whatRequiresMoreEnergy, guess);
 
     splash.getKey().connect();
     //stops the thread when user closes the window
