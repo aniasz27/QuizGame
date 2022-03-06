@@ -34,6 +34,29 @@ public class Activity {
     this.source = source;
   }
 
+  public String getId() {
+    return id;
+  }
+
+  public String getAuthor() {
+    return author;
+  }
+
+  public String getImagePath() {
+    return image_path;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public long getConsumptionInWh() {
+    return consumption_in_wh;
+  }
+
+  public String getSource() {
+    return source;
+  }
 
   @Override
   public boolean equals(Object o) {

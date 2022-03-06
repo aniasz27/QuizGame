@@ -22,6 +22,11 @@ import commons.Question;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import org.checkerframework.checker.units.qual.C;
+import commons.Activity;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.GenericType;
+import java.util.List;
 import org.glassfish.jersey.client.ClientConfig;
 
 public class ServerUtils {
@@ -53,10 +58,10 @@ public class ServerUtils {
    * @return String uniqueId for the client
    */
   public String connectFirst(String username) {
-    return ClientBuilder.newClient(new ClientConfig()) //
-      .target(SERVER).path("api/player/connect") //
-      .request(APPLICATION_JSON) //
-      .accept(APPLICATION_JSON) //
+    return ClientBuilder.newClient(new ClientConfig())
+      .target(SERVER).path("api/player/connect")
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
       .post(Entity.entity(username, APPLICATION_JSON), String.class);
   }
 
@@ -67,10 +72,10 @@ public class ServerUtils {
    * @return String uniqueId for the client
    */
   public String keepAlive(String clientId) {
-    return ClientBuilder.newClient(new ClientConfig()) //
-      .target(SERVER).path("api/player/keepAlive") //
-      .request(APPLICATION_JSON) //
-      .accept(APPLICATION_JSON) //
+    return ClientBuilder.newClient(new ClientConfig())
+      .target(SERVER).path("api/player/keepAlive")
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
       .put(Entity.entity(clientId, APPLICATION_JSON), String.class);
   }
 
@@ -115,5 +120,42 @@ public class ServerUtils {
       .request(APPLICATION_JSON)
       .accept(APPLICATION_JSON)
       .get().readEntity(Question.class);
+  }
+}
+   * Get all activities from the server
+   */
+    public List<Activity> getActivities() {
+    return ClientBuilder.newClient(new ClientConfig())
+      .target(SERVER).path("api/activity/list")
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
+      .get(new GenericType<>() {
+      });
+  }
+
+  public Activity updateActivity(Activity activity) {
+    return ClientBuilder.newClient(new ClientConfig())
+      .target(SERVER).path("api/activity/update")
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
+      .put(Entity.entity(activity, APPLICATION_JSON), Activity.class);
+  }
+
+  public List<String> getPlayers() {
+    return ClientBuilder.newClient(new ClientConfig())
+      .target(SERVER).path("api/player/list")
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
+      .get(new GenericType<>() {
+      });
+  }
+
+  public String getName(String id) {
+    return ClientBuilder.newClient(new ClientConfig())
+      .target(SERVER).path("api/player/" + id)
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
+      .get(String.class);
+
   }
 }
