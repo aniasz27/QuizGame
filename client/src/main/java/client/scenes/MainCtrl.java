@@ -18,6 +18,7 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Activity;
+import commons.MultipleChoiceQuestion;
 import commons.Question;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -93,7 +94,7 @@ public class MainCtrl {
   }
 
   public Mode mode;
-  
+
 
   /**
    * Map of all players and their scores in the current game
@@ -211,26 +212,26 @@ public class MainCtrl {
     server.startGame();
   }
 
-  public void play() {
+  public void play() throws InterruptedException {
     nextQuestion();
   }
 
   // TODO: Long polling
-  private void nextQuestion() {
+  private void nextQuestion() throws InterruptedException {
     Question question = server.nextQuestion();
     if (question == null) {
       //TODO: Show end screen
     } else {
       switch (question.type) {
         case MULTICHOICE:
-          //TODO show multiple choice screen
+          showWhatRequiresMoreEnergy();
           break;
 
         case ESTIMATE:
-          /** showGuess(); */
+          showGuess();
           break;
         case HOWMUCH:
-          /** showHowMuch(); */
+          showHowMuch();
           break;
         default:
           //TODO do something if it doesn't work
@@ -244,6 +245,10 @@ public class MainCtrl {
   public void showGuess() throws InterruptedException {
     primaryStage.getScene().setRoot(guessParent);
     guessCtrl.start();
+  }
+
+  public void showWhatRequiresMoreEnergy() {
+    primaryStage.getScene().setRoot(whatRequiresMoreEnergyParent);
   }
 
   public void showActivityList() {

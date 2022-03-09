@@ -98,7 +98,6 @@ public class Main extends Application {
     mainCtrl.initialize(primaryStage, splash, connectScreen, waitingRoom, howMuch,
       whatRequiresMoreEnergy, guess, activityList, editActivity, helpOverlay);
 
-    //waitingRoom.getKey().connect();
     //stops the thread when user closes the window
     primaryStage.setOnCloseRequest(e -> {
       waitingRoom.getKey().stop();
