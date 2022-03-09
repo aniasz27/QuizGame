@@ -1,9 +1,6 @@
 @import 'main.css';
-
-.title {
-    -fx-font-size: 80px;
-}
+@import 'partials/question.css';
 
 .description {
-    -fx-font-size: 40px;
+  -fx-font-size: 40px;
 }

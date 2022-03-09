@@ -40,7 +40,7 @@ public class WaitingRoomCtrl implements Initializable {
   @FXML
   private void back(ActionEvent actionEvent) {
     stop();
-    mainCtrl.showConnect();
+    mainCtrl.showSplash();
   }
 
   @FXML
@@ -84,7 +84,8 @@ public class WaitingRoomCtrl implements Initializable {
    * Client connects to the server for the first time
    */
   public void connect() {
-    server.setClientId(server.connectFirst("ooo"));
+    mainCtrl.clientId = server.connectFirst("ooo");
+    server.setClientId(mainCtrl.clientId);
     keepAlive();
     checkGameActive();
   }
