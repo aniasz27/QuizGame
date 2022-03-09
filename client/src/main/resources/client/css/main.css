@@ -114,7 +114,6 @@
 
 .button:hover {
   -fx-background-color: #2B145B;
-  -fx-padding: 10px 55px;
 }
 
 .text-field {
@@ -206,4 +205,21 @@
 
 .overlay {
   -fx-background-color: rgba(51, 67, 86, 0.6);
+}
+
+.timer, .timer-bg {
+  -fx-stroke-width: 20px;
+  -fx-stroke-line-cap: round;
+}
+
+.timer {
+  -fx-stroke: #0586e3;
+}
+
+.timer-bg {
+  -fx-stroke: #553794;
+}
+
+.popup-text, .popup-text > * {
+  -fx-wrap-text: true;
 }

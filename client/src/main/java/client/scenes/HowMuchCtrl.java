@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.scenes.helpers.QuestionCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import javafx.fxml.FXML;
@@ -8,10 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
-public class HowMuchCtrl {
-
-  private final ServerUtils server;
-  private final MainCtrl mainCtrl;
+public class HowMuchCtrl extends QuestionCtrl {
 
   @FXML
   private Button backButton;
@@ -32,13 +30,7 @@ public class HowMuchCtrl {
 
   @Inject
   public HowMuchCtrl(ServerUtils server, MainCtrl mainCtrl) {
-    this.server = server;
-    this.mainCtrl = mainCtrl;
-  }
-
-  @FXML
-  public void back() {
-    mainCtrl.goBackToMenu();
+    super(server, mainCtrl);
   }
 
   @FXML

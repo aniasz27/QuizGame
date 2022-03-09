@@ -2,7 +2,6 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -31,12 +30,12 @@ public class ConnectScreenCtrl {
 
   @FXML
   public void exit() {
-    mainCtrl.exit();
+    mainCtrl.openExitOverlay(true);
   }
 
   @FXML
-  public void help() {
-    //TODO: implement help screen
+  private void help(ActionEvent actionEvent) {
+    mainCtrl.openHelp();
   }
 
   @FXML
