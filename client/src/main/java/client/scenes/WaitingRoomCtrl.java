@@ -41,7 +41,6 @@ public class WaitingRoomCtrl implements Initializable {
   private void back(ActionEvent actionEvent) {
     stop();
     mainCtrl.showConnect();
-
   }
 
   @FXML
@@ -49,14 +48,13 @@ public class WaitingRoomCtrl implements Initializable {
     mainCtrl.start();
   }
 
-
   @FXML
   private void help(ActionEvent actionEvent) {
     mainCtrl.openHelp();
   }
 
   @FXML
-  private void play(ActionEvent actionEvent) {
+  private void play(ActionEvent actionEvent) throws InterruptedException {
     mainCtrl.play();
   }
 
@@ -72,7 +70,7 @@ public class WaitingRoomCtrl implements Initializable {
     playerListDisplay.getChildren().removeAll(playerListDisplay.getChildren());
     int[] i = {0};
     players.forEach(player -> {
-      Label l = new Label(player.equals(server.getName(mainCtrl.clientId)) ? "You (" + player + ")" : player);
+      Label l = new Label(player.equals(server.getName(server.getClientId())) ? "You (" + player + ")" : player);
       l.getStyleClass().add("list-item");
       l.getStyleClass().add("border-bottom");
       if (i[0]++ == 0) {
@@ -117,10 +115,14 @@ public class WaitingRoomCtrl implements Initializable {
       EXECGameStarted = Executors.newSingleThreadScheduledExecutor();
       EXECGameStarted.scheduleAtFixedRate(() -> {
         String gameId = server.isGameActive(server.getClientId());
-        if (gameId != null) {
+        if (!gameId.equals("")) {
           server.setGameId(gameId);
           stop();
-          mainCtrl.play();
+          try {
+            mainCtrl.play();
+          } catch (InterruptedException e) {
+            e.printStackTrace();
+          }
         }
       }, 0, 1, TimeUnit.SECONDS);
     } catch (Exception e) {

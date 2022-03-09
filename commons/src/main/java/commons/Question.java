@@ -14,6 +14,7 @@ public abstract class Question {
 
   public Type type;
 
+  @SuppressWarnings("all")
   public enum Type {
     MULTICHOICE(0),
     ESTIMATE(1),
@@ -24,9 +25,18 @@ public abstract class Question {
     private Type(int t) {
       type = t;
     }
+
+    public boolean equals(Type type) {
+      return this.type == type.type;
+    }
+  }
+
+  public Type getType() {
+    return type;
   }
 
   public Question(Type type) {
     this.type = type;
   }
+
 }
