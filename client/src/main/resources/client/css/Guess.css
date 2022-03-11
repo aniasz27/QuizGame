@@ -1,2 +1,6 @@
 @import 'main.css';
 @import 'partials/question.css';
+
+.description {
+  -fx-font-size: 40px;
+}

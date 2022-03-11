@@ -4,6 +4,7 @@ import client.scenes.helpers.QuestionCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Activity;
+import commons.Question;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -31,7 +32,7 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
   }
 
   @FXML
-  private void checkCorrectAnswer(MouseEvent event) {
+  public void checkCorrectAnswer(MouseEvent event) {
     Button clickedButton = (Button) event.getSource();
     if (clickedButton.getUserData() == null) {
       return;
@@ -39,8 +40,6 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
 
     if ((boolean) clickedButton.getUserData()) {
       showUserCorrect();
-    } else {
-      showUserIncorrect();
     }
 
     for (Button button : buttons) {
@@ -48,33 +47,27 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
     }
   }
 
-  private void showUserCorrect() {
-    //TODO: Add points to user and show prompt.
-  }
-
-  private void showUserIncorrect() {
-    //TODO: Give no points to user and show prompt.
-  }
-
   /**
    * Sets button color to appropriate given correctness of answer
    *
    * @param button button to assign color
    */
-  private void showButtonCorrectness(Button button) {
+  public void showButtonCorrectness(Button button) {
     if (button.getUserData() == null) {
       return;
     }
-
     // set color to green (#2dff26) if answer was correct,
     // set it to red (#ff1717) otherwise
     String style = "-fx-background-color: "
       + (((boolean) button.getUserData()) ? "#2dff26" : "#ff1717")
       + ";";
-
     button.getStyleClass().add((boolean) button.getUserData() ? "good" : "bad");
   }
 
+
+  public void showUserCorrect() {
+    mainCtrl.addPoints(100);
+  }
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
@@ -109,5 +102,10 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
       // TODO: buttons[i].setUserData(), put if answer is correct or not
       // buttons[i].setUserData();
     }
+  }
+
+  @Override
+  public void displayQuestion(Question question) {
+
   }
 }

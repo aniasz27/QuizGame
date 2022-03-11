@@ -6,3 +6,7 @@
   -fx-wrap-text: true;
   -fx-max-width: 600px;
 }
+
+.chosen {
+  -fx-background-color: #2B145B;
+}

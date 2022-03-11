@@ -71,6 +71,9 @@ public class MainCtrl {
   private Parent exitOverlayParent;
 
   public String clientId;
+  private long points;
+
+  private Question question;
 
   @Inject
   public MainCtrl(ServerUtils server) {
@@ -148,6 +151,8 @@ public class MainCtrl {
     this.exitOverlayCtrl = exitOverlay.getKey();
     this.exitOverlayParent = exitOverlay.getValue();
 
+    this.points = 0;
+
     primaryStage.setTitle("Quizzzzz");
     // never exit full screen
     primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
@@ -186,6 +191,7 @@ public class MainCtrl {
 
   public void showHowMuch() {
     primaryStage.getScene().setRoot(howMuchParent);
+    howMuchCtrl.displayQuestion(question);
     howMuchCtrl.startTimer();
   }
 
@@ -205,7 +211,7 @@ public class MainCtrl {
 
   // TODO: Long polling
   private void nextQuestion() throws InterruptedException {
-    Question question = server.nextQuestion();
+    question = server.nextQuestion();
     if (question == null) {
       //TODO: Show end screen
     } else {
@@ -265,5 +271,9 @@ public class MainCtrl {
 
   public void closeExitOverlay() {
     ((StackPane) primaryStage.getScene().getRoot()).getChildren().remove(exitOverlayParent);
+  }
+
+  public void addPoints(long toAdd) {
+    this.points += toAdd;
   }
 }
