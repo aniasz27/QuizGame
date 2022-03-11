@@ -69,7 +69,7 @@ public class HowMuchCtrl extends QuestionCtrl {
         answer_3.setText(question.getWrong2() + "Wh");
         buttons[1] = true;
         break;
-      case 3:
+      default:
         answer_3.setText(activity.getConsumptionInWh() + "Wh");
         answer_1.setText(question.getWrong1() + "Wh");
         answer_2.setText(question.getWrong2() + "Wh");
@@ -100,7 +100,8 @@ public class HowMuchCtrl extends QuestionCtrl {
   }
 
   public void checkAnswer() {
-    if (buttons[chosen - 1])
+    if (buttons[chosen - 1]) {
       mainCtrl.addPoints(100);
+    }
   }
 }
