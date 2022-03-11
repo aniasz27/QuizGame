@@ -1,8 +1,10 @@
 package commons;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
+@JsonTypeName("ESTIMATE")
 public class EstimateQuestion extends Question {
 
   private String question;

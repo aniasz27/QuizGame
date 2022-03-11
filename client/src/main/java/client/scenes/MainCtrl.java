@@ -224,13 +224,16 @@ public class MainCtrl {
     } else {
       switch (question.type) {
         case MULTICHOICE:
+          System.out.println("Showed multiple choice");
           showWhatRequiresMoreEnergy();
           break;
 
         case ESTIMATE:
+          System.out.println("Showed guess");
           showGuess();
           break;
         case HOWMUCH:
+          System.out.println("Showed how much");
           showHowMuch();
           break;
         default:

@@ -42,7 +42,7 @@ public class Activity {
     return author;
   }
 
-  public String getImagePath() {
+  public String getImage_path() {
     return image_path;
   }
 
@@ -50,7 +50,7 @@ public class Activity {
     return title;
   }
 
-  public long getConsumptionInWh() {
+  public long getConsumption_in_wh() {
     return consumption_in_wh;
   }
 
