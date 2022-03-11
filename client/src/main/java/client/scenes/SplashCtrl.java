@@ -39,9 +39,9 @@ public class SplashCtrl implements Initializable {
   }
 
   @FXML
-  public void playSingleplayer() {
+  public void playSingleplayer() throws InterruptedException {
     mainCtrl.multiplayer = false;
-    mainCtrl.showHowMuch();
+    mainCtrl.play();
 
     mainCtrl.mode = MainCtrl.Mode.SINGLE;
   }

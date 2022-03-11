@@ -1,11 +1,24 @@
 package commons;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@JsonTypeInfo(
+  use = JsonTypeInfo.Id.NAME,
+  include = JsonTypeInfo.As.PROPERTY,
+  property = "type")
+@JsonSubTypes({
+  @JsonSubTypes.Type(value = MultipleChoiceQuestion.class, name = "MULTICHOICE"),
+  @JsonSubTypes.Type(value = EstimateQuestion.class, name = "ESTIMATE"),
+  @JsonSubTypes.Type(value = HowMuchQuestion.class, name = "HOWMUCH")
+})
+@SuppressWarnings("all")
 public abstract class Question {
 
   @Id
@@ -14,7 +27,7 @@ public abstract class Question {
 
   public Type type;
 
-  @SuppressWarnings("all")
+
   public enum Type {
     MULTICHOICE(0),
     ESTIMATE(1),
@@ -33,6 +46,10 @@ public abstract class Question {
 
   public Type getType() {
     return type;
+  }
+
+
+  public Question() {
   }
 
   public Question(Type type) {

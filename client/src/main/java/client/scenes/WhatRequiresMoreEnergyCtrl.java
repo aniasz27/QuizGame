@@ -100,7 +100,7 @@ public class WhatRequiresMoreEnergyCtrl implements Initializable {
       // get image
       ImageView imageView =
         new ImageView(getClass()
-          .getResource(activity.getImagePath()).toExternalForm());
+          .getResource(activity.getImage_path()).toExternalForm());
       // resize image
       imageView.setFitWidth(1140 / 3.0);
       imageView.setFitHeight(1140 / 3.0);

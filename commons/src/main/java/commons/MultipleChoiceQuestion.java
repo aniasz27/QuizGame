@@ -1,14 +1,15 @@
 package commons;
 
-import static commons.Question.Type;
-
-import java.util.Arrays;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 @SuppressWarnings("unused")
+@JsonTypeName("MULTICHOICE")
 public class MultipleChoiceQuestion extends Question {
 
   private String question;
-  private Activity[] activities;
+  private Activity activity1;
+  private Activity activity2;
+  private Activity activity3;
   private boolean[] correct;
 
   public MultipleChoiceQuestion() {
@@ -18,10 +19,9 @@ public class MultipleChoiceQuestion extends Question {
   public MultipleChoiceQuestion(Activity activity1, Activity activity2, Activity activity3) {
     super(Type.MULTICHOICE);
     this.question = "Which of the following activities consumes the most energy?";
-    this.activities = new Activity[3];
-    this.activities[0] = activity1;
-    this.activities[1] = activity2;
-    this.activities[2] = activity3;
+    this.activity1 = activity1;
+    this.activity2 = activity2;
+    this.activity3 = activity3;
     this.correct = new boolean[3];
     computeCorrectAnswer();
   }
@@ -30,11 +30,13 @@ public class MultipleChoiceQuestion extends Question {
    * Fill the boolean[] correct
    */
   private void computeCorrectAnswer() {
-    long maxWh =
-      Arrays.stream(activities).mapToLong(a -> a.consumption_in_wh).max().orElse(0);
-    for (int i = 0; i < 3; i++) {
-      correct[i] = (activities[i].consumption_in_wh == maxWh);
-    }
+    long maxWh = Math.max(activity1.getConsumption_in_wh(),
+      Math.max(activity2.getConsumption_in_wh(),
+        activity3.getConsumption_in_wh()));
+    correct[0] = activity1.getConsumption_in_wh() == maxWh;
+    correct[1] = activity2.getConsumption_in_wh() == maxWh;
+    correct[2] = activity3.getConsumption_in_wh() == maxWh;
+
   }
 
   /**
@@ -52,7 +54,7 @@ public class MultipleChoiceQuestion extends Question {
    * @return Activity - the 1st activity
    */
   public Activity getActivity1() {
-    return activities[0];
+    return activity1;
   }
 
   /**
@@ -61,7 +63,7 @@ public class MultipleChoiceQuestion extends Question {
    * @return Activity - the 2nd activity
    */
   public Activity getActivity2() {
-    return activities[1];
+    return activity2;
   }
 
   /**
@@ -70,7 +72,7 @@ public class MultipleChoiceQuestion extends Question {
    * @return Activity - the 3rd activity
    */
   public Activity getActivity3() {
-    return activities[2];
+    return activity3;
   }
 
   /**
@@ -78,7 +80,7 @@ public class MultipleChoiceQuestion extends Question {
    *
    * @return the said array
    */
-  public boolean[] getCorrectArray() {
+  public boolean[] getCorrect() {
     return correct;
   }
 
