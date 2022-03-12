@@ -27,6 +27,7 @@ import client.scenes.GuessCtrl;
 import client.scenes.HelpOverlayCtrl;
 import client.scenes.HowMuchCtrl;
 import client.scenes.MainCtrl;
+import client.scenes.SpWaitingRoomCtrl;
 import client.scenes.SplashCtrl;
 import client.scenes.WaitingRoomCtrl;
 import client.scenes.WhatRequiresMoreEnergyCtrl;
@@ -62,6 +63,13 @@ public class Main extends Application {
       "client/scenes/WaitingRoom.fxml",
       "client/css/WaitingRoom.css"
     );
+
+    var spWaitingRoom = FXML.load(
+      SpWaitingRoomCtrl.class,
+      "client/scenes/SpWaitingRoom.fxml",
+      "client/css/SpWaitingRoom.css"
+    );
+
     var howMuch = FXML.load(
       HowMuchCtrl.class,
       "client/scenes/HowMuch.fxml",
@@ -108,7 +116,7 @@ public class Main extends Application {
     );
 
     var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-    mainCtrl.initialize(primaryStage, splash, connectScreen, waitingRoom, howMuch,
+    mainCtrl.initialize(primaryStage, splash, connectScreen, waitingRoom, spWaitingRoom, howMuch,
       whatRequiresMoreEnergy, guess, activityList, editActivity, helpOverlay, exitOverlay, endScreen);
 
     //stops the thread when user closes the window

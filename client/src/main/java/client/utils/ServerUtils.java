@@ -159,6 +159,14 @@ public class ServerUtils {
       .get(String.class);
   }
 
+  public Score addScore(Score score) {
+    return ClientBuilder.newClient(new ClientConfig())
+      .target(SERVER).path("api/score/add")
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
+      .put(Entity.entity(score, APPLICATION_JSON), Score.class);
+  }
+
   public Iterable<Score> getSingleLeaderboard() {
     return ClientBuilder.newClient(new ClientConfig())
       .target(SERVER).path("api/score/leaderboard")

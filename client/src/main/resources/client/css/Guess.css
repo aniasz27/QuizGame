@@ -4,3 +4,10 @@
 .description {
   -fx-font-size: 40px;
 }
+.wrong {
+    -fx-control-inner-background: red;
+}
+
+.correct {
+    -fx-control-inner-background: green;
+}
