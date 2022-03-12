@@ -18,7 +18,6 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Activity;
-import commons.MultipleChoiceQuestion;
 import commons.Question;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -60,7 +59,6 @@ public class MainCtrl {
   // if true, the player plays in multiplayer mode
   public boolean multiplayer;
 
-
   private ActivityListCtrl activityListCtrl;
   private Parent activityListParent;
 
@@ -70,15 +68,14 @@ public class MainCtrl {
   private HelpOverlayCtrl helpOverlayCtrl;
   private Parent helpOverlayParent;
 
+  private ExitOverlayCtrl exitOverlayCtrl;
+  private Parent exitOverlayParent;
+
   public String clientId;
 
   @Inject
   public MainCtrl(ServerUtils server) {
     this.server = server;
-  }
-
-  public boolean isMultiplayer() {
-    return multiplayer;
   }
 
   public enum Mode {
@@ -94,13 +91,6 @@ public class MainCtrl {
   }
 
   public Mode mode;
-
-
-  /**
-   * Map of all players and their scores in the current game
-   * Null if not in a game.
-   */
-  //public Map<String, Integer> players = null;
 
   /**
    * The user's name in the current game.
@@ -118,11 +108,10 @@ public class MainCtrl {
     Pair<GuessCtrl, Parent> guess,
     Pair<ActivityListCtrl, Parent> activityList,
     Pair<EditActivityCtrl, Parent> editActivity,
-    Pair<HelpOverlayCtrl, Parent> helpOverlay
+    Pair<HelpOverlayCtrl, Parent> helpOverlay,
+    Pair<ExitOverlayCtrl, Parent> exitOverlay
   ) {
-
     this.primaryStage = primaryStage;
-
     this.connectCtrl = connect.getKey();
     this.connectParent = connect.getValue();
 
@@ -150,6 +139,11 @@ public class MainCtrl {
     this.helpOverlayCtrl = helpOverlay.getKey();
     this.helpOverlayParent = helpOverlay.getValue();
 
+
+    this.exitOverlayCtrl = exitOverlay.getKey();
+    this.exitOverlayParent = exitOverlay.getValue();
+
+
     primaryStage.setTitle("Quizzzzz");
     // never exit full screen
     primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
@@ -162,25 +156,13 @@ public class MainCtrl {
 
   @FXML
   public void exit() {
-    if (alert()) {
-      Platform.exit();
-      System.exit(0);
-    }
-  }
-
-  public boolean alert() {
-    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-    alert.setTitle("Exit");
-    alert.setHeaderText("You are about to leave the game");
-    alert.setContentText("Are you sure?");
-    return alert.showAndWait().get() == ButtonType.OK;
+    Platform.exit();
+    System.exit(0);
   }
 
   @FXML
-  public void goBackToMenu() {
-    if (alert()) {
-      showSplash();
-    }
+  public void backToMenu() {
+    showSplash();
   }
 
   // instead of swapping entire scene, just swap parent
@@ -200,6 +182,7 @@ public class MainCtrl {
 
   public void showHowMuch() {
     primaryStage.getScene().setRoot(howMuchParent);
+    howMuchCtrl.startTimer();
   }
 
   public void showWaitingRoom() {
@@ -244,14 +227,14 @@ public class MainCtrl {
 
   }
 
-
-  public void showGuess() throws InterruptedException {
+  public void showGuess() {
     primaryStage.getScene().setRoot(guessParent);
-    guessCtrl.start();
+    guessCtrl.startTimer();
   }
 
   public void showWhatRequiresMoreEnergy() {
     primaryStage.getScene().setRoot(whatRequiresMoreEnergyParent);
+    whatRequiresMoreEnergyCtrl.startTimer();
   }
 
   public void showActivityList() {
@@ -272,5 +255,14 @@ public class MainCtrl {
 
   public void closeHelp() {
     ((StackPane) primaryStage.getScene().getRoot()).getChildren().remove(helpOverlayParent);
+  }
+
+  public void openExitOverlay(boolean closeApp) {
+    exitOverlayCtrl.closeApp = closeApp;
+    ((StackPane) primaryStage.getScene().getRoot()).getChildren().add(exitOverlayParent);
+  }
+
+  public void closeExitOverlay() {
+    ((StackPane) primaryStage.getScene().getRoot()).getChildren().remove(exitOverlayParent);
   }
 }

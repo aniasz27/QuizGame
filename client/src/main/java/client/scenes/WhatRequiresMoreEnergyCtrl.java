@@ -1,24 +1,20 @@
 package client.scenes;
 
+import client.scenes.helpers.QuestionCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Activity;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.OptionalLong;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 
-public class WhatRequiresMoreEnergyCtrl implements Initializable {
+public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initializable {
 
-  @FXML
-  private Button backButton;
   @FXML
   private Button button0;
   @FXML
@@ -26,34 +22,27 @@ public class WhatRequiresMoreEnergyCtrl implements Initializable {
   @FXML
   private Button button2;
 
-  ServerUtils server;
-  MainCtrl mainCtrl;
-
   Button[] buttons;
   Activity[] activities;
 
   @Inject
   WhatRequiresMoreEnergyCtrl(ServerUtils server, MainCtrl mainCtrl) {
-    this.server = server;
-    this.mainCtrl = mainCtrl;
-  }
-
-
-  @FXML
-  private void back(ActionEvent actionEvent) {
-    mainCtrl.showSplash();
+    super(server, mainCtrl);
   }
 
   @FXML
-  private void checkCorrectAnswer(ActionEvent actionEvent) {
-    Button clickedButton = (Button) actionEvent.getSource();
+  private void checkCorrectAnswer(MouseEvent event) {
+    Button clickedButton = (Button) event.getSource();
+    if (clickedButton.getUserData() == null) {
+      return;
+    }
 
     if ((boolean) clickedButton.getUserData()) {
       showUserCorrect();
     } else {
       showUserIncorrect();
     }
-    ;
+
     for (Button button : buttons) {
       showButtonCorrectness(button);
     }
@@ -73,13 +62,17 @@ public class WhatRequiresMoreEnergyCtrl implements Initializable {
    * @param button button to assign color
    */
   private void showButtonCorrectness(Button button) {
+    if (button.getUserData() == null) {
+      return;
+    }
+
     // set color to green (#2dff26) if answer was correct,
     // set it to red (#ff1717) otherwise
     String style = "-fx-background-color: "
       + (((boolean) button.getUserData()) ? "#2dff26" : "#ff1717")
       + ";";
 
-    button.setStyle(style);
+    button.getStyleClass().add((boolean) button.getUserData() ? "good" : "bad");
   }
 
 

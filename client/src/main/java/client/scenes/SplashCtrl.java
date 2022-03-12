@@ -7,7 +7,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -33,8 +33,7 @@ public class SplashCtrl implements Initializable {
   }
 
   @FXML
-  public void playMultiplayer() throws InterruptedException {
-    mainCtrl.multiplayer = true;
+  public void playMultiplayer() {
     mainCtrl.showWaitingRoom();
   }
 
@@ -48,24 +47,19 @@ public class SplashCtrl implements Initializable {
 
   @FXML
   public void showAdmin() {
-    mainCtrl.mode = MainCtrl.Mode.ADMIN;
+    mainCtrl.showActivityList();
+  }
+
+
+  @FXML
+  public void back() {
+    // TODO: disconnect from the server
     mainCtrl.showConnect();
   }
 
   @FXML
-  public void reconnect() {
-    //TODO
-  }
-
-  @FXML
-  public void showAdminPanel() {
-    //TODO
-  }
-
-
-  @FXML
-  public void exit() {
-    mainCtrl.exit();
+  private void help(ActionEvent actionEvent) {
+    mainCtrl.openHelp();
   }
 
   /**
