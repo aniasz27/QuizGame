@@ -1,8 +1,10 @@
 package commons;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.Random;
 
 @SuppressWarnings("unused")
+@JsonTypeName("HOWMUCH")
 public class HowMuchQuestion extends Question {
 
   private String question;
