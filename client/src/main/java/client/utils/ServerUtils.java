@@ -20,6 +20,7 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import commons.Activity;
 import commons.Question;
+import commons.Score;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
@@ -156,5 +157,14 @@ public class ServerUtils {
       .request(APPLICATION_JSON)
       .accept(APPLICATION_JSON)
       .get(String.class);
+  }
+
+  public Iterable<Score> getSingleLeaderboard() {
+    return ClientBuilder.newClient(new ClientConfig())
+      .target(SERVER).path("api/score/leaderboard")
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
+      .get(new GenericType<>() {
+      });
   }
 }

@@ -71,6 +71,9 @@ public class MainCtrl {
   private ExitOverlayCtrl exitOverlayCtrl;
   private Parent exitOverlayParent;
 
+  private EndScreenCtrl endScreenCtrl;
+  private Parent endScreenParent;
+
   public String clientId;
 
   @Inject
@@ -109,7 +112,8 @@ public class MainCtrl {
     Pair<ActivityListCtrl, Parent> activityList,
     Pair<EditActivityCtrl, Parent> editActivity,
     Pair<HelpOverlayCtrl, Parent> helpOverlay,
-    Pair<ExitOverlayCtrl, Parent> exitOverlay
+    Pair<ExitOverlayCtrl, Parent> exitOverlay,
+    Pair<EndScreenCtrl, Parent> endScreen
   ) {
     this.primaryStage = primaryStage;
     this.connectCtrl = connect.getKey();
@@ -143,6 +147,8 @@ public class MainCtrl {
     this.exitOverlayCtrl = exitOverlay.getKey();
     this.exitOverlayParent = exitOverlay.getValue();
 
+    this.endScreenCtrl = endScreen.getKey();
+    this.endScreenParent = endScreen.getValue();
 
     primaryStage.setTitle("Quizzzzz");
     // never exit full screen
@@ -264,5 +270,9 @@ public class MainCtrl {
 
   public void closeExitOverlay() {
     ((StackPane) primaryStage.getScene().getRoot()).getChildren().remove(exitOverlayParent);
+  }
+
+  public void showEndScreen() {
+    primaryStage.getScene().setRoot(endScreenParent);
   }
 }
