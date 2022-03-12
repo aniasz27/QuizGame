@@ -283,6 +283,7 @@ public class MainCtrl {
 
   public void addPoints(long toAdd) {
     this.points += toAdd;
+  }
 
   public void showEndScreen() {
     primaryStage.getScene().setRoot(endScreenParent);
