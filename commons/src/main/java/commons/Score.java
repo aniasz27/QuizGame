@@ -11,7 +11,7 @@ public class Score {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  public long id;
+  public String id;
 
   public String player;
   public int points;
@@ -22,7 +22,7 @@ public class Score {
   }
 
   @SuppressWarnings("unused")
-  public Score(long id, String player, int points) {
+  public Score(String id, String player, int points) {
     this.id = id;
     this.player = player;
     this.points = points;
@@ -68,5 +68,9 @@ public class Score {
 
   public void setPoints(int points) {
     this.points = points;
+  }
+
+  public void addPoints(int points) {
+    this.points += points;
   }
 }

@@ -17,8 +17,7 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
-import commons.Activity;
-import commons.Question;
+import commons.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -75,7 +74,7 @@ public class MainCtrl {
   private Parent endScreenParent;
 
   public String clientId;
-  private long points;
+  private Score points;
 
   private Question question;
 
@@ -151,8 +150,6 @@ public class MainCtrl {
     this.exitOverlayParent = exitOverlay.getValue();
 
 
-    this.points = 0;
-
     this.endScreenCtrl = endScreen.getKey();
     this.endScreenParent = endScreen.getValue();
 
@@ -181,7 +178,7 @@ public class MainCtrl {
   // instead of swapping entire scene, just swap parent
   public void showSplash() {
     // reset name and list of players if coming out of a game
-    name = null;
+    this.points = new Score(clientId, name, 0);
     //players = null;
     primaryStage.getScene().setRoot(splashParent);
   }
@@ -281,12 +278,11 @@ public class MainCtrl {
   }
 
 
-  public void addPoints(long toAdd) {
-    this.points += toAdd;
-  }
-
   public void showEndScreen() {
     primaryStage.getScene().setRoot(endScreenParent);
+  }
 
+  public void addPoints(int toAdd) {
+    points.addPoints(toAdd);
   }
 }

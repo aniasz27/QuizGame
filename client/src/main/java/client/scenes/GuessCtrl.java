@@ -50,8 +50,8 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   }
 
   public void checkCorrect() {
-    long value = Long.parseLong(answer.getText());
-    long point = (long) (question.calculateHowClose(value) * 100);
+    int value = Integer.parseInt(answer.getText());
+    int point = (int) (question.calculateHowClose(value) * 100);
     mainCtrl.addPoints(point);
   }
 }
