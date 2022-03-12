@@ -4,6 +4,9 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -35,13 +38,14 @@ public class WaitingRoomCtrl implements Initializable {
   }
 
   @FXML
-  public void back(ActionEvent actionEvent) {
-    mainCtrl.goBackToMenu();
+  private void back(ActionEvent actionEvent) {
+    stop();
+    mainCtrl.showSplash();
   }
 
   @FXML
   public void start(ActionEvent actionEvent) {
-    mainCtrl.showHowMuch();
+    mainCtrl.start();
   }
 
   @FXML
@@ -50,7 +54,7 @@ public class WaitingRoomCtrl implements Initializable {
   }
 
   @FXML
-  private void play(ActionEvent actionEvent) {
+  private void play(ActionEvent actionEvent) throws InterruptedException {
     mainCtrl.play();
   }
 
@@ -66,7 +70,7 @@ public class WaitingRoomCtrl implements Initializable {
     playerListDisplay.getChildren().removeAll(playerListDisplay.getChildren());
     int[] i = {0};
     players.forEach(player -> {
-      Label l = new Label(player.equals(server.getName(mainCtrl.clientId)) ? "You (" + player + ")" : player);
+      Label l = new Label(player.equals(server.getName(server.getClientId())) ? "You (" + player + ")" : player);
       l.getStyleClass().add("list-item");
       l.getStyleClass().add("border-bottom");
       if (i[0]++ == 0) {
@@ -75,4 +79,61 @@ public class WaitingRoomCtrl implements Initializable {
       playerListDisplay.getChildren().add(l);
     });
   }
+
+  /**
+   * Client connects to the server for the first time
+   */
+  public void connect() {
+    mainCtrl.clientId = server.connectFirst("ooo");
+    server.setClientId(mainCtrl.clientId);
+    keepAlive();
+    checkGameActive();
+  }
+
+  private static ScheduledExecutorService EXECKeepAlive;
+
+  /**
+   * Sends http request from the client to the server every second
+   */
+  public void keepAlive() {
+    EXECKeepAlive = Executors.newSingleThreadScheduledExecutor();
+    EXECKeepAlive.scheduleAtFixedRate(new Runnable() {
+      @Override
+      public void run() {
+        server.keepAlive(server.getClientId());
+      }
+    }, 0, 1, TimeUnit.SECONDS);
+  }
+
+
+  private static ScheduledExecutorService EXECGameStarted;
+
+  /**
+   * Checks every second if a game containing the player has started
+   */
+  public void checkGameActive() {
+    try {
+      EXECGameStarted = Executors.newSingleThreadScheduledExecutor();
+      EXECGameStarted.scheduleAtFixedRate(() -> {
+        String gameId = server.isGameActive(server.getClientId());
+        if (!gameId.equals("")) {
+          server.setGameId(gameId);
+          stop();
+          try {
+            mainCtrl.play();
+          } catch (InterruptedException e) {
+            e.printStackTrace();
+          }
+        }
+      }, 0, 1, TimeUnit.SECONDS);
+    } catch (Exception e) {
+      System.out.println(e.getCause().toString());
+    }
+  }
+
+  public void stop() {
+    EXECGameStarted.shutdownNow();
+    EXECKeepAlive.shutdownNow();
+  }
+
 }

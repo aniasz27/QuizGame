@@ -31,12 +31,12 @@ public class ConnectScreenCtrl {
 
   @FXML
   public void exit() {
-    mainCtrl.exit();
+    mainCtrl.openExitOverlay(true);
   }
 
   @FXML
-  public void help() {
-    //TODO: implement help screen
+  private void help(ActionEvent actionEvent) {
+    mainCtrl.openHelp();
   }
 
   @FXML

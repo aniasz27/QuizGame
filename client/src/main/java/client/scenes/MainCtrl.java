@@ -16,7 +16,9 @@
 
 package client.scenes;
 
+import client.utils.ServerUtils;
 import commons.Activity;
+import commons.Question;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -27,8 +29,12 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import javax.inject.Inject;
 
 public class MainCtrl {
+
+  private final ServerUtils server;
+
   private Stage primaryStage;
 
   private SplashCtrl splashCtrl;
@@ -62,7 +68,15 @@ public class MainCtrl {
   private HelpOverlayCtrl helpOverlayCtrl;
   private Parent helpOverlayParent;
 
+  private ExitOverlayCtrl exitOverlayCtrl;
+  private Parent exitOverlayParent;
+
   public String clientId;
+
+  @Inject
+  public MainCtrl(ServerUtils server) {
+    this.server = server;
+  }
 
   public enum Mode {
     MULTI(0),
@@ -77,12 +91,6 @@ public class MainCtrl {
   }
 
   public Mode mode;
-
-  /**
-   * Map of all players and their scores in the current game
-   * Null if not in a game.
-   */
-  //public Map<String, Integer> players = null;
 
   /**
    * The user's name in the current game.
@@ -100,10 +108,10 @@ public class MainCtrl {
     Pair<GuessCtrl, Parent> guess,
     Pair<ActivityListCtrl, Parent> activityList,
     Pair<EditActivityCtrl, Parent> editActivity,
-    Pair<HelpOverlayCtrl, Parent> helpOverlay
+    Pair<HelpOverlayCtrl, Parent> helpOverlay,
+    Pair<ExitOverlayCtrl, Parent> exitOverlay
   ) {
     this.primaryStage = primaryStage;
-
     this.connectCtrl = connect.getKey();
     this.connectParent = connect.getValue();
 
@@ -131,6 +139,11 @@ public class MainCtrl {
     this.helpOverlayCtrl = helpOverlay.getKey();
     this.helpOverlayParent = helpOverlay.getValue();
 
+
+    this.exitOverlayCtrl = exitOverlay.getKey();
+    this.exitOverlayParent = exitOverlay.getValue();
+
+
     primaryStage.setTitle("Quizzzzz");
     // never exit full screen
     primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
@@ -142,26 +155,8 @@ public class MainCtrl {
   }
 
   @FXML
-  public void exit() {
-    if (alert()) {
-      Platform.exit();
-      System.exit(0);
-    }
-  }
-
-  public boolean alert() {
-    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-    alert.setTitle("Exit");
-    alert.setHeaderText("You are about to leave the game");
-    alert.setContentText("Are you sure?");
-    return alert.showAndWait().get() == ButtonType.OK;
-  }
-
-  @FXML
-  public void goBackToMenu() {
-    if (alert()) {
-      showSplash();
-    }
+  public void backToMenu() {
+    showSplash();
   }
 
   // instead of swapping entire scene, just swap parent
@@ -181,20 +176,56 @@ public class MainCtrl {
 
   public void showHowMuch() {
     primaryStage.getScene().setRoot(howMuchParent);
+    howMuchCtrl.startTimer();
   }
 
   public void showWaitingRoom() {
     primaryStage.getScene().setRoot(waitingRoomParent);
+    waitingRoomCtrl.connect();
     waitingRoomCtrl.refresh();
   }
 
-  public void play() {
-    // TODO
+  public void start() {
+    server.startGame();
   }
 
-  public void showGuess() throws InterruptedException {
+  public void play() throws InterruptedException {
+    nextQuestion();
+  }
+
+  // TODO: Long polling
+  private void nextQuestion() throws InterruptedException {
+    Question question = server.nextQuestion();
+    if (question == null) {
+      //TODO: Show end screen
+    } else {
+      switch (question.type) {
+        case MULTICHOICE:
+          showWhatRequiresMoreEnergy();
+          break;
+
+        case ESTIMATE:
+          showGuess();
+          break;
+        case HOWMUCH:
+          showHowMuch();
+          break;
+        default:
+          //TODO do something if it doesn't work
+          break;
+      }
+    }
+
+  }
+
+  public void showGuess() {
     primaryStage.getScene().setRoot(guessParent);
-    guessCtrl.start();
+    guessCtrl.startTimer();
+  }
+
+  public void showWhatRequiresMoreEnergy() {
+    primaryStage.getScene().setRoot(whatRequiresMoreEnergyParent);
+    whatRequiresMoreEnergyCtrl.startTimer();
   }
 
   public void showActivityList() {
@@ -215,5 +246,14 @@ public class MainCtrl {
 
   public void closeHelp() {
     ((StackPane) primaryStage.getScene().getRoot()).getChildren().remove(helpOverlayParent);
+  }
+
+  public void openExitOverlay(boolean closeApp) {
+    exitOverlayCtrl.closeApp = closeApp;
+    ((StackPane) primaryStage.getScene().getRoot()).getChildren().add(exitOverlayParent);
+  }
+
+  public void closeExitOverlay() {
+    ((StackPane) primaryStage.getScene().getRoot()).getChildren().remove(exitOverlayParent);
   }
 }
