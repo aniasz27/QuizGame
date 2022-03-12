@@ -10,6 +10,8 @@ build/
 
 **/*.swp
 
+**/activities.json
+
 ### STS ###
 .apt_generated
 .classpath
