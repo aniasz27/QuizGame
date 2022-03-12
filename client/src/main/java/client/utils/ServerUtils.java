@@ -28,27 +28,6 @@ import java.util.List;
 import org.glassfish.jersey.client.ClientConfig;
 
 public class ServerUtils {
-  private static final String SERVER = "http://localhost:8080/";
-
-  private String clientId;
-  private String gameId;
-
-  public String getGameId() {
-    return gameId;
-  }
-
-  public void setGameId(String gameId) {
-    this.gameId = gameId;
-  }
-
-  public String getClientId() {
-    return clientId;
-  }
-
-  public void setClientId(String clientId) {
-    this.clientId = clientId;
-  }
-
   /**
    * Initiate connection to the server.
    *
@@ -136,15 +115,14 @@ public class ServerUtils {
       });
   }
 
-
   /**
    * Long polling: starts a timer with the server and keeps the connection open
    *
    * @return true if 10s have passed and connection closes, false if an exception has been thrown
    */
-  public boolean startServerTimer(int duration) {
+  public boolean startServerTimer(String ip, int duration) {
     return ClientBuilder.newClient(new ClientConfig())
-      .target(SERVER)
+      .target(ip)
       .path("/api/game/finished/" + duration)
       .request(APPLICATION_JSON)
       .accept(APPLICATION_JSON)
@@ -199,9 +177,9 @@ public class ServerUtils {
    * @param id id of a player
    * @return a score of the player specified by the passed parameter
    */
-  public int playerScore(String id) {
+  public int playerScore(String ip, String id) {
     return ClientBuilder.newClient(new ClientConfig())
-      .target(SERVER).path("api/game/" + id + "/score")
+      .target(ip).path("api/game/" + id + "/score")
       .request(APPLICATION_JSON)
       .accept(APPLICATION_JSON)
       .get(Integer.class);

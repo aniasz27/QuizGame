@@ -42,7 +42,6 @@ public class ConnectScreenCtrl {
   }
 
   @FXML
-
   private void connect(ActionEvent actionEvent) {
     try {
       String ip = serverField.getText().trim();
