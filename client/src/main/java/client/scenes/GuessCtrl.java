@@ -28,13 +28,7 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   private TextField answer;
 
   @FXML
-  private ImageView imageView;
-
-  @FXML
   private Image image;
-
-  @FXML
-  private TextField answer;
 
   @FXML
   private Button submit;
@@ -99,6 +93,7 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     int point = (int) (question.calculateHowClose(value) * 100);
     mainCtrl.addPoints(point);
   }
+
   //sets the textfield color to green and increases the points
   //shows the correct answer
   public void showCorrect() {
