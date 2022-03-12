@@ -21,6 +21,7 @@ import static com.google.inject.Guice.createInjector;
 import client.scenes.ActivityListCtrl;
 import client.scenes.ConnectScreenCtrl;
 import client.scenes.EditActivityCtrl;
+import client.scenes.EndScreenCtrl;
 import client.scenes.ExitOverlayCtrl;
 import client.scenes.GuessCtrl;
 import client.scenes.HelpOverlayCtrl;
@@ -100,9 +101,15 @@ public class Main extends Application {
       "client/css/ExitOverlay.css"
     );
 
+    var endScreen = FXML.load(
+      EndScreenCtrl.class,
+      "client/scenes/EndScreen.fxml",
+      "client/css/EndScreen.css"
+    );
+
     var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
     mainCtrl.initialize(primaryStage, splash, connectScreen, waitingRoom, howMuch,
-      whatRequiresMoreEnergy, guess, activityList, editActivity, helpOverlay, exitOverlay);
+      whatRequiresMoreEnergy, guess, activityList, editActivity, helpOverlay, exitOverlay, endScreen);
 
     //stops the thread when user closes the window
     primaryStage.setOnCloseRequest(e -> {
