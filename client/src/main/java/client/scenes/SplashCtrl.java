@@ -39,7 +39,7 @@ public class SplashCtrl implements Initializable {
 
   @FXML
   public void playSingleplayer() {
-    mainCtrl.showHowMuch();
+    mainCtrl.showSpWaitingRoom();
   }
 
   @FXML

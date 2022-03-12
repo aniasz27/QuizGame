@@ -48,7 +48,6 @@ public class SpWaitingRoomCtrl implements Initializable {
 
   @FXML
   private void back(ActionEvent actionEvent) {
-    stop();
     mainCtrl.showSplash();
   }
 
@@ -66,10 +65,4 @@ public class SpWaitingRoomCtrl implements Initializable {
   private void play(ActionEvent actionEvent) throws InterruptedException {
     mainCtrl.showHowMuch();
   }
-
-  public void stop() {
-//    EXECGameStarted.shutdownNow();
-//    EXECKeepAlive.shutdownNow();
-  }
-
 }
