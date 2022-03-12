@@ -45,7 +45,7 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   public void displayQuestion(Question question) {
     this.question = (EstimateQuestion) question;
     this.activity = this.question.getActivity();
-    imageView = new ImageView(getClass().getResource(activity.getImagePath()).toExternalForm());
+    imageView = new ImageView(getClass().getResource(activity.getImage_path()).toExternalForm());
     description.setText(activity.getTitle());
   }
 

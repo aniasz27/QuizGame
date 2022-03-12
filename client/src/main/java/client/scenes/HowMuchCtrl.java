@@ -45,7 +45,7 @@ public class HowMuchCtrl extends QuestionCtrl {
     this.buttons = new boolean[3];
     this.question = (HowMuchQuestion) question;
     this.activity = this.question.getActivity();
-    imageView = new ImageView(getClass().getResource(activity.getImagePath()).toExternalForm());
+    imageView = new ImageView(getClass().getResource(activity.getImage_path()).toExternalForm());
     description.setText(activity.getTitle());
     answer_1.setDisable(false);
     answer_2.setDisable(false);
@@ -58,19 +58,19 @@ public class HowMuchCtrl extends QuestionCtrl {
     int place = random.nextInt(3);
     switch (place) {
       case 1:
-        answer_1.setText(activity.getConsumptionInWh() + "Wh");
+        answer_1.setText(activity.getConsumption_in_wh() + "Wh");
         answer_2.setText(question.getWrong1() + "Wh");
         answer_3.setText(question.getWrong2() + "Wh");
         buttons[0] = true;
         break;
       case 2:
-        answer_2.setText(activity.getConsumptionInWh() + "Wh");
+        answer_2.setText(activity.getConsumption_in_wh() + "Wh");
         answer_1.setText(question.getWrong1() + "Wh");
         answer_3.setText(question.getWrong2() + "Wh");
         buttons[1] = true;
         break;
       default:
-        answer_3.setText(activity.getConsumptionInWh() + "Wh");
+        answer_3.setText(activity.getConsumption_in_wh() + "Wh");
         answer_1.setText(question.getWrong1() + "Wh");
         answer_2.setText(question.getWrong2() + "Wh");
         buttons[2] = true;
