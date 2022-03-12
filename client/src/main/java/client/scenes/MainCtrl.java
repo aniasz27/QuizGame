@@ -23,6 +23,8 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -60,7 +62,6 @@ public class MainCtrl {
   // if true, the player plays in multiplayer mode
   public boolean multiplayer;
 
-
   private ActivityListCtrl activityListCtrl;
   private Parent activityListParent;
 
@@ -73,15 +74,14 @@ public class MainCtrl {
   private ExitOverlayCtrl exitOverlayCtrl;
   private Parent exitOverlayParent;
 
+  private EndScreenCtrl endScreenCtrl;
+  private Parent endScreenParent;
+
   public String clientId;
 
   @Inject
   public MainCtrl(ServerUtils server) {
     this.server = server;
-  }
-
-  public boolean isMultiplayer() {
-    return multiplayer;
   }
 
   public enum Mode {
@@ -97,7 +97,6 @@ public class MainCtrl {
   }
 
   public Mode mode;
-
 
   /**
    * The user's name in the current game.
@@ -117,11 +116,10 @@ public class MainCtrl {
     Pair<ActivityListCtrl, Parent> activityList,
     Pair<EditActivityCtrl, Parent> editActivity,
     Pair<HelpOverlayCtrl, Parent> helpOverlay,
-    Pair<ExitOverlayCtrl, Parent> exitOverlay
+    Pair<ExitOverlayCtrl, Parent> exitOverlay,
+    Pair<EndScreenCtrl, Parent> endScreen
   ) {
-
     this.primaryStage = primaryStage;
-
     this.connectCtrl = connect.getKey();
     this.connectParent = connect.getValue();
 
@@ -152,8 +150,12 @@ public class MainCtrl {
     this.helpOverlayCtrl = helpOverlay.getKey();
     this.helpOverlayParent = helpOverlay.getValue();
 
+
     this.exitOverlayCtrl = exitOverlay.getKey();
     this.exitOverlayParent = exitOverlay.getValue();
+
+    this.endScreenCtrl = endScreen.getKey();
+    this.endScreenParent = endScreen.getValue();
 
     primaryStage.setTitle("Quizzzzz");
     // never exit full screen
@@ -222,13 +224,16 @@ public class MainCtrl {
     } else {
       switch (question.type) {
         case MULTICHOICE:
+          System.out.println("Showed multiple choice");
           showWhatRequiresMoreEnergy();
           break;
 
         case ESTIMATE:
+          System.out.println("Showed guess");
           showGuess();
           break;
         case HOWMUCH:
+          System.out.println("Showed how much");
           showHowMuch();
           break;
         default:
@@ -276,5 +281,9 @@ public class MainCtrl {
 
   public void closeExitOverlay() {
     ((StackPane) primaryStage.getScene().getRoot()).getChildren().remove(exitOverlayParent);
+  }
+
+  public void showEndScreen() {
+    primaryStage.getScene().setRoot(endScreenParent);
   }
 }

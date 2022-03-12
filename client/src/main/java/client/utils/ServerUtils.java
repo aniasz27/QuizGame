@@ -167,7 +167,7 @@ public class ServerUtils {
       .put(Entity.entity(score, APPLICATION_JSON), Score.class);
   }
 
-  public List<Score> getLeaderboard() {
+  public Iterable<Score> getSingleLeaderboard() {
     return ClientBuilder.newClient(new ClientConfig())
       .target(SERVER).path("api/score/leaderboard")
       .request(APPLICATION_JSON)
