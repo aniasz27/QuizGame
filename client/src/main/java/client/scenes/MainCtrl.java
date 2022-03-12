@@ -17,7 +17,9 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
-import commons.*;
+import commons.Activity;
+import commons.Question;
+import commons.Score;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -166,7 +168,7 @@ public class MainCtrl {
     primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
     // set initial scene (splash) and show
-    
+
     primaryStage.setScene(new Scene(connectParent));
     primaryStage.show();
     primaryStage.setFullScreen(true);
