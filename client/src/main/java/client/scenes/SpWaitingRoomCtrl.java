@@ -32,7 +32,7 @@ public class SpWaitingRoomCtrl implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    var leaderboard = server.getLeaderboard();
+    var leaderboard = server.getSingleLeaderboard();
 
     int[] i = {1};
     leaderboard.forEach(score -> {

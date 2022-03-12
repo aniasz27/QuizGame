@@ -27,19 +27,7 @@ public class Score {
     this.player = player;
     this.points = points;
   }
-
-  public long getId() {
-    return id;
-  }
-
-  public String getPlayer() {
-    return player;
-  }
-
-  public int getPoints() {
-    return points;
-  }
-
+  
   @Override
   public boolean equals(Object o) {
     if (this == o) {
