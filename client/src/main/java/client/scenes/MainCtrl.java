@@ -23,6 +23,8 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -57,7 +59,6 @@ public class MainCtrl {
   // if true, the player plays in multiplayer mode
   public boolean multiplayer;
 
-
   private ActivityListCtrl activityListCtrl;
   private Parent activityListParent;
 
@@ -77,10 +78,6 @@ public class MainCtrl {
     this.server = server;
   }
 
-  public boolean isMultiplayer() {
-    return multiplayer;
-  }
-
   public enum Mode {
     MULTI(0),
     SINGLE(1),
@@ -94,7 +91,6 @@ public class MainCtrl {
   }
 
   public Mode mode;
-
 
   /**
    * The user's name in the current game.
@@ -115,9 +111,7 @@ public class MainCtrl {
     Pair<HelpOverlayCtrl, Parent> helpOverlay,
     Pair<ExitOverlayCtrl, Parent> exitOverlay
   ) {
-
     this.primaryStage = primaryStage;
-
     this.connectCtrl = connect.getKey();
     this.connectParent = connect.getValue();
 
@@ -145,8 +139,10 @@ public class MainCtrl {
     this.helpOverlayCtrl = helpOverlay.getKey();
     this.helpOverlayParent = helpOverlay.getValue();
 
+
     this.exitOverlayCtrl = exitOverlay.getKey();
     this.exitOverlayParent = exitOverlay.getValue();
+
 
     primaryStage.setTitle("Quizzzzz");
     // never exit full screen
