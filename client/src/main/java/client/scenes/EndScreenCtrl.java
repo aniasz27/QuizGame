@@ -55,7 +55,6 @@ public class EndScreenCtrl implements Initializable {
     final boolean[] first = {true};
 
     scores.forEach(s -> {
-      HBox score = new HBox();
       Label label = new Label(s.getPlayer());
       label.getStyleClass().add("expand");
       label.getStyleClass().add("list-item");
@@ -63,6 +62,7 @@ public class EndScreenCtrl implements Initializable {
       if (first[0]) {
         label.getStyleClass().add("list-item-top-left");
       }
+      HBox score = new HBox();
       HBox.setHgrow(label, Priority.ALWAYS);
       score.getChildren().add(label);
       label = new Label(String.valueOf(s.getPoints()));
