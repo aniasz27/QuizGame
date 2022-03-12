@@ -27,7 +27,7 @@ public class Score {
     this.player = player;
     this.points = points;
   }
-
+  
   @Override
   public boolean equals(Object o) {
     if (this == o) {

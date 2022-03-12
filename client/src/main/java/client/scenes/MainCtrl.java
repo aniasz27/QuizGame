@@ -46,6 +46,9 @@ public class MainCtrl {
   private WaitingRoomCtrl waitingRoomCtrl;
   private Parent waitingRoomParent;
 
+  private SpWaitingRoomCtrl spWaitingRoomCtrl;
+  private Parent spWaitingRoomParent;
+
   private HowMuchCtrl howMuchCtrl;
   private Parent howMuchParent;
 
@@ -106,6 +109,7 @@ public class MainCtrl {
     Pair<SplashCtrl, Parent> splash,
     Pair<ConnectScreenCtrl, Parent> connect,
     Pair<WaitingRoomCtrl, Parent> waitingRoom,
+    Pair<SpWaitingRoomCtrl, Parent> spWaitingRoom,
     Pair<HowMuchCtrl, Parent> howMuch,
     Pair<WhatRequiresMoreEnergyCtrl, Parent> whatRequiresMoreEnergy,
     Pair<GuessCtrl, Parent> guess,
@@ -124,6 +128,9 @@ public class MainCtrl {
 
     this.waitingRoomCtrl = waitingRoom.getKey();
     this.waitingRoomParent = waitingRoom.getValue();
+
+    this.spWaitingRoomCtrl = spWaitingRoom.getKey();
+    this.spWaitingRoomParent = spWaitingRoom.getValue();
 
     this.howMuchCtrl = howMuch.getKey();
     this.howMuchParent = howMuch.getValue();
@@ -195,6 +202,10 @@ public class MainCtrl {
     primaryStage.getScene().setRoot(waitingRoomParent);
     waitingRoomCtrl.connect();
     waitingRoomCtrl.refresh();
+  }
+
+  public void showSpWaitingRoom() {
+    primaryStage.getScene().setRoot(spWaitingRoomParent);
   }
 
   public void start() {
