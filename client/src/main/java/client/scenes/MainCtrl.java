@@ -155,6 +155,12 @@ public class MainCtrl {
   }
 
   @FXML
+  public void exit() {
+    Platform.exit();
+    System.exit(0);
+  }
+
+  @FXML
   public void backToMenu() {
     showSplash();
   }
