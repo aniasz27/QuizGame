@@ -162,7 +162,7 @@ public class MainCtrl {
     primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
     // set initial scene (splash) and show
-    
+
     primaryStage.setScene(new Scene(connectParent));
     primaryStage.show();
     primaryStage.setFullScreen(true);
@@ -207,6 +207,7 @@ public class MainCtrl {
 
   public void showSpWaitingRoom() {
     primaryStage.getScene().setRoot(spWaitingRoomParent);
+    spWaitingRoomCtrl.refresh();
   }
 
   public void start() {
@@ -286,5 +287,6 @@ public class MainCtrl {
 
   public void showEndScreen() {
     primaryStage.getScene().setRoot(endScreenParent);
+    endScreenCtrl.refresh();
   }
 }

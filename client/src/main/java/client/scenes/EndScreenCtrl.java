@@ -33,7 +33,6 @@ public class EndScreenCtrl implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    addScores();
   }
 
   @FXML
@@ -45,6 +44,10 @@ public class EndScreenCtrl implements Initializable {
   private void playAgain() throws InterruptedException {
     //TODO check if multiplayer or singleplayer
     mainCtrl.showWaitingRoom();
+  }
+
+  public void refresh() {
+    addScores();
   }
 
   public void addScores() {
