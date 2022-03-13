@@ -3,11 +3,14 @@ package client.scenes.helpers;
 import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
+import commons.Question;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Line;
 import javafx.util.Duration;
 
@@ -49,4 +52,6 @@ public abstract class QuestionCtrl {
   private void help(ActionEvent actionEvent) {
     mainCtrl.openHelp();
   }
+
+  public abstract void displayQuestion(Question question);
 }

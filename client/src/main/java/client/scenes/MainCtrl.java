@@ -19,6 +19,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import commons.Activity;
 import commons.Question;
+import commons.Score;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -45,6 +46,9 @@ public class MainCtrl {
   private WaitingRoomCtrl waitingRoomCtrl;
   private Parent waitingRoomParent;
 
+  private SpWaitingRoomCtrl spWaitingRoomCtrl;
+  private Parent spWaitingRoomParent;
+
   private HowMuchCtrl howMuchCtrl;
   private Parent howMuchParent;
 
@@ -70,7 +74,13 @@ public class MainCtrl {
   private ExitOverlayCtrl exitOverlayCtrl;
   private Parent exitOverlayParent;
 
+  private EndScreenCtrl endScreenCtrl;
+  private Parent endScreenParent;
+
   public String clientId;
+  private Score points;
+
+  private Question question;
 
   public Thread timerThread;
 
@@ -106,13 +116,15 @@ public class MainCtrl {
     Pair<SplashCtrl, Parent> splash,
     Pair<ConnectScreenCtrl, Parent> connect,
     Pair<WaitingRoomCtrl, Parent> waitingRoom,
+    Pair<SpWaitingRoomCtrl, Parent> spWaitingRoom,
     Pair<HowMuchCtrl, Parent> howMuch,
     Pair<WhatRequiresMoreEnergyCtrl, Parent> whatRequiresMoreEnergy,
     Pair<GuessCtrl, Parent> guess,
     Pair<ActivityListCtrl, Parent> activityList,
     Pair<EditActivityCtrl, Parent> editActivity,
     Pair<HelpOverlayCtrl, Parent> helpOverlay,
-    Pair<ExitOverlayCtrl, Parent> exitOverlay
+    Pair<ExitOverlayCtrl, Parent> exitOverlay,
+    Pair<EndScreenCtrl, Parent> endScreen
   ) {
     this.primaryStage = primaryStage;
     this.connectCtrl = connect.getKey();
@@ -123,6 +135,9 @@ public class MainCtrl {
 
     this.waitingRoomCtrl = waitingRoom.getKey();
     this.waitingRoomParent = waitingRoom.getValue();
+
+    this.spWaitingRoomCtrl = spWaitingRoom.getKey();
+    this.spWaitingRoomParent = spWaitingRoom.getValue();
 
     this.howMuchCtrl = howMuch.getKey();
     this.howMuchParent = howMuch.getValue();
@@ -147,11 +162,16 @@ public class MainCtrl {
     this.exitOverlayParent = exitOverlay.getValue();
 
 
+    this.endScreenCtrl = endScreen.getKey();
+    this.endScreenParent = endScreen.getValue();
+
+
     primaryStage.setTitle("Quizzzzz");
     // never exit full screen
     primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
     // set initial scene (splash) and show
+
     primaryStage.setScene(new Scene(connectParent));
     primaryStage.show();
     primaryStage.setFullScreen(true);
@@ -171,7 +191,7 @@ public class MainCtrl {
   // instead of swapping entire scene, just swap parent
   public void showSplash() {
     // reset name and list of players if coming out of a game
-    name = null;
+    this.points = new Score(name, 0);
     //players = null;
     primaryStage.getScene().setRoot(splashParent);
   }
@@ -180,11 +200,17 @@ public class MainCtrl {
     // reset name and list of players if coming out of a game
     name = null;
     //players = null;
+
     primaryStage.getScene().setRoot(connectParent);
   }
 
   public void showHowMuch() {
     primaryStage.getScene().setRoot(howMuchParent);
+
+    howMuchCtrl.displayQuestion(question);
+
+    howMuchCtrl.showPoints();
+
     howMuchCtrl.startTimer();
   }
 
@@ -192,6 +218,11 @@ public class MainCtrl {
     primaryStage.getScene().setRoot(waitingRoomParent);
     waitingRoomCtrl.connect();
     waitingRoomCtrl.refresh();
+  }
+
+  public void showSpWaitingRoom() {
+    primaryStage.getScene().setRoot(spWaitingRoomParent);
+    spWaitingRoomCtrl.refresh();
   }
 
   public void start() {
@@ -249,8 +280,9 @@ public class MainCtrl {
     }
   }
 
-  private void nextQuestion() {
-    Question question = server.nextQuestion();
+  // TODO: Long polling
+  private void nextQuestion() throws InterruptedException {
+    question = server.nextQuestion();
     if (question == null) {
       //TODO: Show end screen
     } else {
@@ -278,11 +310,13 @@ public class MainCtrl {
 
   public void showGuess() {
     primaryStage.getScene().setRoot(guessParent);
+    guessCtrl.showPoints();
     guessCtrl.startTimer();
   }
 
   public void showWhatRequiresMoreEnergy() {
     primaryStage.getScene().setRoot(whatRequiresMoreEnergyParent);
+    whatRequiresMoreEnergyCtrl.showPoints();
     whatRequiresMoreEnergyCtrl.startTimer();
   }
 
@@ -313,5 +347,15 @@ public class MainCtrl {
 
   public void closeExitOverlay() {
     ((StackPane) primaryStage.getScene().getRoot()).getChildren().remove(exitOverlayParent);
+  }
+
+
+  public void showEndScreen() {
+    primaryStage.getScene().setRoot(endScreenParent);
+    endScreenCtrl.refresh();
+  }
+
+  public void addPoints(int toAdd) {
+    points.addPoints(toAdd);
   }
 }

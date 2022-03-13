@@ -20,6 +20,7 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import commons.Activity;
 import commons.Question;
+import commons.Score;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
@@ -171,4 +172,37 @@ public class ServerUtils {
       .accept(APPLICATION_JSON)
       .get(String.class);
   }
+
+  public Score addScore(Score score) {
+    return ClientBuilder.newClient(new ClientConfig())
+      .target(SERVER).path("api/score/add")
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
+      .put(Entity.entity(score, APPLICATION_JSON), Score.class);
+  }
+
+  public Iterable<Score> getSingleLeaderboard() {
+    return ClientBuilder.newClient(new ClientConfig())
+      .target(SERVER).path("api/score/leaderboard")
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
+      .get(new GenericType<>() {
+      });
+  }
+
+  /**
+   * Returns a score of a player as an int
+   *
+   * @param id id of a player
+   * @return a score of the player specified by the passed parameter
+   */
+  public int playerScore(String id) {
+    return ClientBuilder.newClient(new ClientConfig())
+      .target(SERVER).path("api/game/" + id + "/score")
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
+      .get(Integer.class);
+  }
+
+
 }

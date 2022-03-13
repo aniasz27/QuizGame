@@ -1,5 +1,6 @@
 package commons;
 
+
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import javax.persistence.Entity;
