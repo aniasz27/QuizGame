@@ -21,11 +21,10 @@ import commons.Activity;
 import commons.Question;
 import commons.Score;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -82,6 +81,10 @@ public class MainCtrl {
   private Score points;
 
   private Question question;
+
+  public Thread timerThread;
+
+  public boolean playerExited = false;
 
   @Inject
   public MainCtrl(ServerUtils server) {
@@ -227,7 +230,54 @@ public class MainCtrl {
   }
 
   public void play() throws InterruptedException {
+    playerExited = false;
+    nextRound();
+  }
+
+  /**
+   * Shows the next question, starts a timer from the server and uses long polling to determine when to change state
+   *
+   * @throws InterruptedException if server long polling was unsuccessful
+   */
+  public void nextRound() throws InterruptedException {
+    if (playerExited) {
+      return;
+    }
+
     nextQuestion();
+
+    Task<Void> task = new Task<Void>() {
+      @Override
+      protected Void call() throws Exception {
+        startQuestionTimer();
+        return null;
+      }
+    };
+
+    timerThread = new Thread(task);
+    timerThread.start();
+  }
+
+  public void startQuestionTimer() throws InterruptedException {
+    // set a timer for 10s (question duration)
+    boolean finished = server.startServerTimer(10000);
+
+    if (finished) {
+      //Platform.runLater(() -> placeholder()) // TODO: Assign method of showing correct answer per question type
+      startBreakTimer();
+    } else {
+      System.err.println("Error in question timer.");
+    }
+  }
+
+  public void startBreakTimer() throws InterruptedException {
+    boolean finished = server.startServerTimer(2000); // 2s time given for break
+
+    if (finished) {
+      nextRound();
+    } else {
+      System.err.println("Error in break timer.");
+    }
   }
 
   // TODO: Long polling

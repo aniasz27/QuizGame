@@ -40,7 +40,12 @@ public abstract class QuestionCtrl {
 
   @FXML
   private void back(ActionEvent actionEvent) {
+    mainCtrl.playerExited = true;
     mainCtrl.openExitOverlay(false);
+  }
+
+  private void endServerTimer() {
+    mainCtrl.timerThread.interrupt();
   }
 
   @FXML
