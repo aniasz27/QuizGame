@@ -239,7 +239,7 @@ public class MainCtrl {
    *
    * @throws InterruptedException if server long polling was unsuccessful
    */
-  public void nextRound() {
+  public void nextRound() throws InterruptedException {
     if (playerExited) {
       return;
     }
@@ -258,7 +258,7 @@ public class MainCtrl {
     timerThread.start();
   }
 
-  public void startQuestionTimer() {
+  public void startQuestionTimer() throws InterruptedException {
     // set a timer for 10s (question duration)
     boolean finished = server.startServerTimer(10000);
 
@@ -270,7 +270,7 @@ public class MainCtrl {
     }
   }
 
-  public void startBreakTimer() {
+  public void startBreakTimer() throws InterruptedException {
     boolean finished = server.startServerTimer(2000); // 2s time given for break
 
     if (finished) {
