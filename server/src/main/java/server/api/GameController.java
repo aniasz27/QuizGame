@@ -148,11 +148,13 @@ public class GameController {
 
     return result;
   }
+
   /**
    * Endpoint to get a player score by id
    *
    * @return int score or -1 if the player is not in the game
    */
+
   @GetMapping("/{id}/score")
   public int playerScore(@PathVariable("id") String id) {
     String player = playerController.clients.get(id).getSecond();
