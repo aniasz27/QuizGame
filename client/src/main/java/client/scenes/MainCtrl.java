@@ -197,12 +197,17 @@ public class MainCtrl {
     // reset name and list of players if coming out of a game
     name = null;
     //players = null;
+
     primaryStage.getScene().setRoot(connectParent);
   }
 
   public void showHowMuch() {
     primaryStage.getScene().setRoot(howMuchParent);
+
     howMuchCtrl.displayQuestion(question);
+
+    howMuchCtrl.showPoints();
+
     howMuchCtrl.startTimer();
   }
 
@@ -255,11 +260,13 @@ public class MainCtrl {
 
   public void showGuess() {
     primaryStage.getScene().setRoot(guessParent);
+    guessCtrl.showPoints();
     guessCtrl.startTimer();
   }
 
   public void showWhatRequiresMoreEnergy() {
     primaryStage.getScene().setRoot(whatRequiresMoreEnergyParent);
+    whatRequiresMoreEnergyCtrl.showPoints();
     whatRequiresMoreEnergyCtrl.startTimer();
   }
 

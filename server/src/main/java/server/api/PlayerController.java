@@ -19,7 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/player")
 public class PlayerController {
-  private Map<String, Pair<LocalDateTime, String>> clients = new HashMap<>();
+  // maps a unique playerID to the pair of the time when the user was last active and their username
+  public Map<String, Pair<LocalDateTime, String>> clients = new HashMap<>();
 
   /**
    * Generates uniqueId for the client when they first connect
@@ -65,8 +66,13 @@ public class PlayerController {
     return clients.values().stream().map(Pair::getSecond).collect(Collectors.toList());
   }
 
+  /**
+   * Returns a username based on the id
+   *
+   * @param id uniqueId for the client
+   */
   @GetMapping("/{id}")
-  public String getPlayers(@PathVariable("id") String id) {
+  public String getPlayer(@PathVariable("id") String id) {
     return clients.get(id).getSecond();
   }
 

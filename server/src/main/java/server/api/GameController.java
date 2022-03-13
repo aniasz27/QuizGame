@@ -11,6 +11,7 @@ import java.util.UUID;
 import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,7 +28,8 @@ public class GameController {
   private static int questionCounter = 0;
   private final QuestionRepository questionRepository;
   private final PlayerController playerController;
-
+  private final ScoreController scoreController;
+  private String uniqueServerId;
 
   /**
    * Maps the unique game ID with a Pair of < username, points >
@@ -35,11 +37,13 @@ public class GameController {
   private Map<String, Pair<String, Integer>> games = new HashMap<>();
 
   public GameController(ActivityController activityController, Random random,
-                        QuestionRepository questionRepository, PlayerController playerController) {
+                        QuestionRepository questionRepository, PlayerController playerController,
+                        ScoreController scoreController) {
     this.activityController = activityController;
     this.random = random;
     this.questionRepository = questionRepository;
     this.playerController = playerController;
+    this.scoreController = scoreController;
   }
 
   /**
@@ -55,7 +59,7 @@ public class GameController {
     playerController.getPlayers().forEach(p -> {
       games.put(uniqueServerID, Pair.of(p, 0));
     });
-
+    this.uniqueServerId = uniqueServerID;
     return uniqueServerID;
   }
 
@@ -119,5 +123,39 @@ public class GameController {
     return ResponseEntity.ok(question);
   }
 
+  /**
+   * Endpoint to get a player score by id
+   *
+   * @return int score or -1 if the player is not in the game
+   */
+  @GetMapping("/{id}/score")
+  public int playerScore(@PathVariable("id") String id) {
+    String player = playerController.clients.get(id).getSecond();
+    for (String key : games.keySet()) {
+      if (games.get(key).getFirst().equals(player)) {
+        return games.get(key).getSecond();
+      }
+    }
+    return -1;
 
+  }
+
+  /**
+   * Update a score of a player
+   *
+   * @return true if the score was updated or false if the player is not in the game
+   */
+  @GetMapping("/{id}/score/update")
+  public boolean playerScoreUpdate(@PathVariable("id") String id) {
+    String player = playerController.clients.get(id).getSecond();
+    int oldScore = playerScore(id);
+    if (oldScore == -1) {
+      return false;
+    } else {
+      games.replace(this.uniqueServerId, Pair.of(player, oldScore + 1));
+      //rn everytime we update the score it just goes by one, this will likely be changed in later versions
+      return true;
+    }
+
+  }
 }

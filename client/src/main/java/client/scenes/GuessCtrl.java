@@ -17,6 +17,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
+
 public class GuessCtrl extends QuestionCtrl implements Initializable {
   private EstimateQuestion question;
   private Activity activity;
@@ -35,6 +36,9 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   private Button submit;
 
   private int correctAnswer = 1;
+
+  @FXML
+  private Text points;
 
 
   @Inject
@@ -81,6 +85,7 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     //validate the answer
   }
 
+
   @Override
   public void displayQuestion(Question question) {
     this.question = (EstimateQuestion) question;
@@ -93,6 +98,15 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     int value = Integer.parseInt(answer.getText());
     int point = (int) (question.calculateHowClose(value) * 100);
     mainCtrl.addPoints(point);
+  }
+
+  /**
+   * Displays user points at the start of the question
+   */
+
+  public void showPoints() {
+    int userPoints = server.playerScore(mainCtrl.clientId);
+    points.setText("Points: " + userPoints);
   }
 
   //sets the textfield color to green and increases the points

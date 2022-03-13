@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
 
 public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initializable {
 
@@ -22,6 +23,8 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
   private Button button1;
   @FXML
   private Button button2;
+  @FXML
+  private Text points;
 
   Button[] buttons;
   Activity[] activities;
@@ -46,6 +49,20 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
       showButtonCorrectness(button);
     }
   }
+
+
+  /**
+   * Displays user points at the start of the question
+   */
+  public void showPoints() {
+    int userPoints = server.playerScore(mainCtrl.clientId);
+    points.setText("Points: " + userPoints);
+  }
+
+  private void showUserIncorrect() {
+    //TODO: Give no points to user and show prompt.
+  }
+
 
   /**
    * Sets button color to appropriate given correctness of answer
