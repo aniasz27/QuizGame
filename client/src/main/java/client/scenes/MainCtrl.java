@@ -188,7 +188,7 @@ public class MainCtrl {
   // instead of swapping entire scene, just swap parent
   public void showSplash() {
     // reset name and list of players if coming out of a game
-    this.points = new Score(clientId, name, 0);
+    this.points = new Score(name, 0);
     //players = null;
     primaryStage.getScene().setRoot(splashParent);
   }

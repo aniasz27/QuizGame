@@ -11,7 +11,7 @@ public class Score {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  public String id;
+  public long id;
 
   public String player;
   public int points;
@@ -22,12 +22,11 @@ public class Score {
   }
 
   @SuppressWarnings("unused")
-  public Score(String id, String player, int points) {
-    this.id = id;
+  public Score(String player, int points) {
     this.player = player;
     this.points = points;
   }
-  
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
