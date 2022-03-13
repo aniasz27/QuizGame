@@ -4,6 +4,8 @@ import client.scenes.helpers.QuestionCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Activity;
+import commons.EstimateQuestion;
+import commons.Question;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -13,18 +15,21 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
+import javafx.scene.text.Text;
 
 public class GuessCtrl extends QuestionCtrl implements Initializable {
+  private EstimateQuestion question;
+  private Activity activity;
 
   @FXML
   private ImageView imageView;
+  @FXML
+  private Text description;
+  @FXML
+  private TextField answer;
 
   @FXML
   private Image image;
-
-  @FXML
-  private TextField answer;
 
   @FXML
   private Button submit;
@@ -74,6 +79,20 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     }
     //TODO
     //validate the answer
+  }
+
+  @Override
+  public void displayQuestion(Question question) {
+    this.question = (EstimateQuestion) question;
+    this.activity = this.question.getActivity();
+    imageView = new ImageView(getClass().getResource(activity.getImage_path()).toExternalForm());
+    description.setText(activity.getTitle());
+  }
+
+  public void checkCorrect() {
+    int value = Integer.parseInt(answer.getText());
+    int point = (int) (question.calculateHowClose(value) * 100);
+    mainCtrl.addPoints(point);
   }
 
   //sets the textfield color to green and increases the points

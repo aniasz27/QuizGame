@@ -19,6 +19,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import commons.Activity;
 import commons.Question;
+import commons.Score;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -78,6 +79,9 @@ public class MainCtrl {
   private Parent endScreenParent;
 
   public String clientId;
+  private Score points;
+
+  private Question question;
 
   @Inject
   public MainCtrl(ServerUtils server) {
@@ -154,15 +158,17 @@ public class MainCtrl {
     this.exitOverlayCtrl = exitOverlay.getKey();
     this.exitOverlayParent = exitOverlay.getValue();
 
+
     this.endScreenCtrl = endScreen.getKey();
     this.endScreenParent = endScreen.getValue();
+
 
     primaryStage.setTitle("Quizzzzz");
     // never exit full screen
     primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
     // set initial scene (splash) and show
-    
+
     primaryStage.setScene(new Scene(connectParent));
     primaryStage.show();
     primaryStage.setFullScreen(true);
@@ -182,7 +188,7 @@ public class MainCtrl {
   // instead of swapping entire scene, just swap parent
   public void showSplash() {
     // reset name and list of players if coming out of a game
-    name = null;
+    this.points = new Score(name, 0);
     //players = null;
     primaryStage.getScene().setRoot(splashParent);
   }
@@ -196,6 +202,7 @@ public class MainCtrl {
 
   public void showHowMuch() {
     primaryStage.getScene().setRoot(howMuchParent);
+    howMuchCtrl.displayQuestion(question);
     howMuchCtrl.startTimer();
   }
 
@@ -219,7 +226,7 @@ public class MainCtrl {
 
   // TODO: Long polling
   private void nextQuestion() throws InterruptedException {
-    Question question = server.nextQuestion();
+    question = server.nextQuestion();
     if (question == null) {
       //TODO: Show end screen
     } else {
@@ -284,7 +291,12 @@ public class MainCtrl {
     ((StackPane) primaryStage.getScene().getRoot()).getChildren().remove(exitOverlayParent);
   }
 
+
   public void showEndScreen() {
     primaryStage.getScene().setRoot(endScreenParent);
+  }
+
+  public void addPoints(int toAdd) {
+    points.addPoints(toAdd);
   }
 }

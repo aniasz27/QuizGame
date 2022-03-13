@@ -41,6 +41,7 @@ public class ConnectScreenCtrl {
 
   @FXML
   private void play(ActionEvent actionEvent) {
+    mainCtrl.name = nameField.getText();
     mainCtrl.showSplash();
   }
 }

@@ -22,12 +22,11 @@ public class Score {
   }
 
   @SuppressWarnings("unused")
-  public Score(long id, String player, int points) {
-    this.id = id;
+  public Score(String player, int points) {
     this.player = player;
     this.points = points;
   }
-  
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -68,5 +67,9 @@ public class Score {
 
   public void setPoints(int points) {
     this.points = points;
+  }
+
+  public void addPoints(int points) {
+    this.points += points;
   }
 }
