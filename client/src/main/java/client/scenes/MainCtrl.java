@@ -209,8 +209,9 @@ public class MainCtrl {
    * @throws InterruptedException if server long polling was unsuccessful
    */
   public void nextRound() {
-    if (playerExited)
+    if (playerExited) {
       return;
+    }
 
     nextQuestion();
 
