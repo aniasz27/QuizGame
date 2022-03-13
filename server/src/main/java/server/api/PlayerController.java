@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.data.util.Pair;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,10 +31,23 @@ public class PlayerController {
    * @return String uniqueId for the client
    */
   @PostMapping("/connect")
-  public String addClient(@RequestBody String username) {
+  public ResponseEntity<String> addClient(@RequestBody String username) {
+    prunePlayers();
+    final boolean[] taken = {false};
+    clients.forEach((uuid, userData) -> {
+      if (userData.getSecond().equals(username)) {
+        taken[0] = true;
+      }
+    });
+
+    if (taken[0]) {
+      return ResponseEntity.status(HttpStatus.CONFLICT).body("Username already taken");
+    }
+
     String uniqueID = UUID.randomUUID().toString();
+    System.out.println("uuid: " + uniqueID + ", username: " + username);
     clients.put(uniqueID, Pair.of(LocalDateTime.now(), username));
-    return uniqueID;
+    return ResponseEntity.ok(uniqueID);
   }
 
   /**

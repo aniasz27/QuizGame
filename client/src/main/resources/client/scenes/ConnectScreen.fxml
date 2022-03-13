@@ -36,6 +36,7 @@
     <Region maxHeight="120" styleClass="margin" VBox.vgrow="ALWAYS"/>
     <TextField fx:id="nameField" promptText="Name (Optional)" styleClass="border, rounded, drop-shadow"/>
     <TextField fx:id="serverField" promptText="Server IP" styleClass="border, rounded, drop-shadow"/>
-    <Button fx:id="playButton" onAction="#play" styleClass="border, rounded, drop-shadow" text="Connect"/>
+    <Button fx:id="playButton" onAction="#connect" styleClass="border, rounded, drop-shadow" text="Connect"/>
+
   </VBox>
 </StackPane>

@@ -43,14 +43,13 @@ public class ActivityListCtrl implements Initializable {
    * Displays activities retrieved from the server.
    */
   public void refresh() {
-    List<Activity> activities = server.getActivities();
+    List<Activity> activities = server.getActivities(mainCtrl.serverIp);
+    activityListDisplay.getChildren().removeAll(activityListDisplay.getChildren());
     if (activities == null) {
-      mainCtrl.showConnect();
+      System.out.println("uh oh");
       return;
     }
 
-    // remove all activities and re-add them
-    activityListDisplay.getChildren().removeAll(activityListDisplay.getChildren());
     int[] i = {0};
     activities.forEach(a -> {
       HBox activity = new HBox();
