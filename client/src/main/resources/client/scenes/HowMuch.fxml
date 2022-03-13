@@ -3,54 +3,40 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Text?>
 
-<StackPane id="root" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/17"
-           xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.HowMuchCtrl">
-    <StackPane styleClass="pad, margin">
-        <Button fx:id="backButton" onAction="#back" styleClass="border, rounded, drop-shadow" text="Back"
-                StackPane.alignment="TOP_LEFT"/>
-    </StackPane>
-    <VBox alignment="CENTER" maxWidth="1000" StackPane.alignment="CENTER">
-        <Region minHeight="100" styleClass="margin" VBox.vgrow="ALWAYS"/>
-        <Text fx:id="question" styleClass="title" text="Question" textAlignment="CENTER" BorderPane.alignment="CENTER"/>
-        <Region maxHeight="60" styleClass="margin" VBox.vgrow="ALWAYS"/>
-        <ImageView fx:id="imageView" fitHeight="250.0" fitWidth="350.0" pickOnBounds="true" preserveRatio="true">
-            <image>
-                <Image url="@../img/sample.jpg"/>
-            </image>
+<StackPane id="root" stylesheets="@../css/HowMuch.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.HowMuchCtrl">
+    <HBox maxHeight="0" maxWidth="Infinity" styleClass="pad, margin" StackPane.alignment="TOP_CENTER">
+        <Button fx:id="backButton" onAction="#back" styleClass="icon, border, rounded, drop-shadow" text="" StackPane.alignment="TOP_LEFT" /> <!-- text is \uf053 (back arrow in font awesome) -->
+        <Region HBox.hgrow="ALWAYS" />
+        <StackPane>
+            <Line endX="800" styleClass="timer-bg" StackPane.alignment="CENTER_LEFT" />
+            <Line fx:id="timer" endX="800" styleClass="drop-shadow, timer" StackPane.alignment="CENTER_LEFT" />
+        </StackPane>
+        <Region HBox.hgrow="ALWAYS" />
+        <Button fx:id="helpButton" onAction="#help" styleClass="icon, border, rounded, drop-shadow" text="" StackPane.alignment="TOP_RIGHT" />
+
+    </HBox>
+    <VBox alignment="CENTER" maxWidth="800" spacing="40" StackPane.alignment="CENTER">
+        <Region styleClass="margin" VBox.vgrow="ALWAYS" /> <!-- text is \uf059 (help in font awesome) -->
+   
+        <Text fx:id="points" text="Points:" translateY="30.0" />
+        <Text styleClass="title" text="How much energy does it take?" textAlignment="CENTER" StackPane.alignment="CENTER" />
+        <ImageView fx:id="imageView" fitHeight="250.0" fitWidth="350.0" pickOnBounds="true" preserveRatio="true" styleClass="rounded">
+            <Image url="@../img/sample.jpg" />
         </ImageView>
-        <Region maxHeight="20" styleClass="margin" VBox.vgrow="ALWAYS"/>
-        <Text fx:id="description" styleClass="description" text="Description" textAlignment="CENTER"
-              BorderPane.alignment="CENTER"/>
-        <Region minHeight="40" styleClass="margin" VBox.vgrow="ALWAYS"/>
-        <GridPane>
-            <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="300.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="300.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="300.0"/>
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="150.0" vgrow="SOMETIMES"/>
-            </rowConstraints>
-            <children>
-                <Button fx:id="answer_1" prefHeight="150.0" prefWidth="350.0" styleClass="border, rounded, drop-shadow"
-                        text="Answer-1"/>
-                <Button fx:id="answer_2" prefHeight="150.0" prefWidth="350.0" styleClass="border, rounded, drop-shadow"
-                        text="Answer-2" GridPane.columnIndex="2"/>
-                <Button fx:id="answer_3" prefHeight="150.0" prefWidth="350.0" styleClass="border, rounded, drop-shadow"
-                        text="Answer-3" GridPane.columnIndex="4"/>
-            </children>
-        </GridPane>
-        <Region minHeight="150" styleClass="margin" VBox.vgrow="ALWAYS"/>
+        <Text fx:id="description" styleClass="description" text="Description" textAlignment="CENTER" StackPane.alignment="CENTER" />
+        <HBox spacing="20">
+            <Button fx:id="answer_1" onAction="#choose1" styleClass="question, border, rounded, drop-shadow, button" text="Answer-1" />
+            <Button fx:id="answer_2" onAction="#choose2" styleClass="question, border, rounded, drop-shadow, button" text="Answer-2" />
+            <Button fx:id="answer_3" onAction="#choose3" styleClass="question, border, rounded, drop-shadow, button" text="Answer-3" />
+        </HBox>
+      
+        <Region minHeight="150" styleClass="margin" VBox.vgrow="ALWAYS" />
     </VBox>
 </StackPane>
