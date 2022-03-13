@@ -133,6 +133,20 @@ public class ServerUtils {
       });
   }
 
+  /**
+   * Long polling: starts a timer with the server and keeps the connection open
+   *
+   * @return true if 10s have passed and connection closes, false if an exception has been thrown
+   */
+  public boolean startServerTimer(int duration) {
+    return ClientBuilder.newClient(new ClientConfig())
+      .target(SERVER)
+      .path("/api/game/finished/" + duration)
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
+      .get().readEntity(Boolean.class);
+  }
+
   public Activity updateActivity(Activity activity) {
     return ClientBuilder.newClient(new ClientConfig())
       .target(SERVER).path("api/activity/update")

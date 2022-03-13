@@ -8,14 +8,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.async.DeferredResult;
 import server.database.QuestionRepository;
 
 @RestController
@@ -28,6 +32,7 @@ public class GameController {
   private final QuestionRepository questionRepository;
   private final PlayerController playerController;
 
+  private ExecutorService timerThreads = Executors.newFixedThreadPool(10);
 
   /**
    * Maps the unique game ID with a Pair of < username, points >
@@ -119,5 +124,20 @@ public class GameController {
     return ResponseEntity.ok(question);
   }
 
+  @GetMapping("/finished/{duration}")
+  public DeferredResult<Boolean> serverTimerStart(@PathVariable(name = "duration") long duration) {
+    DeferredResult<Boolean> result = new DeferredResult<>();
+    System.out.println("timing");
+    timerThreads.execute(() -> {
+      try {
+        Thread.sleep(duration);
+        result.setResult(true);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+        result.setErrorResult(false);
+      }
+    });
 
+    return result;
+  }
 }
