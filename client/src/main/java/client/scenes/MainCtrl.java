@@ -214,6 +214,7 @@ public class MainCtrl {
 
   public void showSpWaitingRoom() {
     primaryStage.getScene().setRoot(spWaitingRoomParent);
+    spWaitingRoomCtrl.refresh();
   }
 
   public void start() {
@@ -294,6 +295,7 @@ public class MainCtrl {
 
   public void showEndScreen() {
     primaryStage.getScene().setRoot(endScreenParent);
+    endScreenCtrl.refresh();
   }
 
   public void addPoints(int toAdd) {

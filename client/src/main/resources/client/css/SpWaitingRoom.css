@@ -3,3 +3,11 @@
 .title {
   -fx-font-size: 60px;
 }
+
+.list-item.list-item-top-left {
+  -fx-background-radius: 18px 0 0 0 !important;
+}
+
+.list-item.list-item-top-right {
+  -fx-background-radius: 0 18px 0 0 !important;
+}
