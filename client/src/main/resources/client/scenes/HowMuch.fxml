@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Text?>
+<<<<<<< Updated upstream
 
 <StackPane id="root" stylesheets="@../css/HowMuch.css" xmlns="http://javafx.com/javafx/17"
            xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.HowMuchCtrl">
@@ -40,7 +41,74 @@
               text="Answer-2"/>
       <Button fx:id="answer_3" onAction="#choose3" styleClass="question, border, rounded, drop-shadow, button"
               text="Answer-3"/>
+=======
+<StackPane
+        id="root"
+        xmlns="http://javafx.com/javafx/17"
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="client.scenes.HowMuchCtrl"
+>
+    <HBox StackPane.alignment="TOP_CENTER" maxHeight="0" maxWidth="Infinity" styleClass="pad, margin">
+        <Button
+                fx:id="backButton"
+                styleClass="icon, border, rounded, drop-shadow"
+                StackPane.alignment="TOP_LEFT"
+                onAction="#back"
+                text=""
+        /> <!-- text is \uf053 (back arrow in font awesome) -->
+        <Region HBox.hgrow="ALWAYS"/>
+        <StackPane>
+            <Line
+                    endX="800"
+                    StackPane.alignment="CENTER_LEFT"
+                    styleClass="timer-bg"
+            />
+            <Line
+                    endX="800"
+                    StackPane.alignment="CENTER_LEFT"
+                    fx:id="timer"
+                    styleClass="drop-shadow, timer"
+            />
+        </StackPane>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button
+                fx:id="helpButton"
+                styleClass="icon, border, rounded, drop-shadow"
+                StackPane.alignment="TOP_RIGHT"
+                onAction="#help"
+                text=""
+        /> <!-- text is \uf059 (help in font awesome) -->
+        <Text fx:id="points" text="Points:"/>
+>>>>>>> Stashed changes
     </HBox>
-    <Region minHeight="150" styleClass="margin" VBox.vgrow="ALWAYS"/>
-  </VBox>
+    <VBox spacing="40" maxWidth="800" alignment="CENTER" StackPane.alignment="CENTER">
+        <Region styleClass="margin" VBox.vgrow="ALWAYS"/>
+        <Text fx:id="question" styleClass="title" text="Question" textAlignment="CENTER" BorderPane.alignment="CENTER"/>
+        <ImageView styleClass="rounded" fx:id="imageView" fitHeight="250.0" fitWidth="350.0" pickOnBounds="true"
+                   preserveRatio="true">
+            <Image url="@../img/sample.jpg"/>
+        </ImageView>
+        <Text fx:id="description" styleClass="description" text="Description" textAlignment="CENTER"
+              BorderPane.alignment="CENTER"/>
+        <HBox spacing="20">
+            <Button
+                    fx:id="answer_1"
+                    styleClass="question, border, rounded, drop-shadow, button"
+                    text="Answer-1"
+                    onAction="#push1"/>
+
+            <Button
+                    fx:id="answer_2"
+                    styleClass="question, border, rounded, drop-shadow, button"
+                    text="Answer-2"
+                    onAction="#push2"/>
+
+            <Button
+                    fx:id="answer_3"
+                    styleClass="question, border, rounded, drop-shadow, button"
+                    text="Answer-3"
+                    onAction="#push3"/>
+        </HBox>
+        <Region minHeight="150" styleClass="margin" VBox.vgrow="ALWAYS"/>
+    </VBox>
 </StackPane>

@@ -175,4 +175,20 @@ public class ServerUtils {
       .get(new GenericType<>() {
       });
   }
+
+  /**
+   * Returns a score of a player as an int
+   *
+   * @param id id of a player
+   * @return a score of the player specified by the passed parameter
+   */
+  public int playerScore(String id) {
+    return ClientBuilder.newClient(new ClientConfig())
+      .target(SERVER).path("api/game/" + id + "/score")
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
+      .get(Integer.class);
+  }
+
+
 }

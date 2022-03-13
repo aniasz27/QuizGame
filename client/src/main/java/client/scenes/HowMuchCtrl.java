@@ -9,6 +9,7 @@ import commons.Question;
 import java.util.Random;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
@@ -18,6 +19,8 @@ public class HowMuchCtrl extends QuestionCtrl {
   private Button backButton;
   @FXML
   private ImageView imageView;
+
+  //change the description based on activity
   @FXML
   private Text description;
   @FXML
@@ -27,6 +30,7 @@ public class HowMuchCtrl extends QuestionCtrl {
   @FXML
   private Button answer_3;
 
+
   private Activity activity;
   private HowMuchQuestion question;
 
@@ -34,12 +38,22 @@ public class HowMuchCtrl extends QuestionCtrl {
 
   private int chosen;
 
+  @FXML
+  private Image image;
+  @FXML
+  private Text points;
+
+  //array of String to symbolize which button has the correct answer
+  //entries correspond to the style classes to be added
+  private String[] correctness;
+
   @Inject
   public HowMuchCtrl(ServerUtils server, MainCtrl mainCtrl) {
     super(server, mainCtrl);
   }
 
   @FXML
+
   @Override
   public void displayQuestion(Question question) {
     this.buttons = new boolean[3];
@@ -104,4 +118,22 @@ public class HowMuchCtrl extends QuestionCtrl {
       mainCtrl.addPoints(100);
     }
   }
+
+  /**
+   * Displays user points at the start of the question
+   */
+  public void showPoints() {
+    int userPoints = server.playerScore(mainCtrl.clientId);
+    points.setText("Points: " + userPoints);
+  }
+
+
+  /**
+   * Adds points, just increments by one for now
+   */
+  public void addPoints() {
+
+  }
+
+
 }
