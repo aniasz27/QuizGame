@@ -47,12 +47,9 @@ public class EndScreenCtrl implements Initializable {
   }
 
   public void refresh() {
-    addScores();
-  }
-
-  public void addScores() {
-    Iterable<Score> scores = server.getSingleLeaderboard();
-
+  
+    Iterable<Score> scores = server.getSingleLeaderboard(mainCtrl.serverIp);
+    
     leaderboardDisplay.getChildren().removeAll(leaderboardDisplay.getChildren());
 
     final boolean[] first = {true};

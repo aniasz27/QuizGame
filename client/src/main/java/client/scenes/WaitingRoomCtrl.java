@@ -62,7 +62,7 @@ public class WaitingRoomCtrl implements Initializable {
    * Displays a list of players in the lobby.
    */
   public void refresh() {
-    var players = server.getPlayers();
+    var players = server.getPlayers(mainCtrl.serverIp);
 
     startButton.setDisable(players.size() < 2);
 
@@ -70,7 +70,11 @@ public class WaitingRoomCtrl implements Initializable {
     playerListDisplay.getChildren().removeAll(playerListDisplay.getChildren());
     int[] i = {0};
     players.forEach(player -> {
-      Label l = new Label(player.equals(server.getName(server.getClientId())) ? "You (" + player + ")" : player);
+      Label l = new Label(
+        player.equals(server.getName(mainCtrl.serverIp, mainCtrl.clientId))
+          ? "You (" + player + ")"
+          : player
+      );
       l.getStyleClass().add("list-item");
       l.getStyleClass().add("border-bottom");
       if (i[0]++ == 0) {
@@ -80,33 +84,7 @@ public class WaitingRoomCtrl implements Initializable {
     });
   }
 
-  /**
-   * Client connects to the server for the first time
-   */
-  public void connect() {
-    mainCtrl.clientId = server.connectFirst("ooo");
-    server.setClientId(mainCtrl.clientId);
-    keepAlive();
-    checkGameActive();
-  }
-
-  private static ScheduledExecutorService EXECKeepAlive;
-
-  /**
-   * Sends http request from the client to the server every second
-   */
-  public void keepAlive() {
-    EXECKeepAlive = Executors.newSingleThreadScheduledExecutor();
-    EXECKeepAlive.scheduleAtFixedRate(new Runnable() {
-      @Override
-      public void run() {
-        server.keepAlive(server.getClientId());
-      }
-    }, 0, 1, TimeUnit.SECONDS);
-  }
-
-
-  private static ScheduledExecutorService EXECGameStarted;
+  private static ScheduledExecutorService EXECGameStarted = Executors.newSingleThreadScheduledExecutor();
 
   /**
    * Checks every second if a game containing the player has started
@@ -115,13 +93,13 @@ public class WaitingRoomCtrl implements Initializable {
     try {
       EXECGameStarted = Executors.newSingleThreadScheduledExecutor();
       EXECGameStarted.scheduleAtFixedRate(() -> {
-        String gameId = server.isGameActive(server.getClientId());
+        String gameId = server.isGameActive(mainCtrl.serverIp, mainCtrl.clientId);
         if (!gameId.equals("")) {
-          server.setGameId(gameId);
+          mainCtrl.gameId = gameId;
           stop();
           try {
             mainCtrl.play();
-          } catch (InterruptedException e) {
+          } catch (Exception e) {
             e.printStackTrace();
           }
         }
@@ -133,7 +111,6 @@ public class WaitingRoomCtrl implements Initializable {
 
   public void stop() {
     EXECGameStarted.shutdownNow();
-    EXECKeepAlive.shutdownNow();
   }
 
 }

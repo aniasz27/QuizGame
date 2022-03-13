@@ -37,6 +37,22 @@ public class SpWaitingRoomCtrl implements Initializable {
   public void initialize(URL location, ResourceBundle resources) {
   }
 
+  public void refresh() {
+    var leaderboard = server.getSingleLeaderboard(mainCtrl.serverIp);
+
+    leaderboardDisplay.getChildren().removeAll(leaderboardDisplay.getChildren());
+    int[] i = {1};
+    leaderboard.forEach(score -> {
+      Label l = new Label(i[0] + ". " + score.getPlayer() + " " + score.getPoints());
+      l.getStyleClass().add("list-item");
+      l.getStyleClass().add("border-bottom");
+      if (i[0]++ == 1) {
+        l.getStyleClass().add("list-item-top");
+      }
+      leaderboardDisplay.getChildren().add(l);
+    });
+  }
+
   @FXML
   private void back(ActionEvent actionEvent) {
     mainCtrl.showSplash();
@@ -57,38 +73,5 @@ public class SpWaitingRoomCtrl implements Initializable {
     mainCtrl.showHowMuch();
   }
 
-  public void refresh() {
-    addScores();
-  }
 
-  public void addScores() {
-    Iterable<Score> scores = server.getSingleLeaderboard();
-
-    leaderboardDisplay.getChildren().removeAll(leaderboardDisplay.getChildren());
-
-    final boolean[] first = {true};
-
-    scores.forEach(s -> {
-      Label label = new Label(s.getPlayer());
-      label.getStyleClass().add("expand");
-      label.getStyleClass().add("list-item");
-      label.getStyleClass().add("border-bottom");
-      if (first[0]) {
-        label.getStyleClass().add("list-item-top-left");
-      }
-      HBox score = new HBox();
-      HBox.setHgrow(label, Priority.ALWAYS);
-      score.getChildren().add(label);
-      label = new Label(String.valueOf(s.getPoints()));
-      label.getStyleClass().add("expand");
-      label.getStyleClass().add("list-item");
-      label.getStyleClass().add("border-bottom");
-      if (first[0]) {
-        label.getStyleClass().add("list-item-top-right");
-        first[0] = false;
-      }
-      score.getChildren().add(label);
-      leaderboardDisplay.getChildren().add(score);
-    });
-  }
 }

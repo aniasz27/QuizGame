@@ -20,6 +20,7 @@ import client.utils.ServerUtils;
 import commons.Activity;
 import commons.Question;
 import commons.Score;
+import java.util.concurrent.ScheduledExecutorService;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -77,7 +78,10 @@ public class MainCtrl {
   private EndScreenCtrl endScreenCtrl;
   private Parent endScreenParent;
 
+  public String serverIp;
   public String clientId;
+  public String gameId;
+  public ScheduledExecutorService keepAliveExec;
   private Score points;
 
   private Question question;
@@ -216,7 +220,6 @@ public class MainCtrl {
 
   public void showWaitingRoom() {
     primaryStage.getScene().setRoot(waitingRoomParent);
-    waitingRoomCtrl.connect();
     waitingRoomCtrl.refresh();
   }
 
@@ -226,8 +229,9 @@ public class MainCtrl {
   }
 
   public void start() {
-    server.startGame();
+    server.startGame(serverIp);
   }
+
 
   public void play() throws InterruptedException {
     playerExited = false;
@@ -243,7 +247,6 @@ public class MainCtrl {
     if (playerExited) {
       return;
     }
-
     nextQuestion();
 
     Task<Void> task = new Task<Void>() {
@@ -281,8 +284,10 @@ public class MainCtrl {
   }
 
   // TODO: Long polling
+
+
   private void nextQuestion() throws InterruptedException {
-    question = server.nextQuestion();
+    question = server.nextQuestion(serverIp);
     if (question == null) {
       //TODO: Show end screen
     } else {

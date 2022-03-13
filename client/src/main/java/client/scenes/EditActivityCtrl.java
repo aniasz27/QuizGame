@@ -86,6 +86,7 @@ public class EditActivityCtrl implements Initializable {
 
     try {
       server.updateActivity(
+        mainCtrl.serverIp,
         new Activity(
           activity.id,
           mainCtrl.name,
