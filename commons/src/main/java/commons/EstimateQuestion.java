@@ -47,6 +47,13 @@ public class EstimateQuestion extends Question {
     return activity;
   }
 
+  /**
+   * @return the correct answer to the question
+   */
+  public long getAnswer() {
+    return getActivity().consumption_in_wh;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
