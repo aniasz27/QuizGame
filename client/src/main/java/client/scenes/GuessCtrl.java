@@ -109,7 +109,7 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
    */
 
   public void showPoints() {
-    int userPoints = server.playerScore(mainCtrl.clientId);
+    int userPoints = server.playerScore(mainCtrl.serverIp, mainCtrl.clientId);
     points.setText("Points: " + userPoints);
   }
 

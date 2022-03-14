@@ -46,7 +46,6 @@ public class ActivityListCtrl implements Initializable {
     List<Activity> activities = server.getActivities(mainCtrl.serverIp);
     activityListDisplay.getChildren().removeAll(activityListDisplay.getChildren());
     if (activities == null) {
-      System.out.println("uh oh");
       return;
     }
 

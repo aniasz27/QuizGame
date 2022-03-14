@@ -58,7 +58,7 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
    * Displays user points at the start of the question
    */
   public void showPoints() {
-    int userPoints = server.playerScore(mainCtrl.clientId);
+    int userPoints = server.playerScore(mainCtrl.serverIp, mainCtrl.clientId);
     points.setText("Points: " + userPoints);
   }
 
