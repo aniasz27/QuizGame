@@ -47,9 +47,7 @@ public class EndScreenCtrl implements Initializable {
   }
 
   public void refresh() {
-  
     Iterable<Score> scores = server.getSingleLeaderboard(mainCtrl.serverIp);
-    
     leaderboardDisplay.getChildren().removeAll(leaderboardDisplay.getChildren());
 
     final boolean[] first = {true};

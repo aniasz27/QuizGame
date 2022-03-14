@@ -123,7 +123,7 @@ public class HowMuchCtrl extends QuestionCtrl {
    * Displays user points at the start of the question
    */
   public void showPoints() {
-    int userPoints = server.playerScore(mainCtrl.clientId);
+    int userPoints = server.playerScore(mainCtrl.serverIp, mainCtrl.clientId);
     points.setText("Points: " + userPoints);
   }
 
