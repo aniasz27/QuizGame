@@ -42,7 +42,6 @@ public class ConnectScreenCtrl {
   }
 
   @FXML
-
   private void connect(ActionEvent actionEvent) {
     try {
       String ip = serverField.getText().trim();
@@ -55,9 +54,17 @@ public class ConnectScreenCtrl {
         nameField.getText().trim().equals("") ? null : nameField.getText().trim()
       );
 
+      mainCtrl.name = server.getClient(mainCtrl.serverIp, mainCtrl.clientId).username;
+
       mainCtrl.keepAliveExec = Executors.newSingleThreadScheduledExecutor();
       mainCtrl.keepAliveExec.scheduleAtFixedRate(
-        () -> server.keepAlive(mainCtrl.serverIp, mainCtrl.clientId),
+        () -> {
+          try {
+            server.keepAlive(mainCtrl.serverIp, mainCtrl.clientId, mainCtrl.waitingForGame);
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        },
         0,
         1,
         TimeUnit.SECONDS

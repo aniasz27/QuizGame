@@ -39,6 +39,7 @@ public class GameController {
   private String uniqueServerId;
 
 
+  // TODO: change this to Map<String, Pair<Client, Integer>> (store Clients instead of Strings)
   /**
    * Maps the unique game ID with a Pair of < username, points >
    */
@@ -65,7 +66,9 @@ public class GameController {
     String uniqueServerID = UUID.randomUUID().toString();
 
     playerController.getPlayers().forEach(p -> {
-      games.put(uniqueServerID, new Score(p, 0));
+      if (p.waitingForGame) {
+        games.put(uniqueServerID,  new Score(p, 0));
+      }
     });
     this.uniqueServerId = uniqueServerID;
     return uniqueServerID;
@@ -157,10 +160,11 @@ public class GameController {
 
   @GetMapping("/{id}/score")
   public int playerScore(@PathVariable("id") String id) {
-    String player = playerController.clients.get(id).getSecond();
+    String playerName = playerController.clients.get(id).username;
     for (String key : games.keySet()) {
-      if (games.get(key).getPlayer().equals(player)) {
+      if (games.get(key).getPlayer().equals(playerName)) {
         return games.get(key).getPoints();
+
       }
     }
     return -1;
