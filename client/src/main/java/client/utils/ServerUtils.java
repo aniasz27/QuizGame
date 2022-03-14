@@ -19,6 +19,7 @@ package client.utils;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import commons.Activity;
+import commons.Client;
 import commons.Question;
 import commons.Score;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -37,25 +38,26 @@ public class ServerUtils {
    */
   public String connect(String ip, String username) {
     return ClientBuilder.newClient(new ClientConfig())
-      .target(ip).path("api/player/connect")
+      .target(ip).path("api/player/connect").queryParam("username", username)
       .request(APPLICATION_JSON)
       .accept(APPLICATION_JSON)
-      .post(Entity.entity(username, APPLICATION_JSON), String.class);
+      .post(null, String.class);
   }
 
   /**
    * Keep the connection to the server alive.
    *
-   * @param ip       the ip of the server
-   * @param clientId the client's UUID
+   * @param ip             the ip of the server
+   * @param id             the client's UUID
+   * @param waitingForGame whether the client is in the lobby
    * @return String  the client's UUID
    */
-  public String keepAlive(String ip, String clientId) {
+  public Client keepAlive(String ip, String id, boolean waitingForGame) {
     return ClientBuilder.newClient(new ClientConfig())
-      .target(ip).path("api/player/keepAlive")
+      .target(ip).path("api/player/keepAlive").queryParam("id", id)
       .request(APPLICATION_JSON)
       .accept(APPLICATION_JSON)
-      .put(Entity.entity(clientId, APPLICATION_JSON), String.class);
+      .put(Entity.json(waitingForGame), Client.class);
   }
 
   /**
@@ -66,11 +68,11 @@ public class ServerUtils {
    * @return null if the client is not in a game, the game's id if they are
    */
   public String isGameActive(String ip, String clientId) {
-    return ClientBuilder.newClient(new ClientConfig()) //
-      .target(ip).path("api/game/isGameActive") //
-      .request(APPLICATION_JSON) //
-      .accept(APPLICATION_JSON) //
-      .put(Entity.entity(clientId, APPLICATION_JSON), String.class);
+    return ClientBuilder.newClient(new ClientConfig())
+      .target(ip).path("api/game/isGameActive")
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
+      .put(Entity.json(clientId), String.class);
   }
 
   /**
@@ -84,7 +86,7 @@ public class ServerUtils {
       .path("api/game/play")
       .request(APPLICATION_JSON)
       .accept(APPLICATION_JSON)
-      .post(Entity.entity("START GAME", APPLICATION_JSON), String.class);
+      .post(Entity.json("START GAME"), String.class);
   }
 
   /**
@@ -101,7 +103,6 @@ public class ServerUtils {
       .get().readEntity(Question.class);
 
   }
-
 
   /**
    * Get all activities from the server
@@ -134,24 +135,24 @@ public class ServerUtils {
       .target(ip).path("api/activity/update")
       .request(APPLICATION_JSON)
       .accept(APPLICATION_JSON)
-      .put(Entity.entity(activity, APPLICATION_JSON), Activity.class);
+      .put(Entity.json(activity), Activity.class);
   }
 
-  public List<String> getPlayers(String ip) {
+  public List<String> getPlayerNames(String ip) {
     return ClientBuilder.newClient(new ClientConfig())
-      .target(ip).path("api/player/list")
+      .target(ip).path("api/player/names")
       .request(APPLICATION_JSON)
       .accept(APPLICATION_JSON)
       .get(new GenericType<>() {
       });
   }
 
-  public String getName(String ip, String id) {
+  public Client getClient(String ip, String id) {
     return ClientBuilder.newClient(new ClientConfig())
       .target(ip).path("api/player/" + id)
       .request(APPLICATION_JSON)
       .accept(APPLICATION_JSON)
-      .get(String.class);
+      .get(Client.class);
   }
 
   public Score addScore(String ip, Score score) {
@@ -159,7 +160,7 @@ public class ServerUtils {
       .target(ip).path("api/score/add")
       .request(APPLICATION_JSON)
       .accept(APPLICATION_JSON)
-      .put(Entity.entity(score, APPLICATION_JSON), Score.class);
+      .put(Entity.json(score), Score.class);
   }
 
   public Iterable<Score> getSingleLeaderboard(String ip) {

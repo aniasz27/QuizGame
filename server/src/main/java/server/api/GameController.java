@@ -65,7 +65,9 @@ public class GameController {
     String uniqueServerID = UUID.randomUUID().toString();
 
     playerController.getPlayers().forEach(p -> {
-      games.put(uniqueServerID, Pair.of(p, 0));
+      if (p.waitingForGame) {
+        games.put(uniqueServerID, Pair.of(p.id, 0));
+      }
     });
     this.uniqueServerId = uniqueServerID;
     return uniqueServerID;

@@ -82,6 +82,8 @@ public class MainCtrl {
   public String clientId;
   public String gameId;
   public ScheduledExecutorService keepAliveExec;
+  public boolean waitingForGame;
+
   private Score points;
 
   private Question question;
@@ -220,6 +222,7 @@ public class MainCtrl {
 
   public void showWaitingRoom() {
     primaryStage.getScene().setRoot(waitingRoomParent);
+    waitingForGame = true;
     waitingRoomCtrl.refresh();
   }
 

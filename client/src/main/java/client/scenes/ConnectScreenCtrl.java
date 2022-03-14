@@ -56,7 +56,13 @@ public class ConnectScreenCtrl {
 
       mainCtrl.keepAliveExec = Executors.newSingleThreadScheduledExecutor();
       mainCtrl.keepAliveExec.scheduleAtFixedRate(
-        () -> server.keepAlive(mainCtrl.serverIp, mainCtrl.clientId),
+        () -> {
+          try {
+            server.keepAlive(mainCtrl.serverIp, mainCtrl.clientId, mainCtrl.waitingForGame);
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        },
         0,
         1,
         TimeUnit.SECONDS
