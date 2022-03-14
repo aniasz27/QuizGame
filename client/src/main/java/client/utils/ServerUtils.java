@@ -193,9 +193,9 @@ public class ServerUtils {
    * @return true if the score was updated, false otherwise
    */
 
-  public Score updateScore(String id, Score score) {
+  public Score updateScore(String ip, String id, Score score) {
     return ClientBuilder.newClient(new ClientConfig())
-      .target(SERVER).path("api/game/" + id + "/score/update")
+      .target(ip).path("api/game/" + id + "/score/update")
       .request(APPLICATION_JSON)
       .accept(APPLICATION_JSON)
       .get(Score.class);

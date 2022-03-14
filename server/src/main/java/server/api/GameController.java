@@ -67,7 +67,7 @@ public class GameController {
 
     playerController.getPlayers().forEach(p -> {
       if (p.waitingForGame) {
-        games.put(uniqueServerID,  new Score(p, 0));
+        games.put(uniqueServerID, new Score(p.username, 0));
       }
     });
     this.uniqueServerId = uniqueServerID;
@@ -159,7 +159,7 @@ public class GameController {
    */
 
   @GetMapping("/{id}/score")
-  public int playerScore(@PathVariable("id") String id) {
+  public int playerScore(String ip, @PathVariable("id") String id) {
     String playerName = playerController.clients.get(id).username;
     for (String key : games.keySet()) {
       if (games.get(key).getPlayer().equals(playerName)) {
@@ -177,8 +177,8 @@ public class GameController {
    * @return true if the score was updated or false if the player is not in the game
    */
   @GetMapping("/{id}/score/update")
-  public Score playerScoreUpdate(@PathVariable("id") String id, Score score) {
-    String player = playerController.clients.get(id).getSecond();
+  public Score playerScoreUpdate(String ip, @PathVariable("id") String id, Score score) {
+    String player = playerController.clients.get(id).username;
     return games.replace(this.uniqueServerId, score);
   }
 }

@@ -236,7 +236,7 @@ public class MainCtrl {
    */
   public void start() {
     server.startGame(serverIp);
-    points = new Score(clientId, server.playerScore(clientId));
+    points = new Score(clientId, server.playerScore(serverIp, clientId));
   }
 
   public void play() throws InterruptedException {
@@ -371,7 +371,7 @@ public class MainCtrl {
   public void showEndScreen() {
     primaryStage.getScene().setRoot(endScreenParent);
     endScreenCtrl.refresh();
-    Score check = server.updateScore(clientId, points);
+    Score check = server.updateScore(serverIp, clientId, points);
     if (check == null) {
       System.out.println("Error updating the score");
     }
