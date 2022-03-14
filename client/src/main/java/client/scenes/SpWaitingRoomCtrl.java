@@ -2,7 +2,7 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
-import commons.Score;
+import commons.HowMuchQuestion;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -10,8 +10,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 public class SpWaitingRoomCtrl implements Initializable {
@@ -70,7 +68,7 @@ public class SpWaitingRoomCtrl implements Initializable {
 
   @FXML
   private void play(ActionEvent actionEvent) throws InterruptedException {
-    mainCtrl.showHowMuch();
+    //mainCtrl.showHowMuch((HowMuchQuestion) question);
   }
 
 
