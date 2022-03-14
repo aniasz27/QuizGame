@@ -12,6 +12,7 @@ import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -116,6 +117,23 @@ public class ActivityController {
       String activitiesPath = "src/main/resources/JSON/activities.json";
       Gson gson = new Gson();
       Reader reader = Files.newBufferedReader(Paths.get(activitiesPath));
+      List<Activity> activities = gson.fromJson(reader, new TypeToken<List<Activity>>() {
+      }.getType());
+      reader.close();
+      repo.saveAll(activities);
+    } catch (IOException e) {
+      System.out.println("Something went wrong when importing activities: " + e.getMessage());
+    }
+
+    return ResponseEntity.ok("Activities imported successfully!");
+  }
+
+  @PostMapping("/importActivitiesFromFile")
+  public ResponseEntity<String> importAllActivitiesFromFile(@RequestBody String filePath) {
+
+    try {
+      Gson gson = new Gson();
+      Reader reader = Files.newBufferedReader(Paths.get(filePath));
       List<Activity> activities = gson.fromJson(reader, new TypeToken<List<Activity>>() {
       }.getType());
       reader.close();
