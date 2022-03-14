@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/player")
 public class PlayerController {
-  private HashMap<String, Client> clients = new HashMap<>();
+  public HashMap<String, Client> clients = new HashMap<>();
   // hopefully
   private int anonymousUsers = 0;
 

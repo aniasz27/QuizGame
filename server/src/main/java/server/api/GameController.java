@@ -39,6 +39,7 @@ public class GameController {
   private String uniqueServerId;
 
 
+  // TODO: change this to Map<String, Pair<Client, Integer>> (store Clients instead of Strings)
   /**
    * Maps the unique game ID with a Pair of < username, points >
    */
@@ -159,9 +160,9 @@ public class GameController {
 
   @GetMapping("/{id}/score")
   public int playerScore(@PathVariable("id") String id) {
-    String player = playerController.clients.get(id).getSecond();
+    String playerName = playerController.clients.get(id).username;
     for (String key : games.keySet()) {
-      if (games.get(key).getFirst().equals(player)) {
+      if (games.get(key).getFirst().equals(playerName)) {
         return games.get(key).getSecond();
       }
     }
@@ -176,12 +177,12 @@ public class GameController {
    */
   @GetMapping("/{id}/score/update")
   public boolean playerScoreUpdate(@PathVariable("id") String id) {
-    String player = playerController.clients.get(id).getSecond();
+    String playerName = playerController.clients.get(id).username;
     int oldScore = playerScore(id);
     if (oldScore == -1) {
       return false;
     } else {
-      games.replace(this.uniqueServerId, Pair.of(player, oldScore + 1));
+      games.replace(this.uniqueServerId, Pair.of(playerName, oldScore + 1));
       //rn everytime we update the score it just goes by one, this will likely be changed in later versions
       return true;
     }

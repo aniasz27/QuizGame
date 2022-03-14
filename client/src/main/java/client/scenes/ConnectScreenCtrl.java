@@ -54,6 +54,8 @@ public class ConnectScreenCtrl {
         nameField.getText().trim().equals("") ? null : nameField.getText().trim()
       );
 
+      mainCtrl.name = server.getClient(mainCtrl.serverIp, mainCtrl.clientId).username;
+
       mainCtrl.keepAliveExec = Executors.newSingleThreadScheduledExecutor();
       mainCtrl.keepAliveExec.scheduleAtFixedRate(
         () -> {
