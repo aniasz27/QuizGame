@@ -59,7 +59,12 @@ public class HowMuchCtrl extends QuestionCtrl {
     this.buttons = new boolean[3];
     this.question = (HowMuchQuestion) question;
     this.activity = this.question.getActivity();
-    imageView = new ImageView(getClass().getResource(activity.getImage_path()).toExternalForm());
+
+    String path = "/client/JSON/" + activity.getImage_path();
+
+    image = new Image(getClass().getResource(path).toExternalForm());
+    imageView.setImage(image);
+    
     description.setText(activity.getTitle());
     answer_1.setDisable(false);
     answer_2.setDisable(false);
