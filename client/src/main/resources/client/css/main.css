@@ -168,7 +168,7 @@
 .list-item {
   -fx-background-color: #1E0A49;
   -fx-font-size: 30px;
-  -fx-padding: 10px 10px;
+  -fx-padding: 10px 20px;
   -fx-max-width: Infinity;
   -fx-background-radius: 0;
 }
@@ -177,9 +177,11 @@
   -fx-background-radius: 18px 18px 0 0 !important;
 }
 
+/*
 .list-item .label {
   -fx-padding: 0px 10px;
 }
+*/
 
 .list-item .expand {
   -fx-max-width: Infinity;

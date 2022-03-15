@@ -21,7 +21,6 @@ public class Activity {
 
   @SuppressWarnings("unused")
   private Activity() {
-
   }
 
   @SuppressWarnings("unused")
