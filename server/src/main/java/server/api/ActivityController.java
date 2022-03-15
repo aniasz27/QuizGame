@@ -63,8 +63,8 @@ public class ActivityController {
   @GetMapping("/random")
   @SuppressWarnings("all")
   public ResponseEntity<Activity> getRandomActivity() {
-    int firstNumLimit = 0;
-    int secondNumLimit = 0;
+    int firstNumLimit = 7;
+    int secondNumLimit = 9;
 
     int firstNum = random.nextInt(firstNumLimit + 1);
     int secondNum = random.nextInt(secondNumLimit + 1);
