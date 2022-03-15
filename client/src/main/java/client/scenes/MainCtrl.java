@@ -224,8 +224,12 @@ public class MainCtrl {
     spWaitingRoomCtrl.refresh();
   }
 
+  /**
+   * Starts the game, assigns the points from the game controller
+   */
   public void start() {
     server.startGame(serverIp);
+    points = new Score(clientId, 0);
     try {
       play();
     } catch (InterruptedException e) {
@@ -236,6 +240,13 @@ public class MainCtrl {
   public void play() throws InterruptedException {
     playerExited = false;
     nextRound();
+  }
+
+  /**
+   * Returns the points the player has aquired so far
+   */
+  public int getPoints() {
+    return points.getPoints();
   }
 
   /**
@@ -362,9 +373,18 @@ public class MainCtrl {
     ((StackPane) primaryStage.getScene().getRoot()).getChildren().remove(exitOverlayParent);
   }
 
+
+  /**
+   * Shows the end screen to the user, updates the user points in the game controller
+   */
+
   public void showEndScreen() {
     primaryStage.getScene().setRoot(endScreenParent);
     endScreenCtrl.refresh();
+    Score check = server.updateScore(serverIp, clientId, points);
+    if (check == null) {
+      System.out.println("Error updating the score");
+    }
   }
 
   public void addPoints(int toAdd) {

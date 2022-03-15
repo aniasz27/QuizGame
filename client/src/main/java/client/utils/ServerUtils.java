@@ -186,5 +186,20 @@ public class ServerUtils {
       .get(Integer.class);
   }
 
+  /**
+   * Updates the score of the player specified by id in the game controller
+   *
+   * @param id id of a player
+   * @return true if the score was updated, false otherwise
+   */
+
+  public Score updateScore(String ip, String id, Score score) {
+    return ClientBuilder.newClient(new ClientConfig())
+      .target(ip).path("api/game/" + id + "/score/update")
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
+      .get(Score.class);
+  }
+
 
 }

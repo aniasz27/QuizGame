@@ -35,7 +35,6 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   @FXML
   private Button submit;
 
-  private int correctAnswer = 1;
 
   @FXML
   private Text points;
@@ -48,8 +47,6 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    //get the activity to set the required fields - correct answer, question, image
-    showImage("");
   }
 
   @FXML
@@ -57,34 +54,6 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     image = new Image(getClass().getResourceAsStream(imageName));
     imageView.setImage(image);
   }
-
-  @FXML
-  private void submit(ActionEvent actionEvent) {
-    String userAnswer = answer.getText();
-    char[] check = userAnswer.toCharArray();
-    boolean rightInput = true;
-    for (int i = 0; i < check.length; i++) {
-      Character current = check[i];
-      if (!Character.isDigit(current)) {
-        rightInput = false;
-        break;
-      }
-    }
-    if (!rightInput) {
-      answer.setText("Incorrect input format");
-    } else {
-      submit.setDisable(true);
-      int answer = Integer.parseInt(userAnswer);
-      if (answer >= correctAnswer * 0.8 && answer <= correctAnswer * 1.2) {
-        showCorrect();
-      } else {
-        showIncorrect();
-      }
-    }
-    //TODO
-    //validate the answer
-  }
-
 
   @Override
   public void displayQuestion(Question question) {
@@ -94,38 +63,47 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     String path = "/client/JSON/" + activity.getImage_path();
 
     showImage(path);
-    
+
     description.setText(activity.getTitle());
+    points.setText("Points: " + mainCtrl.getPoints());
+
   }
 
+  /**
+   * On clicking the submit button on the screen, the answer gets evaluated and the correct score is shown
+   */
   public void checkCorrect() {
     int value = Integer.parseInt(answer.getText());
     int point = (int) (question.calculateHowClose(value) * 100);
     mainCtrl.addPoints(point);
+    submit.setDisable(true);
+    if (point == 0) {
+      showIncorrect();
+    } else {
+      showCorrect();
+    }
   }
 
-  /**
-   * Displays user points at the start of the question
-   */
 
+  /**
+   * Sets the color to green, shows the right answer and updates the points on the screen
+   */
   public void showPoints() {
-    int userPoints = server.playerScore(mainCtrl.serverIp, mainCtrl.clientId);
+    int userPoints = mainCtrl.getPoints();
     points.setText("Points: " + userPoints);
   }
 
-  //sets the textfield color to green and increases the points
-  //shows the correct answer
   public void showCorrect() {
     answer.getStyleClass().add("good");
-    //TODO
-    //increase the points
-    answer.setText("Correct answer is: " + correctAnswer);
+    points.setText("Points: " + mainCtrl.getPoints());
+    answer.setText("Correct answer is: " + question.getAnswer());
   }
 
-  //sets the textfield color to red to indicate the incorrect answer
-  // shows the correct answer
+  /**
+   * Sets the color to red and shows the right answer
+   */
   public void showIncorrect() {
     answer.getStyleClass().add("bad");
-    answer.setText("Correct answer is: " + correctAnswer);
+    answer.setText("Correct answer is: " + question.getAnswer());
   }
 }

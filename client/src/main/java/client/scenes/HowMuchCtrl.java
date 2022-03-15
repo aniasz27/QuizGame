@@ -70,6 +70,7 @@ public class HowMuchCtrl extends QuestionCtrl {
     answer_2.setDisable(false);
     answer_3.setDisable(false);
     setButtons();
+    showPoints();
   }
 
   public void setButtons() {
@@ -102,6 +103,7 @@ public class HowMuchCtrl extends QuestionCtrl {
     answer_2.setDisable(true);
     answer_3.setDisable(true);
     chosen = 1;
+    checkAnswer();
   }
 
   public void choose2() {
@@ -109,6 +111,7 @@ public class HowMuchCtrl extends QuestionCtrl {
     answer_1.setDisable(true);
     answer_3.setDisable(true);
     chosen = 2;
+    checkAnswer();
   }
 
   public void choose3() {
@@ -116,11 +119,13 @@ public class HowMuchCtrl extends QuestionCtrl {
     answer_2.setDisable(true);
     answer_1.setDisable(true);
     chosen = 3;
+    checkAnswer();
   }
 
   public void checkAnswer() {
     if (buttons[chosen - 1]) {
       mainCtrl.addPoints(100);
+      showPoints();
     }
   }
 
@@ -128,17 +133,8 @@ public class HowMuchCtrl extends QuestionCtrl {
    * Displays user points at the start of the question
    */
   public void showPoints() {
-    int userPoints = server.playerScore(mainCtrl.serverIp, mainCtrl.clientId);
+    int userPoints = mainCtrl.getPoints();
     points.setText("Points: " + userPoints);
   }
-
-
-  /**
-   * Adds points, just increments by one for now
-   */
-  public void addPoints() {
-
-  }
-
 
 }
