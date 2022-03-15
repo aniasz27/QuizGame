@@ -48,13 +48,12 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   @Override
   public void initialize(URL location, ResourceBundle resources) {
   }
+
   @FXML
   public void showImage(String imageName) {
     image = new Image(getClass().getResourceAsStream(imageName));
     imageView.setImage(image);
   }
-
-
 
   @Override
   public void displayQuestion(Question question) {
@@ -64,7 +63,7 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     String path = "/client/JSON/" + activity.getImage_path();
 
     showImage(path);
-    
+
     description.setText(activity.getTitle());
     points.setText("Points: " + mainCtrl.getPoints());
 
@@ -93,6 +92,7 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     int userPoints = mainCtrl.getPoints();
     points.setText("Points: " + userPoints);
   }
+
   public void showCorrect() {
     answer.getStyleClass().add("good");
     points.setText("Points: " + mainCtrl.getPoints());
