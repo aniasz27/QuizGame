@@ -47,6 +47,11 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+  @FXML
+  public void showImage(String imageName) {
+    image = new Image(getClass().getResourceAsStream(imageName));
+    imageView.setImage(image);
+  }
 
   }
 
@@ -84,6 +89,10 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   /**
    * Sets the color to green, shows the right answer and updates the points on the screen
    */
+  public void showPoints() {
+    int userPoints = mainCtrl.getPoints();
+    points.setText("Points: " + userPoints);
+  }
   public void showCorrect() {
     answer.getStyleClass().add("good");
     points.setText("Points: " + mainCtrl.getPoints());
