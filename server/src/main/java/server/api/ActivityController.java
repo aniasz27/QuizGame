@@ -10,8 +10,10 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,8 +64,9 @@ public class ActivityController {
   @GetMapping("/random")
   @SuppressWarnings("all")
   public ResponseEntity<Activity> getRandomActivity() {
-    int firstNumLimit = 0;
-    int secondNumLimit = 0;
+
+    int firstNumLimit = 7;
+    int secondNumLimit = 9;
 
     int firstNum = random.nextInt(firstNumLimit + 1);
     int secondNum = random.nextInt(secondNumLimit + 1);
@@ -127,4 +130,24 @@ public class ActivityController {
 
     return ResponseEntity.ok("Activities imported successfully!");
   }
+
+  @PostMapping("/importActivitiesFromFile")
+  public ResponseEntity<String> importAllActivitiesFromFile(@RequestBody String filePath) {
+
+    try {
+      Gson gson = new Gson();
+      Reader reader = Files.newBufferedReader(Paths.get(filePath));
+      List<Activity> activities = gson.fromJson(reader, new TypeToken<List<Activity>>() {
+      }.getType());
+      reader.close();
+      repo.saveAll(activities);
+    } catch (IOException e) {
+      return ResponseEntity.status(HttpStatus.NOT_MODIFIED)
+        .body("Something went wrong when importing activities: " + e.getMessage());
+    }
+
+    return ResponseEntity.ok("Activities imported successfully!");
+  }
+
+
 }
