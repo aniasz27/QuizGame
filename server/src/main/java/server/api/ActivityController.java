@@ -122,7 +122,8 @@ public class ActivityController {
       reader.close();
       repo.saveAll(activities);
     } catch (IOException e) {
-      System.out.println("Something went wrong when importing activities: " + e.getMessage());
+      System.err.println("Something went wrong when importing activities:");
+      e.printStackTrace();
     }
 
     return ResponseEntity.ok("Activities imported successfully!");

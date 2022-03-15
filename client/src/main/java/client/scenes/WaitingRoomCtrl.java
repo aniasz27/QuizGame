@@ -40,6 +40,7 @@ public class WaitingRoomCtrl implements Initializable {
   @FXML
   private void back(ActionEvent actionEvent) {
     stop();
+    mainCtrl.waitingForGame = false;
     mainCtrl.showSplash();
   }
 
@@ -62,7 +63,7 @@ public class WaitingRoomCtrl implements Initializable {
    * Displays a list of players in the lobby.
    */
   public void refresh() {
-    var players = server.getPlayers(mainCtrl.serverIp);
+    var players = server.getPlayerNames(mainCtrl.serverIp);
 
     startButton.setDisable(players.size() < 2);
 
@@ -71,7 +72,7 @@ public class WaitingRoomCtrl implements Initializable {
     int[] i = {0};
     players.forEach(player -> {
       Label l = new Label(
-        player.equals(server.getName(mainCtrl.serverIp, mainCtrl.clientId))
+        player.equals(server.getClient(mainCtrl.serverIp, mainCtrl.clientId).username)
           ? "You (" + player + ")"
           : player
       );
@@ -105,12 +106,11 @@ public class WaitingRoomCtrl implements Initializable {
         }
       }, 0, 1, TimeUnit.SECONDS);
     } catch (Exception e) {
-      System.out.println(e.getCause().toString());
+      e.printStackTrace();
     }
   }
 
   public void stop() {
     EXECGameStarted.shutdownNow();
   }
-
 }

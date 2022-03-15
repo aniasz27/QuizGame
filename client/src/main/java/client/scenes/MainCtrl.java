@@ -82,6 +82,8 @@ public class MainCtrl {
   public String clientId;
   public String gameId;
   public ScheduledExecutorService keepAliveExec;
+  public boolean waitingForGame;
+
   private Score points;
 
   private Question question;
@@ -220,6 +222,7 @@ public class MainCtrl {
 
   public void showWaitingRoom() {
     primaryStage.getScene().setRoot(waitingRoomParent);
+    waitingForGame = true;
     waitingRoomCtrl.refresh();
   }
 
@@ -231,7 +234,6 @@ public class MainCtrl {
   public void start() {
     server.startGame(serverIp);
   }
-
 
   public void play() throws InterruptedException {
     playerExited = false;
@@ -247,6 +249,7 @@ public class MainCtrl {
     if (playerExited) {
       return;
     }
+
     nextQuestion();
 
     Task<Void> task = new Task<Void>() {
@@ -263,7 +266,7 @@ public class MainCtrl {
 
   public void startQuestionTimer() throws InterruptedException {
     // set a timer for 10s (question duration)
-    boolean finished = server.startServerTimer(10000);
+    boolean finished = server.startServerTimer(serverIp, 10000);
 
     if (finished) {
       //Platform.runLater(() -> placeholder()) // TODO: Assign method of showing correct answer per question type
@@ -274,7 +277,7 @@ public class MainCtrl {
   }
 
   public void startBreakTimer() throws InterruptedException {
-    boolean finished = server.startServerTimer(2000); // 2s time given for break
+    boolean finished = server.startServerTimer(serverIp, 2000); // 2s time given for break
 
     if (finished) {
       nextRound();
@@ -284,9 +287,7 @@ public class MainCtrl {
   }
 
   // TODO: Long polling
-
-
-  private void nextQuestion() throws InterruptedException {
+  private void nextQuestion() {
     question = server.nextQuestion(serverIp);
     if (question == null) {
       //TODO: Show end screen
