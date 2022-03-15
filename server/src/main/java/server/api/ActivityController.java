@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -63,6 +64,7 @@ public class ActivityController {
   @GetMapping("/random")
   @SuppressWarnings("all")
   public ResponseEntity<Activity> getRandomActivity() {
+
     int firstNumLimit = 7;
     int secondNumLimit = 9;
 
@@ -140,7 +142,8 @@ public class ActivityController {
       reader.close();
       repo.saveAll(activities);
     } catch (IOException e) {
-      System.out.println("Something went wrong when importing activities: " + e.getMessage());
+      return ResponseEntity.status(HttpStatus.NOT_MODIFIED)
+        .body("Something went wrong when importing activities: " + e.getMessage());
     }
 
     return ResponseEntity.ok("Activities imported successfully!");
