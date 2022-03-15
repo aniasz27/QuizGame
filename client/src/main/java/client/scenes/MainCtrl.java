@@ -18,6 +18,9 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Activity;
+import commons.EstimateQuestion;
+import commons.HowMuchQuestion;
+import commons.MultipleChoiceQuestion;
 import commons.Question;
 import commons.Score;
 import java.util.concurrent.ScheduledExecutorService;
@@ -210,16 +213,6 @@ public class MainCtrl {
     primaryStage.getScene().setRoot(connectParent);
   }
 
-  public void showHowMuch() {
-    primaryStage.getScene().setRoot(howMuchParent);
-
-    howMuchCtrl.displayQuestion(question);
-
-    howMuchCtrl.showPoints();
-
-    howMuchCtrl.startTimer();
-  }
-
   public void showWaitingRoom() {
     primaryStage.getScene().setRoot(waitingRoomParent);
     waitingForGame = true;
@@ -233,6 +226,11 @@ public class MainCtrl {
 
   public void start() {
     server.startGame(serverIp);
+    try {
+      play();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
   }
 
   public void play() throws InterruptedException {
@@ -261,6 +259,7 @@ public class MainCtrl {
     };
 
     timerThread = new Thread(task);
+    timerThread.setDaemon(true);
     timerThread.start();
   }
 
@@ -286,8 +285,7 @@ public class MainCtrl {
     }
   }
 
-  // TODO: Long polling
-  private void nextQuestion() {
+  private void nextQuestion() throws InterruptedException {
     question = server.nextQuestion(serverIp);
     if (question == null) {
       //TODO: Show end screen
@@ -295,16 +293,16 @@ public class MainCtrl {
       switch (question.type) {
         case MULTICHOICE:
           System.out.println("Showed multiple choice");
-          showWhatRequiresMoreEnergy();
+          Platform.runLater(() -> showWhatRequiresMoreEnergy((MultipleChoiceQuestion) question));
           break;
 
         case ESTIMATE:
           System.out.println("Showed guess");
-          showGuess();
+          Platform.runLater(() -> showGuess((EstimateQuestion) question));
           break;
         case HOWMUCH:
           System.out.println("Showed how much");
-          showHowMuch();
+          Platform.runLater(() -> showHowMuch((HowMuchQuestion) question));
           break;
         default:
           //TODO do something if it doesn't work
@@ -314,16 +312,25 @@ public class MainCtrl {
 
   }
 
-  public void showGuess() {
+  public void showGuess(EstimateQuestion question) {
     primaryStage.getScene().setRoot(guessParent);
+    guessCtrl.displayQuestion(question);
     guessCtrl.showPoints();
     guessCtrl.startTimer();
   }
 
-  public void showWhatRequiresMoreEnergy() {
+  public void showWhatRequiresMoreEnergy(MultipleChoiceQuestion question) {
     primaryStage.getScene().setRoot(whatRequiresMoreEnergyParent);
+    whatRequiresMoreEnergyCtrl.displayQuestion(question);
     whatRequiresMoreEnergyCtrl.showPoints();
     whatRequiresMoreEnergyCtrl.startTimer();
+  }
+
+  public void showHowMuch(HowMuchQuestion question) {
+    primaryStage.getScene().setRoot(howMuchParent);
+    howMuchCtrl.displayQuestion(question);
+    howMuchCtrl.showPoints();
+    howMuchCtrl.startTimer();
   }
 
   public void showActivityList() {
@@ -354,7 +361,6 @@ public class MainCtrl {
   public void closeExitOverlay() {
     ((StackPane) primaryStage.getScene().getRoot()).getChildren().remove(exitOverlayParent);
   }
-
 
   public void showEndScreen() {
     primaryStage.getScene().setRoot(endScreenParent);

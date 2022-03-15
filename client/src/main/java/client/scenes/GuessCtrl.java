@@ -90,7 +90,11 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   public void displayQuestion(Question question) {
     this.question = (EstimateQuestion) question;
     this.activity = this.question.getActivity();
-    imageView = new ImageView(getClass().getResource(activity.getImage_path()).toExternalForm());
+
+    String path = "/client/JSON/" + activity.getImage_path();
+
+    showImage(path);
+    
     description.setText(activity.getTitle());
   }
 
@@ -124,5 +128,4 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     answer.getStyleClass().add("bad");
     answer.setText("Correct answer is: " + correctAnswer);
   }
-
 }

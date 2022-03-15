@@ -4,6 +4,7 @@ import client.scenes.helpers.QuestionCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Activity;
+import commons.MultipleChoiceQuestion;
 import commons.Question;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -27,7 +28,7 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
   private Text points;
 
   Button[] buttons;
-  Activity[] activities;
+  MultipleChoiceQuestion question;
 
   @Inject
   WhatRequiresMoreEnergyCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -43,6 +44,8 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
 
     if ((boolean) clickedButton.getUserData()) {
       showUserCorrect();
+    } else {
+      showUserIncorrect();
     }
 
     for (Button button : buttons) {
@@ -73,11 +76,7 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
     if (button.getUserData() == null) {
       return;
     }
-    // set color to green (#2dff26) if answer was correct,
-    // set it to red (#ff1717) otherwise
-    String style = "-fx-background-color: "
-      + (((boolean) button.getUserData()) ? "#2dff26" : "#ff1717")
-      + ";";
+
     button.getStyleClass().add((boolean) button.getUserData() ? "good" : "bad");
   }
 
@@ -88,22 +87,38 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    // TODO: get 3 random activities from endpoint
-    // activities = <Activity[] array here>
-
     buttons = new Button[] {button0, button1, button2};
+  }
 
-    //OptionalLong lowestConsumptionInWh = Arrays.stream(activities).mapToLong(
-    //  Activity::getConsumptionInWh).min();
+  @Override
+  public void displayQuestion(Question question) {
+    MultipleChoiceQuestion castedQuestion = (MultipleChoiceQuestion) question;
+
+    // reset correct button colors
+    for (Button button : buttons) {
+      button.getStyleClass().remove("good");
+      button.getStyleClass().remove("bad");
+    }
+
+    Activity[] activities = {
+      castedQuestion.getActivity1(),
+      castedQuestion.getActivity2(),
+      castedQuestion.getActivity3()
+    };
+
+    boolean[] correctAnswers = castedQuestion.getCorrect();
 
     //TODO: change i < 0 -> i < buttons.length when activities can be get
-    for (int i = 0; i < 0; i++) {
+    for (int i = 0; i < buttons.length; i++) {
       Activity activity = activities[i];
+
+      String path = "/client/JSON/" + activity.getImage_path();
 
       // get image
       ImageView imageView =
         new ImageView(getClass()
-          .getResource(activity.getImage_path()).toExternalForm());
+          .getResource(path).toExternalForm());
+
       // resize image
       imageView.setFitWidth(1140 / 3.0);
       imageView.setFitHeight(1140 / 3.0);
@@ -114,15 +129,9 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
       // image is displayed on top of text
       buttons[i].setContentDisplay(ContentDisplay.TOP);
 
-
       buttons[i].setText(activity.getTitle());
       // TODO: buttons[i].setUserData(), put if answer is correct or not
-      // buttons[i].setUserData();
+      buttons[i].setUserData(correctAnswers[i]);
     }
-  }
-
-  @Override
-  public void displayQuestion(Question question) {
-
   }
 }

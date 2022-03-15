@@ -44,10 +44,6 @@ public abstract class QuestionCtrl {
     mainCtrl.openExitOverlay(false);
   }
 
-  private void endServerTimer() {
-    mainCtrl.timerThread.interrupt();
-  }
-
   @FXML
   private void help(ActionEvent actionEvent) {
     mainCtrl.openHelp();
