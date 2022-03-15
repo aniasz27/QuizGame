@@ -47,13 +47,13 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+  }
   @FXML
   public void showImage(String imageName) {
     image = new Image(getClass().getResourceAsStream(imageName));
     imageView.setImage(image);
   }
 
-  }
 
 
   @Override
