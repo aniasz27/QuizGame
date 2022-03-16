@@ -63,9 +63,12 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     String path = "/client/JSON/" + activity.getImage_path();
 
     showImage(path);
-
+    submit.setDisable(false);
+    submit.getStyleClass().remove("good");
+    submit.getStyleClass().remove("bad");
     description.setText(activity.getTitle());
     points.setText("Points: " + mainCtrl.getPoints());
+    answer.setText("Type in your answer");
 
   }
 
@@ -84,6 +87,12 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     }
   }
 
+  /**
+   * Deletes the text upon mouse click
+   */
+  public void deleteText() {
+    answer.setText("");
+  }
 
   /**
    * Sets the color to green, shows the right answer and updates the points on the screen
