@@ -65,8 +65,8 @@ public class ActivityController {
   @SuppressWarnings("all")
   public ResponseEntity<Activity> getRandomActivity() {
 
-    int firstNumLimit = 7;
-    int secondNumLimit = 9;
+    int firstNumLimit = 0;
+    int secondNumLimit = 0;
 
     int firstNum = random.nextInt(firstNumLimit + 1);
     int secondNum = random.nextInt(secondNumLimit + 1);
@@ -116,7 +116,7 @@ public class ActivityController {
   public ResponseEntity<String> importAllActivities() {
 
     try {
-      String activitiesPath = "src/main/resources/JSON/activities.json";
+      String activitiesPath = "server/src/main/resources/JSON/activities.json";
       Gson gson = new Gson();
       Reader reader = Files.newBufferedReader(Paths.get(activitiesPath));
       List<Activity> activities = gson.fromJson(reader, new TypeToken<List<Activity>>() {

@@ -1,5 +1,6 @@
 package commons;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.Objects;
 
@@ -50,6 +51,7 @@ public class EstimateQuestion extends Question {
   /**
    * @return the correct answer to the question
    */
+  @JsonIgnore
   public long getAnswer() {
     return getActivity().consumption_in_wh;
   }

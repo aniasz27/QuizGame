@@ -60,8 +60,9 @@
         <Text fx:id="description" styleClass="description" text="Description" textAlignment="CENTER"
               StackPane.alignment="CENTER"/>
         <Region maxHeight="40" styleClass="margin" VBox.vgrow="ALWAYS"/>
-        <TextField fx:id="answer" promptText="Type in your answer" styleClass="border, rounded, drop-shadow"/>
-        <Button onAction="#checkCorrect" styleClass="border, rounded, drop-shadow" text="Submit"/>
+        <TextField fx:id="answer" promptText="Type in your answer" styleClass="border, rounded, drop-shadow"
+                   onMouseClicked="#deleteText"/>
+        <Button fx:id="submit" onAction="#checkCorrect" styleClass="border, rounded, drop-shadow" text="Submit"/>
         <Region styleClass="margin" VBox.vgrow="ALWAYS"/>
     </VBox>
 </StackPane>
