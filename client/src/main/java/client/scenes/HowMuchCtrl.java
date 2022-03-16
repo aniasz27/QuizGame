@@ -6,6 +6,7 @@ import com.google.inject.Inject;
 import commons.Activity;
 import commons.HowMuchQuestion;
 import commons.Question;
+import java.io.ByteArrayInputStream;
 import java.util.Random;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -60,11 +61,8 @@ public class HowMuchCtrl extends QuestionCtrl {
     this.question = (HowMuchQuestion) question;
     this.activity = this.question.getActivity();
 
-    String path = "/client/JSON/" + activity.getImage_path();
+    imageView.setImage(new Image(new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity.id))));
 
-    image = new Image(getClass().getResource(path).toExternalForm());
-    imageView.setImage(image);
-    
     description.setText(activity.getTitle());
     answer_1.setDisable(false);
     answer_2.setDisable(false);

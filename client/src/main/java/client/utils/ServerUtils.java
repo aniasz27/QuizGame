@@ -106,6 +106,9 @@ public class ServerUtils {
 
   /**
    * Get all activities from the server
+   *
+   * @param ip the server's IP address
+   * @return list of all activities
    */
   public List<Activity> getActivities(String ip) {
     return ClientBuilder.newClient(new ClientConfig())
@@ -114,6 +117,20 @@ public class ServerUtils {
       .accept(APPLICATION_JSON)
       .get(new GenericType<>() {
       });
+  }
+
+  /**
+   * Get all activities from the server
+   *
+   * @param ip the server's IP address
+   * @param id the ID of the activity
+   * @return list of all activities
+   */
+  public byte[] getActivityImage(String ip, String id) {
+    return ClientBuilder.newClient(new ClientConfig())
+      .target(ip).path("api/activity/image/" + id)
+      .request("image/jpeg")
+      .get(byte[].class);
   }
 
   /**

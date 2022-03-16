@@ -6,12 +6,14 @@ import com.google.inject.Inject;
 import commons.Activity;
 import commons.MultipleChoiceQuestion;
 import commons.Question;
+import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
@@ -116,9 +118,9 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
       String path = "/client/JSON/" + activity.getImage_path();
 
       // get image
-      ImageView imageView =
-        new ImageView(getClass()
-          .getResource(path).toExternalForm());
+      ImageView imageView = new ImageView(new Image(
+        new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity.id))
+      ));
 
       // resize image
       imageView.setFitWidth(1140 / 3.0);

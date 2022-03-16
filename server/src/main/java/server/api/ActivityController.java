@@ -4,15 +4,19 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import commons.Activity;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -149,5 +153,16 @@ public class ActivityController {
     return ResponseEntity.ok("Activities imported successfully!");
   }
 
-
+  @GetMapping(path = "/image/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
+  public ResponseEntity<byte[]> getImage(@PathVariable String id) {
+    try {
+      InputStream imageStream = new ByteArrayResource(Files.readAllBytes(Paths.get(
+        "src/main/resources/JSON/" + repo.findById(id).orElseThrow(IOException::new).getImage_path()
+      ))).getInputStream();
+      return ResponseEntity.status(HttpStatus.OK).body(imageStream.readAllBytes());
+    } catch (Exception e) {
+      e.printStackTrace();
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+  }
 }

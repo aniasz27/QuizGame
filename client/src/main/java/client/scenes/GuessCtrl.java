@@ -6,9 +6,9 @@ import com.google.inject.Inject;
 import commons.Activity;
 import commons.EstimateQuestion;
 import commons.Question;
+import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -49,20 +49,12 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   public void initialize(URL location, ResourceBundle resources) {
   }
 
-  @FXML
-  public void showImage(String imageName) {
-    image = new Image(getClass().getResourceAsStream(imageName));
-    imageView.setImage(image);
-  }
-
   @Override
   public void displayQuestion(Question question) {
     this.question = (EstimateQuestion) question;
     this.activity = this.question.getActivity();
 
-    String path = "/client/JSON/" + activity.getImage_path();
-
-    showImage(path);
+    imageView.setImage(new Image(new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity.id))));
     submit.setDisable(false);
     submit.getStyleClass().remove("good");
     submit.getStyleClass().remove("bad");
