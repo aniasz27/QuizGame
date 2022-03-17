@@ -68,13 +68,10 @@ public class ActivityController {
   @GetMapping("/random")
   @SuppressWarnings("all")
   public ResponseEntity<Activity> getRandomActivity() {
+    int groupsAmount = 78; // TODO: change when everyone has downloaded all activities
 
-    int firstNumLimit = 0;
-    int secondNumLimit = 0;
-
-    int firstNum = random.nextInt(firstNumLimit + 1);
-    int secondNum = random.nextInt(secondNumLimit + 1);
-    String group = String.valueOf(firstNum) + String.valueOf(secondNum) + "%";
+    int groupNum = random.nextInt(groupsAmount + 1);
+    String group = String.format("%02d", groupNum) + "%";
     int counter = random.nextInt(repo.getRandomActivityCount(group));
     return ResponseEntity.ok(repo.getRandomActivity(group, counter));
   }
@@ -111,7 +108,7 @@ public class ActivityController {
 
   /**
    * Endpoint to re-import all activities from the activities.json file located at
-   * server/src/main/resources/JSON/activities.json
+   * src/main/resources/JSON/activities.json
    *
    * @return confirmation message or error
    */
@@ -120,7 +117,7 @@ public class ActivityController {
   public ResponseEntity<String> importAllActivities() {
 
     try {
-      String activitiesPath = "server/src/main/resources/JSON/activities.json";
+      String activitiesPath = "src/main/resources/JSON/activities.json";
       Gson gson = new Gson();
       Reader reader = Files.newBufferedReader(Paths.get(activitiesPath));
       List<Activity> activities = gson.fromJson(reader, new TypeToken<List<Activity>>() {
