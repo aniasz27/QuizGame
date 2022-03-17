@@ -39,6 +39,8 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   @FXML
   private Text points;
 
+  private boolean correct;
+
 
   @Inject
   GuessCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -51,17 +53,17 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
 
   @Override
   public void displayQuestion(Question question) {
+    this.correct = false;
     this.question = (EstimateQuestion) question;
     this.activity = this.question.getActivity();
+    this.submit.setDisable(false);
+    this.answer.getStyleClass().remove("good");
+    this.answer.getStyleClass().remove("bad");
 
     imageView.setImage(new Image(new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity.id))));
-    submit.setDisable(false);
-    submit.getStyleClass().remove("good");
-    submit.getStyleClass().remove("bad");
     description.setText(activity.getTitle());
     points.setText("Points: " + mainCtrl.getPoints());
     answer.setText("Type in your answer");
-
   }
 
   /**
@@ -70,12 +72,10 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   public void checkCorrect() {
     int value = Integer.parseInt(answer.getText());
     int point = (int) (question.calculateHowClose(value) * 100);
-    mainCtrl.addPoints(point);
     submit.setDisable(true);
-    if (point == 0) {
-      showIncorrect();
-    } else {
-      showCorrect();
+    if (point != 0) {
+      correct = true;
+      mainCtrl.addPoints(point);
     }
   }
 
@@ -87,7 +87,7 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   }
 
   /**
-   * Sets the color to green, shows the right answer and updates the points on the screen
+   * Sets the color to green/red, shows the right answer and updates the points on the screen
    */
   public void showPoints() {
     int userPoints = mainCtrl.getPoints();
@@ -95,16 +95,16 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   }
 
   public void showCorrect() {
-    answer.getStyleClass().add("good");
-    points.setText("Points: " + mainCtrl.getPoints());
+    answer.getStyleClass().add(correct ? "good" : "bad");
+    showPoints();
     answer.setText("Correct answer is: " + question.getAnswer());
   }
 
   /**
-   * Sets the color to red and shows the right answer
+   * Disable button in case when user does not pick an answer
    */
-  public void showIncorrect() {
-    answer.getStyleClass().add("bad");
-    answer.setText("Correct answer is: " + question.getAnswer());
+  @Override
+  public void disableButtons() {
+    submit.setDisable(true);
   }
 }

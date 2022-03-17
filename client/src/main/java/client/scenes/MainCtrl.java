@@ -200,7 +200,7 @@ public class MainCtrl {
   // instead of swapping entire scene, just swap parent
   public void showSplash() {
     // reset name and list of players if coming out of a game
-    this.points = new Score(name, 0);
+    this.points = new Score(clientId, name, 0);
     //players = null;
     primaryStage.getScene().setRoot(splashParent);
   }
@@ -229,7 +229,7 @@ public class MainCtrl {
    */
   public void start() {
     server.startGame(serverIp);
-    points = new Score(clientId, 0);
+    points = new Score(clientId, name, 0);
     try {
       play();
     } catch (InterruptedException e) {
@@ -279,7 +279,23 @@ public class MainCtrl {
     boolean finished = server.startServerTimer(serverIp, 10000);
 
     if (finished) {
-      //Platform.runLater(() -> placeholder()) // TODO: Assign method of showing correct answer per question type
+      switch (question.type) {
+        case MULTICHOICE:
+          Platform.runLater(() -> whatRequiresMoreEnergyCtrl.disableButtons());
+          Platform.runLater(() -> whatRequiresMoreEnergyCtrl.showCorrect());
+          break;
+        case ESTIMATE:
+          Platform.runLater(() -> guessCtrl.disableButtons());
+          Platform.runLater(() -> guessCtrl.showCorrect());
+          break;
+        case HOWMUCH:
+          Platform.runLater(() -> howMuchCtrl.disableButtons());
+          Platform.runLater(() -> howMuchCtrl.showCorrect());
+          break;
+        default:
+          System.out.println("Wrong question type");
+          break;
+      }
       startBreakTimer();
     } else {
       System.err.println("Error in question timer.");
@@ -299,14 +315,14 @@ public class MainCtrl {
   private void nextQuestion() throws InterruptedException {
     question = server.nextQuestion(serverIp);
     if (question == null) {
-      //TODO: Show end screen
+      server.addScore(serverIp, points);
+      showEndScreen();
     } else {
       switch (question.type) {
         case MULTICHOICE:
           System.out.println("Showed multiple choice");
           Platform.runLater(() -> showWhatRequiresMoreEnergy((MultipleChoiceQuestion) question));
           break;
-
         case ESTIMATE:
           System.out.println("Showed guess");
           Platform.runLater(() -> showGuess((EstimateQuestion) question));
@@ -316,7 +332,7 @@ public class MainCtrl {
           Platform.runLater(() -> showHowMuch((HowMuchQuestion) question));
           break;
         default:
-          //TODO do something if it doesn't work
+          System.out.println("Wrong question type");
           break;
       }
     }
@@ -377,7 +393,6 @@ public class MainCtrl {
   /**
    * Shows the end screen to the user, updates the user points in the game controller
    */
-
   public void showEndScreen() {
     primaryStage.getScene().setRoot(endScreenParent);
     endScreenCtrl.refresh();
