@@ -10,8 +10,7 @@ build/
 
 **/*.swp
 
-**/activities.json
-**/server/src/main/resources/JSON
+JSON/
 
 ### STS ###
 .apt_generated
