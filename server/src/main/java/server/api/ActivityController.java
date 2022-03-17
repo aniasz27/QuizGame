@@ -3,8 +3,12 @@ package server.api;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import commons.Activity;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -117,9 +121,10 @@ public class ActivityController {
   public ResponseEntity<String> importAllActivities() {
 
     try {
-      String activitiesPath = "src/main/resources/JSON/activities.json";
+      String activitiesPath = "/JSON/activities.json";
       Gson gson = new Gson();
-      Reader reader = Files.newBufferedReader(Paths.get(activitiesPath));
+      Reader reader = new InputStreamReader(getClass()
+        .getResourceAsStream(activitiesPath));
       List<Activity> activities = gson.fromJson(reader, new TypeToken<List<Activity>>() {
       }.getType());
       reader.close();
