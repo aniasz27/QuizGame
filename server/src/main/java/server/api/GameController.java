@@ -67,7 +67,7 @@ public class GameController {
 
     playerController.getPlayers().forEach(p -> {
       if (p.waitingForGame) {
-        games.put(uniqueServerID, new Score(p.username, 0));
+        games.put(uniqueServerID, new Score(p.id, p.username, 0));
       }
     });
     this.uniqueServerId = uniqueServerID;

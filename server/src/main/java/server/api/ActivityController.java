@@ -127,12 +127,13 @@ public class ActivityController {
       }.getType());
       reader.close();
       repo.saveAll(activities);
+      return ResponseEntity.ok("Activities imported successfully!");
     } catch (IOException e) {
       System.err.println("Something went wrong when importing activities:");
       e.printStackTrace();
+      return ResponseEntity.internalServerError()
+        .body("Something went wrong when importing activities: " + e.getMessage());
     }
-
-    return ResponseEntity.ok("Activities imported successfully!");
   }
 
   @PostMapping("/importActivitiesFromFile")
