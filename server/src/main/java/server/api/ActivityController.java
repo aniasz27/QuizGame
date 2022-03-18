@@ -3,9 +3,6 @@ package server.api;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import commons.Activity;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -15,7 +12,6 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -123,8 +119,7 @@ public class ActivityController {
     try {
       String activitiesPath = "/JSON/activities.json";
       Gson gson = new Gson();
-      Reader reader = new InputStreamReader(getClass()
-        .getResourceAsStream(activitiesPath));
+      Reader reader = new InputStreamReader(getClass().getResourceAsStream(activitiesPath));
       List<Activity> activities = gson.fromJson(reader, new TypeToken<List<Activity>>() {
       }.getType());
       reader.close();
@@ -159,9 +154,9 @@ public class ActivityController {
   @GetMapping(path = "/image/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
   public ResponseEntity<byte[]> getImage(@PathVariable String id) {
     try {
-      InputStream imageStream = new ByteArrayResource(Files.readAllBytes(Paths.get(
-        "src/main/resources/JSON/" + repo.findById(id).orElseThrow(IOException::new).getImage_path()
-      ))).getInputStream();
+      InputStream imageStream = getClass().getResourceAsStream(
+        "/JSON/" + repo.findById(id).orElseThrow(IOException::new).getImage_path()
+      );
       return ResponseEntity.status(HttpStatus.OK).body(imageStream.readAllBytes());
     } catch (Exception e) {
       e.printStackTrace();
