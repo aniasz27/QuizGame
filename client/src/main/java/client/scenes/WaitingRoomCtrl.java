@@ -69,8 +69,8 @@ public class WaitingRoomCtrl implements Initializable {
    */
   public void refresh() {
     // only include players that are marked as 'waitingForGame'
-    var players = server.getPlayers(mainCtrl.serverIp).stream().filter(c -> c.waitingForGame).
-      collect(Collectors.toList());
+    var players = server.getPlayers(mainCtrl.serverIp).stream().filter(c -> c.waitingForGame)
+      .collect(Collectors.toList());
 
     startButton.setDisable(players.size() < 2);
     playerCounterField.setText(String.valueOf(players.size()));
@@ -123,7 +123,7 @@ public class WaitingRoomCtrl implements Initializable {
     EXECNewPlayers.shutdown();
   }
 
-  private ScheduledExecutorService EXECNewPlayers;
+  private static ScheduledExecutorService EXECNewPlayers;
 
   /**
    * Scheduled Executor that calls refresh() every second.
