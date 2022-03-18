@@ -2,12 +2,11 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.HBox?>
 <StackPane
   id="root" xmlns="http://javafx.com/javafx"
   xmlns:fx="http://javafx.com/fxml"

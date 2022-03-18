@@ -4,7 +4,6 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -15,7 +14,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -70,6 +68,7 @@ public class WaitingRoomCtrl implements Initializable {
    * Displays a list of players in the lobby.
    */
   public void refresh() {
+    // only include players that are marked as 'waitingForGame'
     var players = server.getPlayers(mainCtrl.serverIp).stream().filter(c -> c.waitingForGame).
       collect(Collectors.toList());
 
@@ -126,6 +125,9 @@ public class WaitingRoomCtrl implements Initializable {
 
   private ScheduledExecutorService EXECNewPlayers;
 
+  /**
+   * Scheduled Executor that calls refresh() every second.
+   */
   public void listenForNewPlayers() {
     EXECNewPlayers = Executors.newSingleThreadScheduledExecutor();
     EXECNewPlayers.scheduleAtFixedRate(
