@@ -6,6 +6,8 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
 <StackPane
   id="root" xmlns="http://javafx.com/javafx"
   xmlns:fx="http://javafx.com/fxml"
@@ -31,6 +33,11 @@
   <VBox maxWidth="640" StackPane.alignment="CENTER" alignment="CENTER">
     <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="20" minHeight="20"/>
     <Text styleClass="title" text="Waiting for players..." textAlignment="CENTER" StackPane.alignment="CENTER"/>
+    <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="20" minHeight="20"/>
+    <HBox StackPane.alignment="CENTER" alignment="CENTER">
+      <Text text="Players currently in the waiting room: " textAlignment="CENTER" StackPane.alignment="CENTER"/>
+      <Text fx:id="playerCounterField" text="" StackPane.alignment="CENTER"/>
+    </HBox>
     <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="20" minHeight="20"/>
     <ScrollPane
       styleClass="border, rounded, drop-shadow, no-pad, transparent"

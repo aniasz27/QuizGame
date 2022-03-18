@@ -155,9 +155,9 @@ public class ServerUtils {
       .put(Entity.json(activity), Activity.class);
   }
 
-  public List<String> getPlayerNames(String ip) {
+  public List<Client> getPlayers(String ip) {
     return ClientBuilder.newClient(new ClientConfig())
-      .target(ip).path("api/player/names")
+      .target(ip).path("api/player/list")
       .request(APPLICATION_JSON)
       .accept(APPLICATION_JSON)
       .get(new GenericType<>() {
