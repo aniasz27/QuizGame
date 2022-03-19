@@ -314,29 +314,28 @@ public class MainCtrl {
 
   private void nextQuestion() throws InterruptedException {
     question = server.nextQuestion(serverIp);
-    if (question == null) {
-      server.addScore(serverIp, points);
-      showEndScreen();
-    } else {
-      switch (question.type) {
-        case MULTICHOICE:
-          System.out.println("Showed multiple choice");
-          Platform.runLater(() -> showWhatRequiresMoreEnergy((MultipleChoiceQuestion) question));
-          break;
-        case ESTIMATE:
-          System.out.println("Showed guess");
-          Platform.runLater(() -> showGuess((EstimateQuestion) question));
-          break;
-        case HOWMUCH:
-          System.out.println("Showed how much");
-          Platform.runLater(() -> showHowMuch((HowMuchQuestion) question));
-          break;
-        default:
-          System.out.println("Wrong question type");
-          break;
-      }
+    switch (question.type) {
+      case MULTICHOICE:
+        System.out.println("Showed multiple choice");
+        Platform.runLater(() -> showWhatRequiresMoreEnergy((MultipleChoiceQuestion) question));
+        break;
+      case ESTIMATE:
+        System.out.println("Showed guess");
+        Platform.runLater(() -> showGuess((EstimateQuestion) question));
+        break;
+      case HOWMUCH:
+        System.out.println("Showed how much");
+        Platform.runLater(() -> showHowMuch((HowMuchQuestion) question));
+        break;
+      case ENDSCREEN:
+        System.out.println("Showed end screen");
+        server.addScore(serverIp, points);
+        showEndScreen();
+        break;
+      default:
+        System.out.println("Wrong question type");
+        break;
     }
-
   }
 
   public void showGuess(EstimateQuestion question) {

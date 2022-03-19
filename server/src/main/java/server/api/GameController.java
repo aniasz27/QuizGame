@@ -1,5 +1,6 @@
 package server.api;
 
+import commons.EndScreen;
 import commons.EstimateQuestion;
 import commons.HowMuchQuestion;
 import commons.MultipleChoiceQuestion;
@@ -104,7 +105,7 @@ public class GameController {
   public ResponseEntity<Question> nextStep() {
     if (questionCounter >= 20) {
       questionCounter = 0;
-      return ResponseEntity.ok(null);  // game ended
+      return ResponseEntity.ok(new EndScreen());  // game ended
     } else {
       questionCounter++;
     }
