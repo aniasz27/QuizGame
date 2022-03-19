@@ -25,7 +25,11 @@ import commons.Score;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.Response;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.function.Consumer;
 import org.glassfish.jersey.client.ClientConfig;
 
 public class ServerUtils {
@@ -58,6 +62,36 @@ public class ServerUtils {
       .request(APPLICATION_JSON)
       .accept(APPLICATION_JSON)
       .put(Entity.json(waitingForGame), Client.class);
+  }
+
+  private static ScheduledExecutorService EXECUpdate;
+
+  public void registerForPlayerUpdates(String ip, Consumer<Boolean> consumer) {
+
+    EXECUpdate = Executors.newSingleThreadScheduledExecutor();
+    try {
+      EXECUpdate.submit(() -> {
+        while (!Thread.interrupted()) {
+          var res = ClientBuilder.newClient(new ClientConfig())
+            .target(ip).path("api/player/updates")
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .get(Response.class);
+          if (res.getStatus() == 204) {
+            continue;
+          }
+          consumer.accept(res.readEntity(Boolean.class));
+        }
+      });
+    } catch (Exception e) {
+      if (!Thread.interrupted()) {
+        registerForPlayerUpdates(ip, consumer);
+      }
+    }
+  }
+
+  public void stopUpdates() {
+    EXECUpdate.shutdownNow();
   }
 
   /**

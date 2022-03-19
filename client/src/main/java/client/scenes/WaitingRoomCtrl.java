@@ -50,18 +50,15 @@ public class WaitingRoomCtrl implements Initializable {
   }
 
   @FXML
-  public void start(ActionEvent actionEvent) {
-    mainCtrl.start();
-  }
-
-  @FXML
   private void help(ActionEvent actionEvent) {
     mainCtrl.openHelp();
   }
 
   @FXML
   private void play(ActionEvent actionEvent) throws InterruptedException {
-    mainCtrl.play();
+    mainCtrl.waitingForGame = false;
+    mainCtrl.start();
+    stop();
   }
 
   /**
@@ -120,27 +117,15 @@ public class WaitingRoomCtrl implements Initializable {
 
   public void stop() {
     EXECGameStarted.shutdownNow();
-    EXECNewPlayers.shutdown();
+    server.stopUpdates();
   }
 
-  private static ScheduledExecutorService EXECNewPlayers;
-
-  /**
-   * Scheduled Executor that calls refresh() every second.
+  /*
+   * Call long polling method to update the waiting room automatically
    */
   public void listenForNewPlayers() {
-    EXECNewPlayers = Executors.newSingleThreadScheduledExecutor();
-    EXECNewPlayers.scheduleAtFixedRate(
-      () -> {
-        try {
-          Platform.runLater(this::refresh);
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      },
-      0,
-      1,
-      TimeUnit.SECONDS
-    );
+    server.registerForPlayerUpdates(mainCtrl.serverIp, np -> {
+      Platform.runLater(this::refresh);
+    });
   }
 }
