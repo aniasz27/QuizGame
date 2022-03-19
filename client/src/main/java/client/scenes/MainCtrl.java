@@ -340,6 +340,7 @@ public class MainCtrl {
         case INTERLEADERBOARD:
           System.out.println("Showed Intermediate Leaderboard");
           Platform.runLater(() -> showIntermediateLeaderboard());
+          break;
         default:
           System.out.println("Wrong question type");
           break;
