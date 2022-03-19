@@ -26,6 +26,7 @@ import client.scenes.ExitOverlayCtrl;
 import client.scenes.GuessCtrl;
 import client.scenes.HelpOverlayCtrl;
 import client.scenes.HowMuchCtrl;
+import client.scenes.IntermediateLeaderboardCtrl;
 import client.scenes.MainCtrl;
 import client.scenes.SpWaitingRoomCtrl;
 import client.scenes.SplashCtrl;
@@ -88,6 +89,12 @@ public class Main extends Application {
       "client/css/Guess.css"
     );
 
+    var intermediateLeaderboard = FXML.load(
+      IntermediateLeaderboardCtrl.class,
+      "client/scenes/IntermediateLeaderboard.fxml",
+      "client/css/IntermediateLeaderboard.css"
+    );
+
     var activityList = FXML.load(
       ActivityListCtrl.class,
       "client/scenes/ActivityList.fxml",
@@ -117,7 +124,8 @@ public class Main extends Application {
 
     var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
     mainCtrl.initialize(primaryStage, splash, connectScreen, waitingRoom, spWaitingRoom, howMuch,
-      whatRequiresMoreEnergy, guess, activityList, editActivity, helpOverlay, exitOverlay, endScreen);
+      whatRequiresMoreEnergy, guess, intermediateLeaderboard, activityList, editActivity, helpOverlay, exitOverlay,
+      endScreen);
 
     //stops the thread when user closes the window
     primaryStage.setOnCloseRequest(e -> {
