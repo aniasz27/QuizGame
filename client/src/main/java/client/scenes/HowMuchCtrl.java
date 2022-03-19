@@ -99,7 +99,7 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
   }
 
   public void showUserCorrect() {
-    mainCtrl.addPoints(100);
+    mainCtrl.addPoints(mainCtrl.getPointsOffset());
     showPoints();
   }
 
@@ -113,6 +113,7 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
 
   @FXML
   public void checkCorrectAnswer(MouseEvent event) {
+    mainCtrl.stopPointsTimer();
     this.clickedButton = (Button) event.getSource();
     for (Button button : buttons) {
       button.setDisable(true);

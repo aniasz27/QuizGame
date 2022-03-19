@@ -23,6 +23,11 @@ import commons.HowMuchQuestion;
 import commons.MultipleChoiceQuestion;
 import commons.Question;
 import commons.Score;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.concurrent.ScheduledExecutorService;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -94,6 +99,12 @@ public class MainCtrl {
   public Thread timerThread;
 
   public boolean playerExited = false;
+
+  private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSS");
+
+  private Date pointsTimer;
+
+  private int pointsOffset;
 
   @Inject
   public MainCtrl(ServerUtils server) {
@@ -344,6 +355,7 @@ public class MainCtrl {
     guessCtrl.displayQuestion(question);
     guessCtrl.showPoints();
     guessCtrl.startTimer();
+    this.startPointsTimer();
   }
 
   public void showWhatRequiresMoreEnergy(MultipleChoiceQuestion question) {
@@ -351,6 +363,7 @@ public class MainCtrl {
     whatRequiresMoreEnergyCtrl.displayQuestion(question);
     whatRequiresMoreEnergyCtrl.showPoints();
     whatRequiresMoreEnergyCtrl.startTimer();
+    this.startPointsTimer();
   }
 
   public void showHowMuch(HowMuchQuestion question) {
@@ -358,6 +371,7 @@ public class MainCtrl {
     howMuchCtrl.displayQuestion(question);
     howMuchCtrl.showPoints();
     howMuchCtrl.startTimer();
+    this.startPointsTimer();
   }
 
   public void showActivityList() {
@@ -404,5 +418,49 @@ public class MainCtrl {
 
   public void addPoints(int toAdd) {
     points.addPoints(toAdd);
+  }
+
+  /**
+   * Sets pointsTimer to the time the question was shown
+   */
+  public void startPointsTimer() {
+    try {
+      String timeNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss.SSS"));
+      pointsTimer = simpleDateFormat.parse(timeNow);
+    } catch (ParseException e) {
+      pointsTimer = null;
+    }
+  }
+
+  /**
+   * Calculates the difference between the moment the question was shown and the moment the answer button was pressed
+   * Saves the difference in pointsOffset
+   */
+  public void stopPointsTimer() {
+    int dif = -1;
+    if (pointsTimer != null) {
+      try {
+        String timeNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss.SSS"));
+        dif = (int) (simpleDateFormat.parse(timeNow).getTime() - pointsTimer.getTime()) / 100 % 100;
+      } catch (ParseException e) {
+        System.out.println("Error when calculating time difference");
+      }
+    } else {
+      System.out.println("Error when calculating time difference");
+    }
+    pointsTimer = null;
+    this.pointsOffset = 100 - dif;
+  }
+
+  /**
+   * Returns the offset, but if it's larger than 75, it gives full points (offset is 100)
+   *
+   * @return a value between 0-100
+   */
+  public int getPointsOffset() {
+    if (pointsOffset >= 75) {
+      return 100;
+    }
+    return Math.max(pointsOffset, 0);
   }
 }

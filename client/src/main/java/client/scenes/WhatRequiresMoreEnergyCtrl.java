@@ -41,6 +41,7 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
 
   @FXML
   public void checkCorrectAnswer(MouseEvent event) {
+    mainCtrl.stopPointsTimer();
     this.clickedButton = (Button) event.getSource();
 
     for (Button button : buttons) {
@@ -58,7 +59,7 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
   }
 
   public void showUserCorrect() {
-    mainCtrl.addPoints(100);
+    mainCtrl.addPoints(mainCtrl.getPointsOffset());
     showPoints();
   }
 
