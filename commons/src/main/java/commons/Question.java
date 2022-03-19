@@ -18,7 +18,7 @@ import javax.persistence.Table;
   @JsonSubTypes.Type(value = MultipleChoiceQuestion.class, name = "MULTICHOICE"),
   @JsonSubTypes.Type(value = EstimateQuestion.class, name = "ESTIMATE"),
   @JsonSubTypes.Type(value = HowMuchQuestion.class, name = "HOWMUCH"),
-    @JsonSubTypes.Type(value = IntermediateLeaderboardQuestion.class, name = "INTERLEADERBOARD"),
+  @JsonSubTypes.Type(value = IntermediateLeaderboardQuestion.class, name = "INTERLEADERBOARD"),
   @JsonSubTypes.Type(value = EndScreen.class, name = "ENDSCREEN")
 })
 @SuppressWarnings("all")
