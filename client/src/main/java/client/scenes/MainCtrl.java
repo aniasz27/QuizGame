@@ -264,7 +264,11 @@ public class MainCtrl {
     Task<Void> task = new Task<Void>() {
       @Override
       protected Void call() throws Exception {
-        startQuestionTimer();
+        // do not start timer for next question if on end screen
+        if (!question.type.equals(Question.Type.ENDSCREEN)) {
+          startQuestionTimer();
+        }
+
         return null;
       }
     };
@@ -330,7 +334,7 @@ public class MainCtrl {
       case ENDSCREEN:
         System.out.println("Showed end screen");
         server.addScore(serverIp, points);
-        showEndScreen();
+        Platform.runLater(() -> showEndScreen());
         break;
       default:
         System.out.println("Wrong question type");
