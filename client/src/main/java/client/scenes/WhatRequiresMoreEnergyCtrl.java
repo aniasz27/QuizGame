@@ -16,6 +16,7 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 
 public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initializable {
@@ -94,6 +95,16 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
       String path = "/client/JSON/" + activity.getImage_path();
 
       // get image
+      StackPane imgContainer = new StackPane();
+      imgContainer.getStyleClass().add("rounded");
+      imgContainer.getStyleClass().add("img");
+//      Rectangle clip = new Rectangle(
+//        imgContainer.getWidth(), imgContainer.getHeight()
+//      );
+//      clip.setArcWidth(20);
+//      clip.setArcHeight(20);
+//      imgContainer.setClip(clip);
+
       ImageView imageView = new ImageView(new Image(
         new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity.id))
       ));
@@ -102,8 +113,10 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
       imageView.setFitWidth(1140 / 3.0);
       imageView.setFitHeight(1140 / 3.0);
 
+      imgContainer.getChildren().add(imageView);
+
       //set image
-      buttons[i].setGraphic(imageView);
+      buttons[i].setGraphic(imgContainer);
 
       // image is displayed on top of text
       buttons[i].setContentDisplay(ContentDisplay.TOP);

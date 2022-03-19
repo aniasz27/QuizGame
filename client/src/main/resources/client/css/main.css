@@ -225,3 +225,8 @@
 .popup-text, .popup-text > * {
   -fx-wrap-text: true;
 }
+
+.img, .img * {
+  -fx-padding: 0;
+  -fx-background-color: #fff;
+}

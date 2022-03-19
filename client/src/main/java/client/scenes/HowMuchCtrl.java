@@ -15,12 +15,15 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 public class HowMuchCtrl extends QuestionCtrl implements Initializable {
-
   @FXML
   private Button backButton;
+  @FXML
+  public StackPane imgContainer;
   @FXML
   private ImageView imageView;
 
@@ -73,6 +76,12 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
     this.correct = this.question.getCorrect();
     this.answers = this.question.getAnswers();
 
+    Rectangle clip = new Rectangle(
+      imgContainer.getWidth(), imgContainer.getHeight()
+    );
+    clip.setArcWidth(20);
+    clip.setArcHeight(20);
+    imgContainer.setClip(clip);
     imageView.setImage(new Image(new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity.id))));
 
     description.setText(activity.getTitle());

@@ -15,6 +15,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 
@@ -22,6 +24,8 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   private EstimateQuestion question;
   private Activity activity;
 
+  @FXML
+  public StackPane imgContainer;
   @FXML
   private ImageView imageView;
   @FXML
@@ -60,7 +64,14 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     this.answer.getStyleClass().remove("good");
     this.answer.getStyleClass().remove("bad");
 
+    Rectangle clip = new Rectangle(
+      imgContainer.getWidth(), imgContainer.getHeight()
+    );
+    clip.setArcWidth(20);
+    clip.setArcHeight(20);
+    imgContainer.setClip(clip);
     imageView.setImage(new Image(new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity.id))));
+
     description.setText(activity.getTitle());
     points.setText("Points: " + mainCtrl.getPoints());
     answer.setText("Type in your answer");
