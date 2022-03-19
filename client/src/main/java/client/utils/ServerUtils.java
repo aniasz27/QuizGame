@@ -177,7 +177,7 @@ public class ServerUtils {
       .target(ip).path("api/score/add")
       .request(APPLICATION_JSON)
       .accept(APPLICATION_JSON)
-      .put(Entity.json(score), Score.class);
+      .post(Entity.json(score), Score.class);
   }
 
   public Iterable<Score> getSingleLeaderboard(String ip) {
