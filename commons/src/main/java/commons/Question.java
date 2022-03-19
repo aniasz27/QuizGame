@@ -17,7 +17,8 @@ import javax.persistence.Table;
 @JsonSubTypes({
   @JsonSubTypes.Type(value = MultipleChoiceQuestion.class, name = "MULTICHOICE"),
   @JsonSubTypes.Type(value = EstimateQuestion.class, name = "ESTIMATE"),
-  @JsonSubTypes.Type(value = HowMuchQuestion.class, name = "HOWMUCH")
+  @JsonSubTypes.Type(value = HowMuchQuestion.class, name = "HOWMUCH"),
+  @JsonSubTypes.Type(value = IntermediateLeaderboardQuestion.class, name = "INTERLEADERBOARD")
 })
 @SuppressWarnings("all")
 public abstract class Question {
@@ -32,7 +33,7 @@ public abstract class Question {
   public enum Type {
     MULTICHOICE(0),
     ESTIMATE(1),
-    HOWMUCH(2);
+    HOWMUCH(2), INTERLEADERBOARD(3);
 
     private final int type;
 

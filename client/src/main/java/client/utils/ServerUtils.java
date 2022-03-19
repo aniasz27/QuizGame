@@ -190,6 +190,23 @@ public class ServerUtils {
   }
 
   /**
+   * Gets the multiplayer leaderboard at the time for a given game
+   * TODO: implement sessions and make this work for different games
+   *
+   * @param ip     of the server
+   * @param gameId of the game the client is in
+   * @return the set of leaderboard scores
+   */
+  public Iterable<Score> getMultiLeaderboard(String ip, String gameId) {
+    return ClientBuilder.newClient(new ClientConfig())
+      .target(ip).path("api/score/multiLeaderboard/" + gameId)
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
+      .get(new GenericType<>() {
+      });
+  }
+
+  /**
    * Returns a score of a player as an int
    *
    * @param id id of a player

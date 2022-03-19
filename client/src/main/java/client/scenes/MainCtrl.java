@@ -62,6 +62,9 @@ public class MainCtrl {
   private GuessCtrl guessCtrl;
   private Parent guessParent;
 
+  private IntermediateLeaderboardCtrl intermediateLeaderboardCtrl;
+  private Parent intermediateLeaderboardParent;
+
   //if false, the player plays in singleplayer mode
   // if true, the player plays in multiplayer mode
   public boolean multiplayer;
@@ -129,6 +132,7 @@ public class MainCtrl {
     Pair<HowMuchCtrl, Parent> howMuch,
     Pair<WhatRequiresMoreEnergyCtrl, Parent> whatRequiresMoreEnergy,
     Pair<GuessCtrl, Parent> guess,
+    Pair<IntermediateLeaderboardCtrl, Parent> intermediateLeaderboard,
     Pair<ActivityListCtrl, Parent> activityList,
     Pair<EditActivityCtrl, Parent> editActivity,
     Pair<HelpOverlayCtrl, Parent> helpOverlay,
@@ -157,6 +161,9 @@ public class MainCtrl {
     this.guessCtrl = guess.getKey();
     this.guessParent = guess.getValue();
 
+    this.intermediateLeaderboardCtrl = intermediateLeaderboard.getKey();
+    this.intermediateLeaderboardParent = intermediateLeaderboard.getValue();
+
     this.activityListCtrl = activityList.getKey();
     this.activityListParent = activityList.getValue();
 
@@ -166,10 +173,8 @@ public class MainCtrl {
     this.helpOverlayCtrl = helpOverlay.getKey();
     this.helpOverlayParent = helpOverlay.getValue();
 
-
     this.exitOverlayCtrl = exitOverlay.getKey();
     this.exitOverlayParent = exitOverlay.getValue();
-
 
     this.endScreenCtrl = endScreen.getKey();
     this.endScreenParent = endScreen.getValue();
@@ -314,6 +319,7 @@ public class MainCtrl {
 
   private void nextQuestion() throws InterruptedException {
     question = server.nextQuestion(serverIp);
+
     if (question == null) {
       server.addScore(serverIp, points);
       showEndScreen();
@@ -331,6 +337,9 @@ public class MainCtrl {
           System.out.println("Showed how much");
           Platform.runLater(() -> showHowMuch((HowMuchQuestion) question));
           break;
+        case INTERLEADERBOARD:
+          System.out.println("Showed Intermediate Leaderboard");
+          Platform.runLater(() -> showIntermediateLeaderboard());
         default:
           System.out.println("Wrong question type");
           break;
@@ -358,6 +367,10 @@ public class MainCtrl {
     howMuchCtrl.displayQuestion(question);
     howMuchCtrl.showPoints();
     howMuchCtrl.startTimer();
+  }
+
+  public void showIntermediateLeaderboard() {
+    primaryStage.getScene().setRoot(intermediateLeaderboardParent);
   }
 
   public void showActivityList() {
