@@ -98,12 +98,12 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
       StackPane imgContainer = new StackPane();
       imgContainer.getStyleClass().add("rounded");
       imgContainer.getStyleClass().add("img");
-//      Rectangle clip = new Rectangle(
-//        imgContainer.getWidth(), imgContainer.getHeight()
-//      );
-//      clip.setArcWidth(20);
-//      clip.setArcHeight(20);
-//      imgContainer.setClip(clip);
+      //Rectangle clip = new Rectangle(
+      //  imgContainer.getWidth(), imgContainer.getHeight()
+      //);
+      //clip.setArcWidth(20);
+      //clip.setArcHeight(20);
+      //imgContainer.setClip(clip);
 
       ImageView imageView = new ImageView(new Image(
         new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity.id))
