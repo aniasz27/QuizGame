@@ -103,6 +103,7 @@ public class GameController {
   @GetMapping("/next")
   public ResponseEntity<Question> nextStep() {
     if (questionCounter >= 20) {
+      questionCounter = 0;
       return ResponseEntity.ok(null);  // game ended
     } else {
       questionCounter++;
