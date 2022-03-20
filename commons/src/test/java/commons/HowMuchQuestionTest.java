@@ -1,6 +1,8 @@
 package commons;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -40,18 +42,51 @@ class HowMuchQuestionTest {
   }
 
   @Test
-  void getWrong1() {
+  void getAndSetWrong1() {
+    HowMuchQuestion q = new HowMuchQuestion();
+    q.setWrong1(1234);
+    assertEquals(1234, q.getWrong1());
   }
 
   @Test
-  void setWrong1() {
+  void getAndSetWrong2() {
+    HowMuchQuestion q = new HowMuchQuestion();
+    q.setWrong2(1234);
+    assertEquals(1234, q.getWrong2());
   }
 
   @Test
-  void getWrong2() {
+  void testOnlyOneCorrectAnswer() {
+    HowMuchQuestion q = new HowMuchQuestion(a);
+    long correctAnswer = q.getActivity().getConsumption_in_wh();
+    boolean[] correct = q.getCorrect();
+    int correctAnswers = 0;
+
+    for (int i = 0; i < correct.length; i++) {
+      if (correct[i]) {
+        assertEquals(correctAnswer, q.getAnswers()[i]);
+        correctAnswers++;
+      } else {
+        assertNotEquals(correctAnswer, q.getAnswers()[i]);
+      }
+    }
+
+    assertEquals(1, correctAnswers);
   }
 
   @Test
-  void setWrong2() {
+  void testCorrectRange() {
+    HowMuchQuestion q = new HowMuchQuestion(a);
+    long correctAnswer = q.getActivity().getConsumption_in_wh();
+    long wrong1 = q.getWrong1();
+    long wrong2 = q.getWrong2();
+
+    long diff1 = Math.abs(correctAnswer - wrong1);
+    assertTrue(correctAnswer * (50) / 100L <= diff1);
+    assertTrue(diff1 <= correctAnswer * (90) / 100L);
+
+    long diff2 = Math.abs(correctAnswer - wrong2);
+    assertTrue(correctAnswer * (50) / 100L <= diff2);
+    assertTrue(diff2 <= correctAnswer * (90) / 100L);
   }
 }
