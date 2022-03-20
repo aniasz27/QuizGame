@@ -15,8 +15,9 @@ public class ScoreTest {
   @BeforeAll
   public static void setUp() {
     String player = "Username";
+    String name = "Name";
     int points = 0;
-    score = new Score(player, points);
+    score = new Score(player, name, points);
   }
 
   @Test
@@ -29,30 +30,18 @@ public class ScoreTest {
     assertEquals("Username", score.getPlayer());
   }
 
-  @Test
-  public void setPlayerTest() {
-    score.setPlayer("ME");
-    assertEquals("ME", score.getPlayer());
-    score.setPlayer("Username");
-  }
 
   @Test
   public void getPointsTest() {
     assertEquals(0, score.getPoints());
   }
 
-  @Test
-  public void setPointsTest() {
-    score.setPoints(100);
-    assertEquals(100, score.getPoints());
-    score.setPoints(0);
-  }
 
   @Test
   public void addPointsTest() {
     score.addPoints(100);
     assertEquals(100, score.getPoints());
-    score.setPoints(0);
+    score.points = 0;
   }
 
   @Test
@@ -64,7 +53,8 @@ public class ScoreTest {
   public void equalsSameButDifferentTest() {
     String player = "Username";
     int points = 0;
-    Score score1 = new Score(player, points);
+    String name = "Name";
+    Score score1 = new Score(player, name, points);
     assertEquals(score, score1);
   }
 
@@ -72,7 +62,8 @@ public class ScoreTest {
   public void equalsDifferentTest() {
     String player = "Username";
     int points = 100;
-    Score score1 = new Score(player, points);
+    String name = "Name";
+    Score score1 = new Score(player, name, points);
     assertFalse(score.equals(score1));
   }
 
