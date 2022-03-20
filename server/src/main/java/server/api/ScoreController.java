@@ -4,6 +4,7 @@ import commons.Activity;
 import commons.Score;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,5 +59,11 @@ public class ScoreController {
   @PostMapping("/add")
   public ResponseEntity<Score> addScore(@RequestBody Score score) {
     return ResponseEntity.ok(repo.save(score));
+  }
+
+  @DeleteMapping("/deleteAll")
+  public ResponseEntity<String> clear() {
+    repo.deleteAll();
+    return ResponseEntity.ok("Deleted all scores");
   }
 }

@@ -1,5 +1,6 @@
 package server.api;
 
+import commons.EndScreen;
 import commons.EstimateQuestion;
 import commons.HowMuchQuestion;
 import commons.IntermediateLeaderboardQuestion;
@@ -105,7 +106,8 @@ public class GameController {
   @GetMapping("/next")
   public ResponseEntity<Question> nextStep() {
     if (questionCounter >= 20) {
-      return ResponseEntity.ok(null);  // game ended
+      questionCounter = 0;
+      return ResponseEntity.ok(new EndScreen());  // game ended
     } else if (questionCounter == 10 && !showedIntermediateLeaderboard) { // show intermediate leaderboard
       showedIntermediateLeaderboard = true;
       return ResponseEntity.ok(new IntermediateLeaderboardQuestion()); // TODO: include leaderboard info in question
