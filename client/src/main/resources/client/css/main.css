@@ -226,6 +226,11 @@
   -fx-wrap-text: true;
 }
 
+.img, .img * {
+  -fx-padding: 0;
+  -fx-background-color: #fff;
+}
+  
 #circle {
   -fx-fill: #1E0A49;
   -fx-stroke: #0586E3;

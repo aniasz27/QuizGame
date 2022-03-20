@@ -19,6 +19,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 
@@ -26,6 +27,8 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   private EstimateQuestion question;
   private Activity activity;
 
+  @FXML
+  public StackPane imgContainer;
   @FXML
   private ImageView imageView;
   @FXML
@@ -90,7 +93,14 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     this.answer.getStyleClass().remove("good");
     this.answer.getStyleClass().remove("bad");
 
+    Rectangle clip = new Rectangle(
+      imgContainer.getWidth(), imgContainer.getHeight()
+    );
+    clip.setArcWidth(20);
+    clip.setArcHeight(20);
+    imgContainer.setClip(clip);
     imageView.setImage(new Image(new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity.id))));
+
     description.setText(activity.getTitle());
     points.setText("Points: " + mainCtrl.getPoints());
     answer.setText("Type in your answer");
@@ -100,12 +110,11 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
    * On clicking the submit button on the screen, the answer gets evaluated and the correct score is shown
    */
   public void checkCorrect() {
-    mainCtrl.stopPointsTimer();
     if (answer.getText() == "") {
       return;
     }
     int value = Integer.parseInt(answer.getText());
-    int point = (int) (question.calculateHowClose(value) * 100) * mainCtrl.getPointsOffset() / 100;
+    int point = (int) (question.calculateHowClose(value) * 100);
     submit.setDisable(true);
     if (point != 0) {
       correct = true;
