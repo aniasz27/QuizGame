@@ -179,7 +179,6 @@ public class MainCtrl {
     this.endScreenCtrl = endScreen.getKey();
     this.endScreenParent = endScreen.getValue();
 
-
     primaryStage.setTitle("Quizzzzz");
     // never exit full screen
     primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
@@ -374,6 +373,7 @@ public class MainCtrl {
 
   public void showIntermediateLeaderboard() {
     primaryStage.getScene().setRoot(intermediateLeaderboardParent);
+    intermediateLeaderboardCtrl.display();
   }
 
   public void showActivityList() {
