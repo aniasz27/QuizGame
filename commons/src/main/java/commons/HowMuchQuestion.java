@@ -11,6 +11,8 @@ public class HowMuchQuestion extends Question {
   private Activity activity;
   private long wrong1;
   private long wrong2;
+  private boolean[] correct;
+  private long[] answers;
 
   private final Random random;
 
@@ -24,7 +26,10 @@ public class HowMuchQuestion extends Question {
     this.activity = activity;
     this.random = new Random();
     this.question = "How much energy does this activity use?";
+    this.correct = new boolean[3];
+    this.answers = new long[3];
     computeWrong();
+    setRandomAnswers();
   }
 
   private void computeWrong() {
@@ -54,6 +59,21 @@ public class HowMuchQuestion extends Question {
     }
   }
 
+  public void setRandomAnswers() {
+    int place = random.nextInt(3);
+    answers[place] = this.activity.consumption_in_wh;
+    answers[(place + 1) % 3] = wrong1;
+    answers[(place + 2) % 3] = wrong2;
+    correct[place] = true;
+  }
+
+  public boolean[] getCorrect() {
+    return correct;
+  }
+
+  public long[] getAnswers() {
+    return answers;
+  }
 
   public String getQuestion() {
     return question;

@@ -1,33 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
-<StackPane
-  styleClass="pad, bg"
-  xmlns="http://javafx.com/javafx"
-  xmlns:fx="http://javafx.com/fxml"
-  fx:controller="client.scenes.HelpOverlayCtrl"
->
-  <HBox spacing="20" alignment="TOP_CENTER">
-    <Button
-      fx:id="closeButton"
-      styleClass="icon, border, rounded, drop-shadow"
-      StackPane.alignment="TOP_LEFT"
-      onAction="#close"
-      text=""
-    /> <!-- text is \uf00d (x in font awesome) -->
-    <ScrollPane
-      styleClass="border, rounded, drop-shadow, pad, bg-light"
-      hbarPolicy="NEVER"
-      vbarPolicy="NEVER"
-      maxWidth="Infinity"
-      maxHeight="Infinity"
-      HBox.hgrow="ALWAYS"
-    >
-      <Label styleClass="popup-text" text="TODO"/>
-    </ScrollPane>
-  </HBox>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<?import javafx.scene.layout.Region?>
+<StackPane styleClass="pad, bg" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="client.scenes.HelpOverlayCtrl" stylesheets="@../css/HelpOverlay.css">
+    <HBox alignment="TOP_CENTER" spacing="20">
+        <Button fx:id="closeButton" onAction="#close" styleClass="icon, border, rounded, drop-shadow" text=""
+                StackPane.alignment="TOP_LEFT"/> <!-- text is \uf00d (x in font awesome) -->
+        <ScrollPane hbarPolicy="NEVER" maxHeight="Infinity" maxWidth="Infinity"
+                    styleClass="border, rounded, drop-shadow, pad, bg-light" vbarPolicy="NEVER" HBox.hgrow="ALWAYS"
+                    fitToWidth="true" fitToHeight="true">
+            <content>
+                <Region styleClass="margin"/>
+                <VBox prefHeight="200.0" prefWidth="100.0" spacing="10" alignment="TOP_CENTER">
+                    <children>
+                        <Text strokeType="OUTSIDE" styleClass="title" strokeWidth="0.0" text="How To Play"
+                              textAlignment="CENTER" VBox.vgrow="ALWAYS"/>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0"
+                              text="The game can be played in SinglePlayer or MultiPlayer mode" textAlignment="CENTER"/>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Each game consists of 20 quiz questions"/>
+                        <Region styleClass="margin" minHeight="10" VBox.vgrow="ALWAYS"/>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0"
+                              text="Questions can be divided into 3 categories :  "/>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text=" * Multiple Choice Question,"/>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text=" * Estimate Question"/>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text=" * What Requires More Energy Question"/>
+                        <Region styleClass="margin" minHeight="10" VBox.vgrow="ALWAYS"/>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0"
+                              text="Depending on the type of the question, the player can either: "/>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text=" * Click on a button"/>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0"
+                              text=" * Enter their answer in the answerbox provided"/>
+                        <Region styleClass="margin" minHeight="10" VBox.vgrow="ALWAYS"/>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0"
+                              text="Each question must be answered within the 10 second time limit indicated by the bar at the top of the screen"/>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0"
+                              text="After the time runs out, the correct answer is displayed to the player"/>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0"
+                              text="For each correct answer, the player earns points depending on how fast they answered"/>
+                        <Region styleClass="margin" minHeight="10" VBox.vgrow="ALWAYS"/>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0"
+                              text="There are 3 types of Jokers available:"/>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0"
+                              text="*Joker that doubles the points earned, if the answer was correct"/>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0"
+                              text="*Joker that shows a hint"/>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0"
+                              text="*Joker that decreases other player's time by 50% -(only available in MultiPlayer mode)"/>
+                        <Region styleClass="margin" minHeight="10" VBox.vgrow="ALWAYS"/>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0"
+                              text="After the game has ended, a leaderboard is shown comparing the players"/>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0"
+                              text="The player can choose to enter a new game or exit the application"/>
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </HBox>
 </StackPane>

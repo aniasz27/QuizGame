@@ -6,15 +6,20 @@ import com.google.inject.Inject;
 import commons.Activity;
 import commons.EstimateQuestion;
 import commons.Question;
+import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 
@@ -23,23 +28,38 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   private Activity activity;
 
   @FXML
+  public StackPane imgContainer;
+  @FXML
   private ImageView imageView;
   @FXML
   private Text description;
   @FXML
   private TextField answer;
-
-  @FXML
-  private Image image;
-
   @FXML
   private Button submit;
-
-  private int correctAnswer = 1;
-
   @FXML
   private Text points;
+  @FXML
+  private Circle circle;
+  @FXML
+  private Label emoji1;
+  @FXML
+  private Label emoji2;
+  @FXML
+  private Label emoji3;
+  @FXML
+  private Label emoji4;
+  @FXML
+  private Label emoji5;
+  @FXML
+  private GridPane emojiGrid;
+  @FXML
+  private Button emojiButton;
+  @FXML
+  private StackPane pane;
 
+  private Label[] emojis;
+  private boolean correct;
 
   @Inject
   GuessCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -48,81 +68,86 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    //get the activity to set the required fields - correct answer, question, image
-    showImage("");
+    emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
+    emojiButton.setOnMouseEntered(event -> {
+      pane.setVisible(true);
+      circle.setVisible(true);
+      emojiGrid.setVisible(true);
+    });
+    pane.setOnMouseExited(event -> {
+      pane.setVisible(false);
+      circle.setVisible(false);
+      emojiGrid.setVisible(false);
+    });
   }
-
-  @FXML
-  public void showImage(String imageName) {
-    image = new Image(getClass().getResourceAsStream(imageName));
-    imageView.setImage(image);
-  }
-
-  @FXML
-  private void submit(ActionEvent actionEvent) {
-    String userAnswer = answer.getText();
-    char[] check = userAnswer.toCharArray();
-    boolean rightInput = true;
-    for (int i = 0; i < check.length; i++) {
-      Character current = check[i];
-      if (!Character.isDigit(current)) {
-        rightInput = false;
-        break;
-      }
-    }
-    if (!rightInput) {
-      answer.setText("Incorrect input format");
-    } else {
-      submit.setDisable(true);
-      int answer = Integer.parseInt(userAnswer);
-      if (answer >= correctAnswer * 0.8 && answer <= correctAnswer * 1.2) {
-        showCorrect();
-      } else {
-        showIncorrect();
-      }
-    }
-    //TODO
-    //validate the answer
-  }
-
 
   @Override
   public void displayQuestion(Question question) {
+    pane.setVisible(false);
+    circle.setVisible(false);
+    emojiGrid.setVisible(false);
+    this.correct = false;
     this.question = (EstimateQuestion) question;
     this.activity = this.question.getActivity();
-    imageView = new ImageView(getClass().getResource(activity.getImage_path()).toExternalForm());
-    description.setText(activity.getTitle());
-  }
+    this.submit.setDisable(false);
+    this.answer.getStyleClass().remove("good");
+    this.answer.getStyleClass().remove("bad");
 
-  public void checkCorrect() {
-    int value = Integer.parseInt(answer.getText());
-    int point = (int) (question.calculateHowClose(value) * 100);
-    mainCtrl.addPoints(point);
+    Rectangle clip = new Rectangle(
+      imgContainer.getWidth(), imgContainer.getHeight()
+    );
+    clip.setArcWidth(20);
+    clip.setArcHeight(20);
+    imgContainer.setClip(clip);
+    imageView.setImage(new Image(new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity.id))));
+
+    description.setText(activity.getTitle());
+    points.setText("Points: " + mainCtrl.getPoints());
+    answer.setText("Type in your answer");
   }
 
   /**
-   * Displays user points at the start of the question
+   * On clicking the submit button on the screen, the answer gets evaluated and the correct score is shown
    */
+  public void checkCorrect() {
+    if (answer.getText() == "") {
+      return;
+    }
+    int value = Integer.parseInt(answer.getText());
+    int point = (int) (question.calculateHowClose(value) * 100);
+    submit.setDisable(true);
+    if (point != 0) {
+      correct = true;
+      mainCtrl.addPoints(point);
+    }
+  }
 
+  /**
+   * Deletes the text upon mouse click
+   */
+  public void deleteText() {
+    answer.setText("");
+  }
+
+  /**
+   * Sets the color to green/red, shows the right answer and updates the points on the screen
+   */
   public void showPoints() {
-    int userPoints = server.playerScore(mainCtrl.clientId);
+    int userPoints = mainCtrl.getPoints();
     points.setText("Points: " + userPoints);
   }
 
-  //sets the textfield color to green and increases the points
-  //shows the correct answer
   public void showCorrect() {
-    answer.getStyleClass().add("good");
-    //TODO
-    //increase the points
-    answer.setText("Correct answer is: " + correctAnswer);
+    answer.getStyleClass().add(correct ? "good" : "bad");
+    showPoints();
+    answer.setText("Correct answer is: " + question.getAnswer());
   }
 
-  //sets the textfield color to red to indicate the incorrect answer
-  // shows the correct answer
-  public void showIncorrect() {
-    answer.getStyleClass().add("bad");
-    answer.setText("Correct answer is: " + correctAnswer);
+  /**
+   * Disable button in case when user does not pick an answer
+   */
+  @Override
+  public void disableButtons() {
+    submit.setDisable(true);
   }
-
 }

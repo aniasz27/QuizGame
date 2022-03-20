@@ -4,15 +4,22 @@ import client.scenes.helpers.QuestionCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Activity;
+import commons.MultipleChoiceQuestion;
 import commons.Question;
+import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
 public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initializable {
@@ -25,9 +32,31 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
   private Button button2;
   @FXML
   private Text points;
+  @FXML
+  private Circle circle;
+  @FXML
+  private Label emoji1;
+  @FXML
+  private Label emoji2;
+  @FXML
+  private Label emoji3;
+  @FXML
+  private Label emoji4;
+  @FXML
+  private Label emoji5;
+  @FXML
+  private GridPane emojiGrid;
+  @FXML
+  private Button emojiButton;
+  @FXML
+  private StackPane pane;
+
+  private Label[] emojis;
+
+  private Button clickedButton;
 
   Button[] buttons;
-  Activity[] activities;
+  MultipleChoiceQuestion question;
 
   @Inject
   WhatRequiresMoreEnergyCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -36,17 +65,11 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
 
   @FXML
   public void checkCorrectAnswer(MouseEvent event) {
-    Button clickedButton = (Button) event.getSource();
-    if (clickedButton.getUserData() == null) {
-      return;
-    }
-
-    if ((boolean) clickedButton.getUserData()) {
-      showUserCorrect();
-    }
+    mainCtrl.stopPointsTimer();
+    this.clickedButton = (Button) event.getSource();
 
     for (Button button : buttons) {
-      showButtonCorrectness(button);
+      button.setDisable(true);
     }
   }
 
@@ -55,74 +78,107 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
    * Displays user points at the start of the question
    */
   public void showPoints() {
-    int userPoints = server.playerScore(mainCtrl.clientId);
+    int userPoints = mainCtrl.getPoints();
     points.setText("Points: " + userPoints);
   }
 
-  private void showUserIncorrect() {
-    //TODO: Give no points to user and show prompt.
-  }
-
-
-  /**
-   * Sets button color to appropriate given correctness of answer
-   *
-   * @param button button to assign color
-   */
-  public void showButtonCorrectness(Button button) {
-    if (button.getUserData() == null) {
-      return;
-    }
-    // set color to green (#2dff26) if answer was correct,
-    // set it to red (#ff1717) otherwise
-    String style = "-fx-background-color: "
-      + (((boolean) button.getUserData()) ? "#2dff26" : "#ff1717")
-      + ";";
-    button.getStyleClass().add((boolean) button.getUserData() ? "good" : "bad");
-  }
-
-
   public void showUserCorrect() {
-    mainCtrl.addPoints(100);
+    mainCtrl.addPoints(mainCtrl.getPointsOffset());
+    showPoints();
   }
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    // TODO: get 3 random activities from endpoint
-    // activities = <Activity[] array here>
-
     buttons = new Button[] {button0, button1, button2};
-
-    //OptionalLong lowestConsumptionInWh = Arrays.stream(activities).mapToLong(
-    //  Activity::getConsumptionInWh).min();
-
-    //TODO: change i < 0 -> i < buttons.length when activities can be get
-    for (int i = 0; i < 0; i++) {
-      Activity activity = activities[i];
-
-      // get image
-      ImageView imageView =
-        new ImageView(getClass()
-          .getResource(activity.getImage_path()).toExternalForm());
-      // resize image
-      imageView.setFitWidth(1140 / 3.0);
-      imageView.setFitHeight(1140 / 3.0);
-
-      //set image
-      buttons[i].setGraphic(imageView);
-
-      // image is displayed on top of text
-      buttons[i].setContentDisplay(ContentDisplay.TOP);
-
-
-      buttons[i].setText(activity.getTitle());
-      // TODO: buttons[i].setUserData(), put if answer is correct or not
-      // buttons[i].setUserData();
-    }
+    emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
+    emojiButton.setOnMouseEntered(event -> {
+      pane.setVisible(true);
+      circle.setVisible(true);
+      emojiGrid.setVisible(true);
+    });
+    pane.setOnMouseExited(event -> {
+      pane.setVisible(false);
+      circle.setVisible(false);
+      emojiGrid.setVisible(false);
+    });
   }
 
   @Override
   public void displayQuestion(Question question) {
+    pane.setVisible(false);
+    circle.setVisible(false);
+    emojiGrid.setVisible(false);
+    this.question = (MultipleChoiceQuestion) question;
+    this.clickedButton = null;
 
+    // reset correct button colors
+    for (Button button : buttons) {
+      button.getStyleClass().remove("good");
+      button.getStyleClass().remove("bad");
+      button.setDisable(false);
+    }
+
+    Activity[] activities = {
+      this.question.getActivity1(),
+      this.question.getActivity2(),
+      this.question.getActivity3()
+    };
+
+    boolean[] correctAnswers = this.question.getCorrect();
+    for (int i = 0; i < buttons.length; i++) {
+      Activity activity = activities[i];
+
+      // get image
+      StackPane imgContainer = new StackPane();
+      imgContainer.getStyleClass().add("rounded");
+      imgContainer.getStyleClass().add("img");
+      //Rectangle clip = new Rectangle(
+      //  imgContainer.getWidth(), imgContainer.getHeight()
+      //);
+      //clip.setArcWidth(20);
+      //clip.setArcHeight(20);
+      //imgContainer.setClip(clip);
+
+      ImageView imageView = new ImageView(new Image(
+        new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity.id))
+      ));
+
+      // resize image
+      imageView.setFitWidth(1140 / 3.0);
+      imageView.setFitHeight(1140 / 3.0);
+
+      imgContainer.getChildren().add(imageView);
+
+      //set image
+      buttons[i].setGraphic(imgContainer);
+
+      // image is displayed on top of text
+      buttons[i].setContentDisplay(ContentDisplay.TOP);
+      buttons[i].setText(activity.getTitle());
+      buttons[i].setUserData(correctAnswers[i]);
+    }
+  }
+
+  /**
+   * Sets button color to appropriate given correctness of answer
+   */
+  @Override
+  public void showCorrect() {
+    for (Button button : buttons) {
+      button.getStyleClass().add((boolean) button.getUserData() ? "good" : "bad");
+    }
+    if (clickedButton != null && (boolean) clickedButton.getUserData()) {
+      showUserCorrect();
+    }
+  }
+
+  /**
+   * Disable buttons in case when user does not pick an answer
+   */
+  @Override
+  public void disableButtons() {
+    for (Button button : buttons) {
+      button.setDisable(true);
+    }
   }
 }

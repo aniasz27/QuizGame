@@ -43,19 +43,17 @@ public class EndScreenCtrl implements Initializable {
   @FXML
   private void playAgain() throws InterruptedException {
     //TODO check if multiplayer or singleplayer
-    mainCtrl.showWaitingRoom();
+    mainCtrl.start();
   }
 
   public void refresh() {
-  
     Iterable<Score> scores = server.getSingleLeaderboard(mainCtrl.serverIp);
-    
     leaderboardDisplay.getChildren().removeAll(leaderboardDisplay.getChildren());
 
     final boolean[] first = {true};
 
     scores.forEach(s -> {
-      Label label = new Label(s.getPlayer());
+      Label label = new Label(s.getName());
       label.getStyleClass().add("expand");
       label.getStyleClass().add("list-item");
       label.getStyleClass().add("border-bottom");

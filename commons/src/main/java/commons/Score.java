@@ -14,6 +14,7 @@ public class Score {
   public long id;
 
   public String player;
+  public String name;
   public int points;
 
   @SuppressWarnings("unused")
@@ -22,8 +23,9 @@ public class Score {
   }
 
   @SuppressWarnings("unused")
-  public Score(String player, int points) {
+  public Score(String player, String name, int points) {
     this.player = player;
+    this.name = name;
     this.points = points;
   }
 
@@ -35,13 +37,14 @@ public class Score {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Score score1 = (Score) o;
-    return id == score1.id && points == score1.points && Objects.equals(player, score1.player);
+    Score score = (Score) o;
+    return points == score.points && Objects.equals(player, score.player)
+      && Objects.equals(name, score.name);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, player, points);
+    return Objects.hash(id, player, name, points);
   }
 
   @Override
@@ -57,19 +60,15 @@ public class Score {
     return player;
   }
 
-  public void setPlayer(String player) {
-    this.player = player;
-  }
-
   public int getPoints() {
     return points;
   }
 
-  public void setPoints(int points) {
-    this.points = points;
-  }
-
   public void addPoints(int points) {
     this.points += points;
+  }
+
+  public String getName() {
+    return name;
   }
 }

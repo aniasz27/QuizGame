@@ -10,7 +10,7 @@ build/
 
 **/*.swp
 
-**/activities.json
+JSON/
 
 ### STS ###
 .apt_generated

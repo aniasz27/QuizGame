@@ -1,8 +1,10 @@
 package commons;
 
 import java.util.Objects;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 
 /**
  * Stores one Activity
@@ -17,11 +19,12 @@ public class Activity {
   public String image_path;
   public String title;
   public long consumption_in_wh;
+  @Lob
+  @Column
   public String source;
 
   @SuppressWarnings("unused")
   private Activity() {
-
   }
 
   @SuppressWarnings("unused")

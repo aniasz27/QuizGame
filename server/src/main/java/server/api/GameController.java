@@ -1,16 +1,18 @@
 package server.api;
 
+import commons.EndScreen;
 import commons.EstimateQuestion;
 import commons.HowMuchQuestion;
+import commons.IntermediateLeaderboardQuestion;
 import commons.MultipleChoiceQuestion;
 import commons.Question;
+import commons.Score;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,10 +41,12 @@ public class GameController {
   private String uniqueServerId;
 
 
+  // TODO: change this to Map<String, Pair<Client, Integer>> (store Clients instead of Strings)
   /**
    * Maps the unique game ID with a Pair of < username, points >
    */
-  private Map<String, Pair<String, Integer>> games = new HashMap<>();
+  private Map<String, Score> games = new HashMap<>();
+  private boolean showedIntermediateLeaderboard = false; // TODO: implement this on a game-by-game basis.
 
   public GameController(ActivityController activityController, Random random,
                         QuestionRepository questionRepository, PlayerController playerController,
@@ -65,7 +69,9 @@ public class GameController {
     String uniqueServerID = UUID.randomUUID().toString();
 
     playerController.getPlayers().forEach(p -> {
-      games.put(uniqueServerID, Pair.of(p, 0));
+      if (p.waitingForGame) {
+        games.put(uniqueServerID, new Score(p.id, p.username, 0));
+      }
     });
     this.uniqueServerId = uniqueServerID;
     return uniqueServerID;
@@ -82,7 +88,7 @@ public class GameController {
   @PutMapping("/isGameActive")
   public String isGameActive(@RequestBody String userID) {
     for (String key : games.keySet()) {
-      if (games.get(key).getFirst().equals(userID)) {
+      if (games.get(key).getPlayer().equals(userID)) {
         return key;
       }
     }
@@ -100,7 +106,11 @@ public class GameController {
   @GetMapping("/next")
   public ResponseEntity<Question> nextStep() {
     if (questionCounter >= 20) {
-      return ResponseEntity.ok(null);  // game ended
+      questionCounter = 0;
+      return ResponseEntity.ok(new EndScreen());  // game ended
+    } else if (questionCounter == 10 && !showedIntermediateLeaderboard) { // show intermediate leaderboard
+      showedIntermediateLeaderboard = true;
+      return ResponseEntity.ok(new IntermediateLeaderboardQuestion()); // TODO: include leaderboard info in question
     } else {
       questionCounter++;
     }
@@ -156,11 +166,12 @@ public class GameController {
    */
 
   @GetMapping("/{id}/score")
-  public int playerScore(@PathVariable("id") String id) {
-    String player = playerController.clients.get(id).getSecond();
+  public int playerScore(String ip, @PathVariable("id") String id) {
+    String playerName = playerController.clients.get(id).username;
     for (String key : games.keySet()) {
-      if (games.get(key).getFirst().equals(player)) {
-        return games.get(key).getSecond();
+      if (games.get(key).getPlayer().equals(playerName)) {
+        return games.get(key).getPoints();
+
       }
     }
     return -1;
@@ -173,17 +184,21 @@ public class GameController {
    * @return true if the score was updated or false if the player is not in the game
    */
   @GetMapping("/{id}/score/update")
-  public boolean playerScoreUpdate(@PathVariable("id") String id) {
-    String player = playerController.clients.get(id).getSecond();
-    int oldScore = playerScore(id);
-    if (oldScore == -1) {
-      return false;
-    } else {
-      games.replace(this.uniqueServerId, Pair.of(player, oldScore + 1));
-      //rn everytime we update the score it just goes by one, this will likely be changed in later versions
-      return true;
-    }
+  public Score playerScoreUpdate(String ip, @PathVariable("id") String id, Score score) {
+    String player = playerController.clients.get(id).username;
+    return games.replace(this.uniqueServerId, score);
+  }
 
-
+  /**
+   * TODO: implement actual game sessions and non-global questionCounter
+   * Returns the number of the round the player is in for a given player id
+   *
+   * @param id player id
+   * @return round number of player
+   */
+  @GetMapping("/getRoundNumber/{id}")
+  public int getRoundNumber(@PathVariable("id") String id) {
+    return questionCounter;
   }
 }
+

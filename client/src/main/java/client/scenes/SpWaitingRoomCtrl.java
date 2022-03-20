@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
+import commons.HowMuchQuestion;
 import commons.Score;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -38,18 +39,32 @@ public class SpWaitingRoomCtrl implements Initializable {
   }
 
   public void refresh() {
-    var leaderboard = server.getSingleLeaderboard(mainCtrl.serverIp);
-
+    Iterable<Score> scores = server.getSingleLeaderboard(mainCtrl.serverIp);
     leaderboardDisplay.getChildren().removeAll(leaderboardDisplay.getChildren());
-    int[] i = {1};
-    leaderboard.forEach(score -> {
-      Label l = new Label(i[0] + ". " + score.getPlayer() + " " + score.getPoints());
-      l.getStyleClass().add("list-item");
-      l.getStyleClass().add("border-bottom");
-      if (i[0]++ == 1) {
-        l.getStyleClass().add("list-item-top");
+
+    final boolean[] first = {true};
+
+    scores.forEach(s -> {
+      Label label = new Label(s.getName());
+      label.getStyleClass().add("expand");
+      label.getStyleClass().add("list-item");
+      label.getStyleClass().add("border-bottom");
+      if (first[0]) {
+        label.getStyleClass().add("list-item-top-left");
       }
-      leaderboardDisplay.getChildren().add(l);
+      HBox score = new HBox();
+      HBox.setHgrow(label, Priority.ALWAYS);
+      score.getChildren().add(label);
+      label = new Label(String.valueOf(s.getPoints()));
+      label.getStyleClass().add("expand");
+      label.getStyleClass().add("list-item");
+      label.getStyleClass().add("border-bottom");
+      if (first[0]) {
+        label.getStyleClass().add("list-item-top-right");
+        first[0] = false;
+      }
+      score.getChildren().add(label);
+      leaderboardDisplay.getChildren().add(score);
     });
   }
 
@@ -70,7 +85,7 @@ public class SpWaitingRoomCtrl implements Initializable {
 
   @FXML
   private void play(ActionEvent actionEvent) throws InterruptedException {
-    mainCtrl.showHowMuch();
+    //mainCtrl.showHowMuch((HowMuchQuestion) question);
   }
 
 
