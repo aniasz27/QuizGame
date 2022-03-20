@@ -100,11 +100,12 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
    * On clicking the submit button on the screen, the answer gets evaluated and the correct score is shown
    */
   public void checkCorrect() {
+    mainCtrl.stopPointsTimer();
     if (answer.getText() == "") {
       return;
     }
     int value = Integer.parseInt(answer.getText());
-    int point = (int) (question.calculateHowClose(value) * 100);
+    int point = (int) (question.calculateHowClose(value) * 100) * mainCtrl.getPointsOffset() / 100;
     submit.setDisable(true);
     if (point != 0) {
       correct = true;
