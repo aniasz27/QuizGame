@@ -5,21 +5,22 @@
 
 <?import javafx.scene.text.Text?>
 <StackPane
-  id="root" xmlns="http://javafx.com/javafx"
-  xmlns:fx="http://javafx.com/fxml"
-  fx:controller="client.scenes.EndScreenCtrl"
-  prefHeight="1080.0" prefWidth="1920.0"
+        id="root" xmlns="http://javafx.com/javafx"
+        xmlns:fx="http://javafx.com/fxml"
+        fx:controller="client.scenes.EndScreenCtrl"
+        prefHeight="1080.0" prefWidth="1920.0"
+        stylesheets="@../css/EndScreen.css"
 >
   <VBox maxWidth="640" StackPane.alignment="CENTER" alignment="CENTER">
     <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="20" minHeight="20"/>
     <Text styleClass="title" text="Leaderboard" textAlignment="CENTER" StackPane.alignment="CENTER"/>
     <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="20" minHeight="20"/>
     <ScrollPane
-      styleClass="border, rounded, drop-shadow, no-pad, transparent"
-      VBox.vgrow="ALWAYS"
-      fitToWidth="true"
-      hbarPolicy="NEVER"
-      vbarPolicy="NEVER"
+            styleClass="border, rounded, drop-shadow, no-pad, transparent"
+            VBox.vgrow="ALWAYS"
+            fitToWidth="true"
+            hbarPolicy="NEVER"
+            vbarPolicy="NEVER"
     >
       <VBox fx:id="leaderboardDisplay" maxWidth="Infinity">
         <!-- Leaderboard -->

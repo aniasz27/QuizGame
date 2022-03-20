@@ -1,7 +1,9 @@
 package server.api;
 
+import commons.EndScreen;
 import commons.EstimateQuestion;
 import commons.HowMuchQuestion;
+import commons.IntermediateLeaderboardQuestion;
 import commons.MultipleChoiceQuestion;
 import commons.Question;
 import commons.Score;
@@ -44,6 +46,7 @@ public class GameController {
    * Maps the unique game ID with a Pair of < username, points >
    */
   private Map<String, Score> games = new HashMap<>();
+  private boolean showedIntermediateLeaderboard = false; // TODO: implement this on a game-by-game basis.
 
   public GameController(ActivityController activityController, Random random,
                         QuestionRepository questionRepository, PlayerController playerController,
@@ -103,7 +106,11 @@ public class GameController {
   @GetMapping("/next")
   public ResponseEntity<Question> nextStep() {
     if (questionCounter >= 20) {
-      return ResponseEntity.ok(null);  // game ended
+      questionCounter = 0;
+      return ResponseEntity.ok(new EndScreen());  // game ended
+    } else if (questionCounter == 10 && !showedIntermediateLeaderboard) { // show intermediate leaderboard
+      showedIntermediateLeaderboard = true;
+      return ResponseEntity.ok(new IntermediateLeaderboardQuestion()); // TODO: include leaderboard info in question
     } else {
       questionCounter++;
     }
@@ -180,6 +187,18 @@ public class GameController {
   public Score playerScoreUpdate(String ip, @PathVariable("id") String id, Score score) {
     String player = playerController.clients.get(id).username;
     return games.replace(this.uniqueServerId, score);
+  }
+
+  /**
+   * TODO: implement actual game sessions and non-global questionCounter
+   * Returns the number of the round the player is in for a given player id
+   *
+   * @param id player id
+   * @return round number of player
+   */
+  @GetMapping("/getRoundNumber/{id}")
+  public int getRoundNumber(@PathVariable("id") String id) {
+    return questionCounter;
   }
 }
 

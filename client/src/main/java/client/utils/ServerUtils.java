@@ -211,12 +211,29 @@ public class ServerUtils {
       .target(ip).path("api/score/add")
       .request(APPLICATION_JSON)
       .accept(APPLICATION_JSON)
-      .put(Entity.json(score), Score.class);
+      .post(Entity.json(score), Score.class);
   }
 
   public Iterable<Score> getSingleLeaderboard(String ip) {
     return ClientBuilder.newClient(new ClientConfig())
       .target(ip).path("api/score/leaderboard")
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
+      .get(new GenericType<>() {
+      });
+  }
+
+  /**
+   * Gets the multiplayer leaderboard at the time for a given game
+   * TODO: implement sessions and make this work for different games
+   *
+   * @param ip     of the server
+   * @param gameId of the game the client is in
+   * @return the set of leaderboard scores
+   */
+  public Iterable<Score> getMultiLeaderboard(String ip, String gameId) {
+    return ClientBuilder.newClient(new ClientConfig())
+      .target(ip).path("api/score/multiLeaderboard/" + gameId)
       .request(APPLICATION_JSON)
       .accept(APPLICATION_JSON)
       .get(new GenericType<>() {

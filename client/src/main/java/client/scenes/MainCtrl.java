@@ -67,6 +67,9 @@ public class MainCtrl {
   private GuessCtrl guessCtrl;
   private Parent guessParent;
 
+  private IntermediateLeaderboardCtrl intermediateLeaderboardCtrl;
+  private Parent intermediateLeaderboardParent;
+
   //if false, the player plays in singleplayer mode
   // if true, the player plays in multiplayer mode
   public boolean multiplayer;
@@ -140,6 +143,7 @@ public class MainCtrl {
     Pair<HowMuchCtrl, Parent> howMuch,
     Pair<WhatRequiresMoreEnergyCtrl, Parent> whatRequiresMoreEnergy,
     Pair<GuessCtrl, Parent> guess,
+    Pair<IntermediateLeaderboardCtrl, Parent> intermediateLeaderboard,
     Pair<ActivityListCtrl, Parent> activityList,
     Pair<EditActivityCtrl, Parent> editActivity,
     Pair<HelpOverlayCtrl, Parent> helpOverlay,
@@ -168,6 +172,9 @@ public class MainCtrl {
     this.guessCtrl = guess.getKey();
     this.guessParent = guess.getValue();
 
+    this.intermediateLeaderboardCtrl = intermediateLeaderboard.getKey();
+    this.intermediateLeaderboardParent = intermediateLeaderboard.getValue();
+
     this.activityListCtrl = activityList.getKey();
     this.activityListParent = activityList.getValue();
 
@@ -177,14 +184,11 @@ public class MainCtrl {
     this.helpOverlayCtrl = helpOverlay.getKey();
     this.helpOverlayParent = helpOverlay.getValue();
 
-
     this.exitOverlayCtrl = exitOverlay.getKey();
     this.exitOverlayParent = exitOverlay.getValue();
 
-
     this.endScreenCtrl = endScreen.getKey();
     this.endScreenParent = endScreen.getValue();
-
 
     primaryStage.setTitle("Quizzzzz");
     // never exit full screen
@@ -275,7 +279,11 @@ public class MainCtrl {
     Task<Void> task = new Task<Void>() {
       @Override
       protected Void call() throws Exception {
-        startQuestionTimer();
+        // do not start timer for next question if on end screen
+        if (!question.type.equals(Question.Type.ENDSCREEN)) {
+          startQuestionTimer();
+        }
+
         return null;
       }
     };
@@ -325,29 +333,32 @@ public class MainCtrl {
 
   private void nextQuestion() throws InterruptedException {
     question = server.nextQuestion(serverIp);
-    if (question == null) {
-      server.addScore(serverIp, points);
-      showEndScreen();
-    } else {
-      switch (question.type) {
-        case MULTICHOICE:
-          System.out.println("Showed multiple choice");
-          Platform.runLater(() -> showWhatRequiresMoreEnergy((MultipleChoiceQuestion) question));
-          break;
-        case ESTIMATE:
-          System.out.println("Showed guess");
-          Platform.runLater(() -> showGuess((EstimateQuestion) question));
-          break;
-        case HOWMUCH:
-          System.out.println("Showed how much");
-          Platform.runLater(() -> showHowMuch((HowMuchQuestion) question));
-          break;
-        default:
-          System.out.println("Wrong question type");
-          break;
-      }
+    switch (question.type) {
+      case MULTICHOICE:
+        System.out.println("Showed multiple choice");
+        Platform.runLater(() -> showWhatRequiresMoreEnergy((MultipleChoiceQuestion) question));
+        break;
+      case ESTIMATE:
+        System.out.println("Showed guess");
+        Platform.runLater(() -> showGuess((EstimateQuestion) question));
+        break;
+      case HOWMUCH:
+        System.out.println("Showed how much");
+        Platform.runLater(() -> showHowMuch((HowMuchQuestion) question));
+        break;
+      case INTERLEADERBOARD:
+        System.out.println("Showed Intermediate Leaderboard");
+        Platform.runLater(() -> showIntermediateLeaderboard());
+        break;
+      case ENDSCREEN:
+        System.out.println("Showed end screen");
+        server.addScore(serverIp, points);
+        Platform.runLater(() -> showEndScreen());
+        break;
+      default:
+        System.out.println("Wrong question type");
+        break;
     }
-
   }
 
   public void showGuess(EstimateQuestion question) {
@@ -372,6 +383,11 @@ public class MainCtrl {
     howMuchCtrl.showPoints();
     howMuchCtrl.startTimer();
     this.startPointsTimer();
+  }
+
+  public void showIntermediateLeaderboard() {
+    primaryStage.getScene().setRoot(intermediateLeaderboardParent);
+    intermediateLeaderboardCtrl.display();
   }
 
   public void showActivityList() {
