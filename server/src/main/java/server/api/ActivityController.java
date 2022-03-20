@@ -5,13 +5,13 @@ import com.google.gson.reflect.TypeToken;
 import commons.Activity;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -68,13 +68,10 @@ public class ActivityController {
   @GetMapping("/random")
   @SuppressWarnings("all")
   public ResponseEntity<Activity> getRandomActivity() {
+    int groupsAmount = 78; // TODO: change when everyone has downloaded all activities
 
-    int firstNumLimit = 0;
-    int secondNumLimit = 0;
-
-    int firstNum = random.nextInt(firstNumLimit + 1);
-    int secondNum = random.nextInt(secondNumLimit + 1);
-    String group = String.valueOf(firstNum) + String.valueOf(secondNum) + "%";
+    int groupNum = random.nextInt(groupsAmount + 1);
+    String group = String.format("%02d", groupNum) + "%";
     int counter = random.nextInt(repo.getRandomActivityCount(group));
     return ResponseEntity.ok(repo.getRandomActivity(group, counter));
   }
@@ -111,7 +108,7 @@ public class ActivityController {
 
   /**
    * Endpoint to re-import all activities from the activities.json file located at
-   * server/src/main/resources/JSON/activities.json
+   * src/main/resources/JSON/activities.json
    *
    * @return confirmation message or error
    */
@@ -120,19 +117,20 @@ public class ActivityController {
   public ResponseEntity<String> importAllActivities() {
 
     try {
-      String activitiesPath = "server/src/main/resources/JSON/activities.json";
+      String activitiesPath = "/JSON/activities.json";
       Gson gson = new Gson();
-      Reader reader = Files.newBufferedReader(Paths.get(activitiesPath));
+      Reader reader = new InputStreamReader(getClass().getResourceAsStream(activitiesPath));
       List<Activity> activities = gson.fromJson(reader, new TypeToken<List<Activity>>() {
       }.getType());
       reader.close();
       repo.saveAll(activities);
+      return ResponseEntity.ok("Activities imported successfully!");
     } catch (IOException e) {
       System.err.println("Something went wrong when importing activities:");
       e.printStackTrace();
+      return ResponseEntity.internalServerError()
+        .body("Something went wrong when importing activities: " + e.getMessage());
     }
-
-    return ResponseEntity.ok("Activities imported successfully!");
   }
 
   @PostMapping("/importActivitiesFromFile")
@@ -156,9 +154,9 @@ public class ActivityController {
   @GetMapping(path = "/image/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
   public ResponseEntity<byte[]> getImage(@PathVariable String id) {
     try {
-      InputStream imageStream = new ByteArrayResource(Files.readAllBytes(Paths.get(
-        "src/main/resources/JSON/" + repo.findById(id).orElseThrow(IOException::new).getImage_path()
-      ))).getInputStream();
+      InputStream imageStream = getClass().getResourceAsStream(
+        "/JSON/" + repo.findById(id).orElseThrow(IOException::new).getImage_path()
+      );
       return ResponseEntity.status(HttpStatus.OK).body(imageStream.readAllBytes());
     } catch (Exception e) {
       e.printStackTrace();

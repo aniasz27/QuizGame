@@ -5,6 +5,7 @@ import commons.Score;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,6 +41,12 @@ public class ScoreController {
   @GetMapping("/leaderboard")
   public Iterable<Score> getLeaderboard() {
     return repo.getLeaderboard();
+  }
+
+  // TODO: implement actual multiplayer leaderboard by game session id
+  @GetMapping("/multiLeaderboard/{gameId}")
+  public Iterable<Score> getMultiLeaderboard(@PathVariable("gameId") String gameId) {
+    return getLeaderboard();
   }
 
   /**

@@ -34,7 +34,7 @@ public class EstimateQuestion extends Question {
   public float calculateHowClose(long guessedValue) {
     float percentage = 20;
     long correct = getActivity().consumption_in_wh;
-    if (guessedValue < (100 - percentage) / 100 * correct || (100 + percentage) / 100 * correct > guessedValue) {
+    if (guessedValue < (100 - percentage) / 100 * correct || (100 + percentage) / 100 * correct < guessedValue) {
       return 0;
     }
     return (float) Math.abs(guessedValue - correct) / (correct * -(percentage / 100.0f)) + 1.0f;

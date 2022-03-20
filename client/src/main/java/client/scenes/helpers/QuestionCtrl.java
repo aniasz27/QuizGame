@@ -50,4 +50,8 @@ public abstract class QuestionCtrl {
   }
 
   public abstract void displayQuestion(Question question);
+
+  public abstract void showCorrect();
+
+  public abstract void disableButtons();
 }

@@ -29,6 +29,8 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
   @FXML
   private Text points;
 
+  private Button clickedButton;
+
   Button[] buttons;
   MultipleChoiceQuestion question;
 
@@ -39,19 +41,10 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
 
   @FXML
   public void checkCorrectAnswer(MouseEvent event) {
-    Button clickedButton = (Button) event.getSource();
-    if (clickedButton.getUserData() == null) {
-      return;
-    }
-
-    if ((boolean) clickedButton.getUserData()) {
-      showUserCorrect();
-    } else {
-      showUserIncorrect();
-    }
+    this.clickedButton = (Button) event.getSource();
 
     for (Button button : buttons) {
-      showButtonCorrectness(button);
+      button.setDisable(true);
     }
   }
 
@@ -63,25 +56,6 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
     int userPoints = mainCtrl.getPoints();
     points.setText("Points: " + userPoints);
   }
-
-  private void showUserIncorrect() {
-    //TODO: Give no points to user and show prompt.
-  }
-
-
-  /**
-   * Sets button color to appropriate given correctness of answer
-   *
-   * @param button button to assign color
-   */
-  public void showButtonCorrectness(Button button) {
-    if (button.getUserData() == null) {
-      return;
-    }
-
-    button.getStyleClass().add((boolean) button.getUserData() ? "good" : "bad");
-  }
-
 
   public void showUserCorrect() {
     mainCtrl.addPoints(100);
@@ -95,21 +69,23 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
 
   @Override
   public void displayQuestion(Question question) {
-    MultipleChoiceQuestion castedQuestion = (MultipleChoiceQuestion) question;
+    this.question = (MultipleChoiceQuestion) question;
+    this.clickedButton = null;
 
     // reset correct button colors
     for (Button button : buttons) {
       button.getStyleClass().remove("good");
       button.getStyleClass().remove("bad");
+      button.setDisable(false);
     }
 
     Activity[] activities = {
-      castedQuestion.getActivity1(),
-      castedQuestion.getActivity2(),
-      castedQuestion.getActivity3()
+      this.question.getActivity1(),
+      this.question.getActivity2(),
+      this.question.getActivity3()
     };
 
-    boolean[] correctAnswers = castedQuestion.getCorrect();
+    boolean[] correctAnswers = this.question.getCorrect();
 
     //TODO: change i < 0 -> i < buttons.length when activities can be get
     for (int i = 0; i < buttons.length; i++) {
@@ -135,6 +111,29 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
       buttons[i].setText(activity.getTitle());
       // TODO: buttons[i].setUserData(), put if answer is correct or not
       buttons[i].setUserData(correctAnswers[i]);
+    }
+  }
+
+  /**
+   * Sets button color to appropriate given correctness of answer
+   */
+  @Override
+  public void showCorrect() {
+    for (Button button : buttons) {
+      button.getStyleClass().add((boolean) button.getUserData() ? "good" : "bad");
+    }
+    if (clickedButton != null && (boolean) clickedButton.getUserData()) {
+      showUserCorrect();
+    }
+  }
+
+  /**
+   * Disable buttons in case when user does not pick an answer
+   */
+  @Override
+  public void disableButtons() {
+    for (Button button : buttons) {
+      button.setDisable(true);
     }
   }
 }
