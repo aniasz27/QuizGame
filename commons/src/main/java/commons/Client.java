@@ -55,7 +55,8 @@ public class Client {
 
     Client client = (Client) o;
 
-    return Objects.equals(id, client.id);
+    return Objects.equals(id, client.id) && Objects.equals(username, client.username)
+      && client.waitingForGame == waitingForGame;
   }
 
   @Override
