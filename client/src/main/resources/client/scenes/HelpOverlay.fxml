@@ -9,7 +9,7 @@
 
 <?import javafx.scene.layout.Region?>
 <StackPane styleClass="pad, bg" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="client.scenes.HelpOverlayCtrl">
+           fx:controller="client.scenes.HelpOverlayCtrl" stylesheets="@../css/HelpOverlay.css">
     <HBox alignment="TOP_CENTER" spacing="20">
         <Button fx:id="closeButton" onAction="#close" styleClass="icon, border, rounded, drop-shadow" text=""
                 StackPane.alignment="TOP_LEFT"/> <!-- text is \uf00d (x in font awesome) -->

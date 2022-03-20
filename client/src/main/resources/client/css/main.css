@@ -225,3 +225,17 @@
 .popup-text, .popup-text > * {
   -fx-wrap-text: true;
 }
+
+#circle {
+  -fx-fill: #1E0A49;
+  -fx-stroke: #0586E3;
+  -fx-stroke-width: 5px;
+}
+
+#emojiButton {
+  -fx-padding: 5px 10px 10px 10px;
+}
+
+.emoji {
+  -fx-cursor: hand;
+}

@@ -1,36 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Text?>
 
-<StackPane id="root" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/17"
-           xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.IntermediateLeaderboardCtrl">
-    <StackPane styleClass="pad, margin">
-        <Button fx:id="backButton" onAction="#back" styleClass="icon, border, rounded, drop-shadow" text=""
-                StackPane.alignment="TOP_LEFT"/> <!-- text is \uf053 (back arrow in font awesome) -->
-        <Button fx:id="helpButton" onAction="#help" styleClass="icon, border, rounded, drop-shadow" text=""
-                StackPane.alignment="TOP_RIGHT"/> <!-- text is \uf059 (help in font awesome) -->
-    </StackPane>
-    <VBox alignment="CENTER" maxWidth="640" StackPane.alignment="CENTER">
-        <Region maxHeight="20" minHeight="20" styleClass="margin" VBox.vgrow="ALWAYS"/>
-        <Text styleClass="title" text="Intermediate Leaderboard" textAlignment="CENTER" StackPane.alignment="CENTER"/>
-        <Region maxHeight="20" minHeight="20" styleClass="margin" VBox.vgrow="ALWAYS"/>
-        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="border, rounded, drop-shadow, no-pad, transparent"
-                    vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
-            <VBox fx:id="leaderboardDisplay" maxWidth="Infinity">
-                <!-- Leaderboard -->
-            </VBox>
-        </ScrollPane>
-        <Region maxHeight="20" minHeight="20" styleClass="margin" VBox.vgrow="ALWAYS"/>
-        <Region maxHeight="20" minHeight="20" styleClass="margin" VBox.vgrow="ALWAYS"/>
-    </VBox>
-    <stylesheets>
-        <URL value="@../css/main.css"/>
-        <URL value="@../css/IntermediateLeaderboard.css"/>
-    </stylesheets>
+<StackPane id="root" prefHeight="1080.0" prefWidth="1920.0" stylesheets="@../css/IntermediateLeaderboard.css"
+           xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="client.scenes.IntermediateLeaderboardCtrl">
+  <StackPane styleClass="pad, margin">
+    <Button fx:id="backButton" onAction="#back" styleClass="icon, border, rounded, drop-shadow" text=""
+            StackPane.alignment="TOP_LEFT"/> <!-- text is \uf053 (back arrow in font awesome) -->
+    <Button fx:id="helpButton" onAction="#help" styleClass="icon, border, rounded, drop-shadow" text=""
+            StackPane.alignment="TOP_RIGHT"/> <!-- text is \uf059 (help in font awesome) -->
+  </StackPane>
+  <VBox alignment="CENTER" maxWidth="640" StackPane.alignment="CENTER">
+    <Region maxHeight="20" minHeight="20" styleClass="margin" VBox.vgrow="ALWAYS"/>
+    <Text styleClass="title" text="Intermediate Leaderboard" textAlignment="CENTER" StackPane.alignment="CENTER"/>
+    <Region maxHeight="20" minHeight="20" styleClass="margin" VBox.vgrow="ALWAYS"/>
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="border, rounded, drop-shadow, no-pad, transparent"
+                vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+      <VBox fx:id="leaderboardDisplay" maxWidth="Infinity">
+        <!-- Leaderboard -->
+      </VBox>
+    </ScrollPane>
+    <Region maxHeight="20" minHeight="20" styleClass="margin" VBox.vgrow="ALWAYS"/>
+    <Region maxHeight="20" minHeight="20" styleClass="margin" VBox.vgrow="ALWAYS"/>
+  </VBox>
+  <Button fx:id="emojiButton" mnemonicParsing="false" styleClass="icon, border, rounded, drop-shadow" text=""
+          translateX="-20.0" translateY="-20.0" StackPane.alignment="BOTTOM_RIGHT"/>
+  <StackPane fx:id="pane" maxHeight="400.0" maxWidth="400.0" prefHeight="400.0" prefWidth="400.0"
+             StackPane.alignment="BOTTOM_RIGHT"/>
+  <Circle fx:id="circle" fill="DODGERBLUE" radius="300.0" stroke="BLACK" strokeType="INSIDE" translateX="250.0"
+          translateY="250.0" StackPane.alignment="BOTTOM_RIGHT"/>
+  <GridPane fx:id="emojiGrid" alignment="CENTER" maxHeight="350.0" maxWidth="350.0" StackPane.alignment="BOTTOM_RIGHT">
+    <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+    </columnConstraints>
+    <rowConstraints>
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+    </rowConstraints>
+    <children>
+      <Label fx:id="emoji1" styleClass="icon, emoji" text="" GridPane.halignment="CENTER" GridPane.rowIndex="4"/>
+      <Label fx:id="emoji2" styleClass="icon, emoji" text="" translateX="-45.0" translateY="-30.0"
+             GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3"/>
+      <Label fx:id="emoji3" styleClass="icon, emoji" text="" translateX="-60.0" translateY="-50.0"
+             GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2"/>
+      <Label fx:id="emoji4" styleClass="icon, emoji" text="" translateX="-40.0" translateY="-45.0"
+             GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1"/>
+      <Label fx:id="emoji5" styleClass="icon, emoji" text="" GridPane.columnIndex="4" GridPane.halignment="CENTER"/>
+    </children>
+  </GridPane>
 </StackPane>
