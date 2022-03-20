@@ -2,81 +2,37 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
-<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Text?>
-<StackPane
-  xmlns="http://javafx.com/javafx/17"
-  xmlns:fx="http://javafx.com/fxml/1"
-  fx:controller="client.scenes.GuessCtrl"
-  stylesheets="@../css/Guess.css"
->
 
-  <HBox StackPane.alignment="TOP_CENTER" maxHeight="0" maxWidth="Infinity" styleClass="pad, margin">
-    <Button
-      fx:id="backButton"
-      styleClass="icon, border, rounded, drop-shadow"
-      StackPane.alignment="TOP_LEFT"
-      onAction="#back"
-      text=""
-    /> <!-- text is \uf053 (back arrow in font awesome) -->
-    <Region HBox.hgrow="ALWAYS"/>
-    <StackPane>
-      <Line
-        endX="800"
-        StackPane.alignment="CENTER_LEFT"
-        styleClass="timer-bg"
-      />
-      <Line
-        endX="800"
-        StackPane.alignment="CENTER_LEFT"
-        fx:id="timer"
-        styleClass="drop-shadow, timer"
-      />
-    </StackPane>
-    <Region HBox.hgrow="ALWAYS"/>
-    <Button
-      fx:id="helpButton"
-      styleClass="icon, border, rounded, drop-shadow"
-      StackPane.alignment="TOP_RIGHT"
-      onAction="#help"
-      text=""
-    /> <!-- text is \uf059 (help in font awesome) -->
-  </HBox>
-  <VBox spacing="20" alignment="TOP_CENTER" maxWidth="800" StackPane.alignment="CENTER">
-    <Region styleClass="margin" VBox.vgrow="ALWAYS"/>
-    <Text fx:id="points" text="Points:" translateY="30.0"/>
-    <Text styleClass="title" text="How much energy does it take?" textAlignment="CENTER"
-          StackPane.alignment="CENTER"/>
-    <StackPane fx:id="imgContainer" styleClass="rounded, img">
-      <ImageView
-        fx:id="imageView"
-        fitHeight="250.0"
-        fitWidth="350.0"
-        pickOnBounds="true"
-        preserveRatio="true"
-        styleClass="rounded, img"
-      >
-        <Image url="@../img/sample.jpg"/>
-      </ImageView>
-    </StackPane>
-    <Text fx:id="description" styleClass="description" text="Description" textAlignment="CENTER"
-          StackPane.alignment="CENTER"/>
-    <Region maxHeight="40" styleClass="margin" VBox.vgrow="ALWAYS"/>
-    <TextField fx:id="answer" promptText="Type in your answer" styleClass="border, rounded, drop-shadow"
-               onMouseClicked="#deleteText"/>
-    <Button fx:id="submit" onAction="#checkCorrect" styleClass="border, rounded, drop-shadow" text="Submit"/>
-    <Region styleClass="margin" VBox.vgrow="ALWAYS"/>
+<StackPane id="root" prefHeight="1080.0" prefWidth="1920.0" stylesheets="@../css/IntermediateLeaderboard.css"
+           xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="client.scenes.IntermediateLeaderboardCtrl">
+  <StackPane styleClass="pad, margin">
+    <Button fx:id="backButton" onAction="#back" styleClass="icon, border, rounded, drop-shadow" text=""
+            StackPane.alignment="TOP_LEFT"/> <!-- text is \uf053 (back arrow in font awesome) -->
+    <Button fx:id="helpButton" onAction="#help" styleClass="icon, border, rounded, drop-shadow" text=""
+            StackPane.alignment="TOP_RIGHT"/> <!-- text is \uf059 (help in font awesome) -->
+  </StackPane>
+  <VBox alignment="CENTER" maxWidth="640" StackPane.alignment="CENTER">
+    <Region maxHeight="20" minHeight="20" styleClass="margin" VBox.vgrow="ALWAYS"/>
+    <Text styleClass="title" text="Intermediate Leaderboard" textAlignment="CENTER" StackPane.alignment="CENTER"/>
+    <Region maxHeight="20" minHeight="20" styleClass="margin" VBox.vgrow="ALWAYS"/>
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="border, rounded, drop-shadow, no-pad, transparent"
+                vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+      <VBox fx:id="leaderboardDisplay" maxWidth="Infinity">
+        <!-- Leaderboard -->
+      </VBox>
+    </ScrollPane>
+    <Region maxHeight="20" minHeight="20" styleClass="margin" VBox.vgrow="ALWAYS"/>
+    <Region maxHeight="20" minHeight="20" styleClass="margin" VBox.vgrow="ALWAYS"/>
   </VBox>
   <Button fx:id="emojiButton" mnemonicParsing="false" styleClass="icon, border, rounded, drop-shadow" text=""
           translateX="-20.0" translateY="-20.0" StackPane.alignment="BOTTOM_RIGHT"/>

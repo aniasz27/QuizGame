@@ -12,11 +12,14 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.layout.GridPane;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
 public class HowMuchCtrl extends QuestionCtrl implements Initializable {
@@ -36,9 +39,29 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
   private Button answer_2;
   @FXML
   private Button answer_3;
+  @FXML
+  private Text points;
+  @FXML
+  private Circle circle;
+  @FXML
+  private Label emoji1;
+  @FXML
+  private Label emoji2;
+  @FXML
+  private Label emoji3;
+  @FXML
+  private Label emoji4;
+  @FXML
+  private Label emoji5;
+  @FXML
+  private GridPane emojiGrid;
+  @FXML
+  private Button emojiButton;
+  @FXML
+  private StackPane pane;
 
   private Button[] buttons;
-
+  private Label[] emojis;
 
   private Activity activity;
   private HowMuchQuestion question;
@@ -48,11 +71,6 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
 
   private Button clickedButton;
 
-  @FXML
-  private Image image;
-  @FXML
-  private Text points;
-
   @Inject
   public HowMuchCtrl(ServerUtils server, MainCtrl mainCtrl) {
     super(server, mainCtrl);
@@ -61,6 +79,17 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     buttons = new Button[] {answer_1, answer_2, answer_3};
+    emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
+    emojiButton.setOnMouseEntered(event -> {
+      pane.setVisible(true);
+      circle.setVisible(true);
+      emojiGrid.setVisible(true);
+    });
+    pane.setOnMouseExited(event -> {
+      pane.setVisible(false);
+      circle.setVisible(false);
+      emojiGrid.setVisible(false);
+    });
   }
 
   /**
@@ -70,6 +99,9 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
    */
   @Override
   public void displayQuestion(Question question) {
+    pane.setVisible(false);
+    circle.setVisible(false);
+    emojiGrid.setVisible(false);
     this.clickedButton = null;
     this.question = (HowMuchQuestion) question;
     this.activity = this.question.getActivity();
@@ -91,7 +123,7 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
       button.setDisable(false);
     }
     for (int i = 0; i < 3; i++) {
-      buttons[i].setText(answers[i] + "Wh");
+      buttons[i].setText(answers[i] + " Wh");
       buttons[i].setUserData(correct[i]);
     }
     showPoints();
@@ -108,7 +140,7 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
   }
 
   public void showUserCorrect() {
-    mainCtrl.addPoints(100);
+    mainCtrl.addPoints(mainCtrl.getPointsOffset());
     showPoints();
   }
 
@@ -122,6 +154,7 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
 
   @FXML
   public void checkCorrectAnswer(MouseEvent event) {
+    mainCtrl.stopPointsTimer();
     this.clickedButton = (Button) event.getSource();
     for (Button button : buttons) {
       button.setDisable(true);

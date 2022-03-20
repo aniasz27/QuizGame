@@ -23,6 +23,11 @@ import commons.HowMuchQuestion;
 import commons.MultipleChoiceQuestion;
 import commons.Question;
 import commons.Score;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.concurrent.ScheduledExecutorService;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -62,6 +67,9 @@ public class MainCtrl {
   private GuessCtrl guessCtrl;
   private Parent guessParent;
 
+  private IntermediateLeaderboardCtrl intermediateLeaderboardCtrl;
+  private Parent intermediateLeaderboardParent;
+
   //if false, the player plays in singleplayer mode
   // if true, the player plays in multiplayer mode
   public boolean multiplayer;
@@ -94,6 +102,12 @@ public class MainCtrl {
   public Thread timerThread;
 
   public boolean playerExited = false;
+
+  private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSS");
+
+  private Date pointsTimer;
+
+  private int pointsOffset;
 
   @Inject
   public MainCtrl(ServerUtils server) {
@@ -129,6 +143,7 @@ public class MainCtrl {
     Pair<HowMuchCtrl, Parent> howMuch,
     Pair<WhatRequiresMoreEnergyCtrl, Parent> whatRequiresMoreEnergy,
     Pair<GuessCtrl, Parent> guess,
+    Pair<IntermediateLeaderboardCtrl, Parent> intermediateLeaderboard,
     Pair<ActivityListCtrl, Parent> activityList,
     Pair<EditActivityCtrl, Parent> editActivity,
     Pair<HelpOverlayCtrl, Parent> helpOverlay,
@@ -157,6 +172,9 @@ public class MainCtrl {
     this.guessCtrl = guess.getKey();
     this.guessParent = guess.getValue();
 
+    this.intermediateLeaderboardCtrl = intermediateLeaderboard.getKey();
+    this.intermediateLeaderboardParent = intermediateLeaderboard.getValue();
+
     this.activityListCtrl = activityList.getKey();
     this.activityListParent = activityList.getValue();
 
@@ -166,14 +184,11 @@ public class MainCtrl {
     this.helpOverlayCtrl = helpOverlay.getKey();
     this.helpOverlayParent = helpOverlay.getValue();
 
-
     this.exitOverlayCtrl = exitOverlay.getKey();
     this.exitOverlayParent = exitOverlay.getValue();
 
-
     this.endScreenCtrl = endScreen.getKey();
     this.endScreenParent = endScreen.getValue();
-
 
     primaryStage.setTitle("Quizzzzz");
     // never exit full screen
@@ -216,7 +231,7 @@ public class MainCtrl {
   public void showWaitingRoom() {
     primaryStage.getScene().setRoot(waitingRoomParent);
     waitingForGame = true;
-    waitingRoomCtrl.refresh();
+    waitingRoomCtrl.listenForNewPlayers();
   }
 
   public void showSpWaitingRoom() {
@@ -264,7 +279,11 @@ public class MainCtrl {
     Task<Void> task = new Task<Void>() {
       @Override
       protected Void call() throws Exception {
-        startQuestionTimer();
+        // do not start timer for next question if on end screen
+        if (!question.type.equals(Question.Type.ENDSCREEN)) {
+          startQuestionTimer();
+        }
+
         return null;
       }
     };
@@ -314,29 +333,32 @@ public class MainCtrl {
 
   private void nextQuestion() throws InterruptedException {
     question = server.nextQuestion(serverIp);
-    if (question == null) {
-      server.addScore(serverIp, points);
-      showEndScreen();
-    } else {
-      switch (question.type) {
-        case MULTICHOICE:
-          System.out.println("Showed multiple choice");
-          Platform.runLater(() -> showWhatRequiresMoreEnergy((MultipleChoiceQuestion) question));
-          break;
-        case ESTIMATE:
-          System.out.println("Showed guess");
-          Platform.runLater(() -> showGuess((EstimateQuestion) question));
-          break;
-        case HOWMUCH:
-          System.out.println("Showed how much");
-          Platform.runLater(() -> showHowMuch((HowMuchQuestion) question));
-          break;
-        default:
-          System.out.println("Wrong question type");
-          break;
-      }
+    switch (question.type) {
+      case MULTICHOICE:
+        System.out.println("Showed multiple choice");
+        Platform.runLater(() -> showWhatRequiresMoreEnergy((MultipleChoiceQuestion) question));
+        break;
+      case ESTIMATE:
+        System.out.println("Showed guess");
+        Platform.runLater(() -> showGuess((EstimateQuestion) question));
+        break;
+      case HOWMUCH:
+        System.out.println("Showed how much");
+        Platform.runLater(() -> showHowMuch((HowMuchQuestion) question));
+        break;
+      case INTERLEADERBOARD:
+        System.out.println("Showed Intermediate Leaderboard");
+        Platform.runLater(() -> showIntermediateLeaderboard());
+        break;
+      case ENDSCREEN:
+        System.out.println("Showed end screen");
+        server.addScore(serverIp, points);
+        Platform.runLater(() -> showEndScreen());
+        break;
+      default:
+        System.out.println("Wrong question type");
+        break;
     }
-
   }
 
   public void showGuess(EstimateQuestion question) {
@@ -344,6 +366,7 @@ public class MainCtrl {
     guessCtrl.displayQuestion(question);
     guessCtrl.showPoints();
     guessCtrl.startTimer();
+    this.startPointsTimer();
   }
 
   public void showWhatRequiresMoreEnergy(MultipleChoiceQuestion question) {
@@ -351,6 +374,7 @@ public class MainCtrl {
     whatRequiresMoreEnergyCtrl.displayQuestion(question);
     whatRequiresMoreEnergyCtrl.showPoints();
     whatRequiresMoreEnergyCtrl.startTimer();
+    this.startPointsTimer();
   }
 
   public void showHowMuch(HowMuchQuestion question) {
@@ -358,6 +382,12 @@ public class MainCtrl {
     howMuchCtrl.displayQuestion(question);
     howMuchCtrl.showPoints();
     howMuchCtrl.startTimer();
+    this.startPointsTimer();
+  }
+
+  public void showIntermediateLeaderboard() {
+    primaryStage.getScene().setRoot(intermediateLeaderboardParent);
+    intermediateLeaderboardCtrl.display();
   }
 
   public void showActivityList() {
@@ -404,5 +434,49 @@ public class MainCtrl {
 
   public void addPoints(int toAdd) {
     points.addPoints(toAdd);
+  }
+
+  /**
+   * Sets pointsTimer to the time the question was shown
+   */
+  public void startPointsTimer() {
+    try {
+      String timeNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss.SSS"));
+      pointsTimer = simpleDateFormat.parse(timeNow);
+    } catch (ParseException e) {
+      pointsTimer = null;
+    }
+  }
+
+  /**
+   * Calculates the difference between the moment the question was shown and the moment the answer button was pressed
+   * Saves the difference in pointsOffset
+   */
+  public void stopPointsTimer() {
+    int dif = -1;
+    if (pointsTimer != null) {
+      try {
+        String timeNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss.SSS"));
+        dif = (int) (simpleDateFormat.parse(timeNow).getTime() - pointsTimer.getTime()) / 100 % 100;
+      } catch (ParseException e) {
+        System.out.println("Error when calculating time difference");
+      }
+    } else {
+      System.out.println("Error when calculating time difference");
+    }
+    pointsTimer = null;
+    this.pointsOffset = 100 - dif;
+  }
+
+  /**
+   * Returns the offset, but if it's larger than 75, it gives full points (offset is 100)
+   *
+   * @return a value between 0-100
+   */
+  public int getPointsOffset() {
+    if (pointsOffset >= 75) {
+      return 100;
+    }
+    return Math.max(pointsOffset, 0);
   }
 }

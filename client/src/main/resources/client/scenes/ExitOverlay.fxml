@@ -6,36 +6,37 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <StackPane
-  styleClass="pad, overlay"
-  xmlns="http://javafx.com/javafx"
-  xmlns:fx="http://javafx.com/fxml"
-  fx:controller="client.scenes.ExitOverlayCtrl"
+        styleClass="pad, overlay"
+        xmlns="http://javafx.com/javafx"
+        xmlns:fx="http://javafx.com/fxml"
+        fx:controller="client.scenes.ExitOverlayCtrl"
+        stylesheets="@../css/ExitOverlay.css"
 >
   <VBox
-    spacing="20"
-    alignment="BOTTOM_CENTER"
-    StackPane.alignment="CENTER"
-    styleClass="border, rounded, drop-shadow, pad, bg-light"
-    maxHeight="220"
-    maxWidth="500"
+          spacing="20"
+          alignment="BOTTOM_CENTER"
+          StackPane.alignment="CENTER"
+          styleClass="border, rounded, drop-shadow, pad, bg-light"
+          maxHeight="220"
+          maxWidth="500"
   >
     <Label textAlignment="CENTER" styleClass="popup-text" text="Are you sure you want to exit the game?"/>
     <HBox spacing="20">
       <Button
-        styleClass="border, rounded, drop-shadow, bad"
-        StackPane.alignment="TOP_LEFT"
-        onAction="#confirm"
-        text="Yes"
-        maxWidth="Infinity"
-        HBox.hgrow="ALWAYS"
+              styleClass="border, rounded, drop-shadow, bad"
+              StackPane.alignment="TOP_LEFT"
+              onAction="#confirm"
+              text="Yes"
+              maxWidth="Infinity"
+              HBox.hgrow="ALWAYS"
       />
       <Button
-        styleClass="border, rounded, drop-shadow"
-        StackPane.alignment="TOP_LEFT"
-        onAction="#close"
-        text="No"
-        maxWidth="Infinity"
-        HBox.hgrow="ALWAYS"
+              styleClass="border, rounded, drop-shadow"
+              StackPane.alignment="TOP_LEFT"
+              onAction="#close"
+              text="No"
+              maxWidth="Infinity"
+              HBox.hgrow="ALWAYS"
       />
     </HBox>
   </VBox>

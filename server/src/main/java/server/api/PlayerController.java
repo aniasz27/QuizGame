@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.async.DeferredResult;
 
 @RestController
 @RequestMapping("/api/player")
@@ -70,6 +72,9 @@ public class PlayerController {
   @PutMapping("/keepAlive")
   public Client keepAlive(@RequestParam String id, @RequestBody boolean waiting) {
     Client client = clients.get(id);
+    if (client.waitingForGame != waiting) {
+      listeners.forEach((k, l) -> l.accept(true));
+    }
     client.waitingForGame = waiting;
     clients.put(id, client.observe());
     return client;
@@ -113,5 +118,25 @@ public class PlayerController {
     clients = (HashMap<String, Client>) clients.entrySet().stream().filter(
       x -> Duration.between(x.getValue().lastSeen, LocalDateTime.now()).getSeconds() <= 1
     ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+  }
+
+  private Map<Object, Consumer<Boolean>> listeners = new HashMap<>();
+
+  @GetMapping("/updates")
+  public DeferredResult<ResponseEntity<Boolean>> getPlayerUpdates() {
+
+    var noContent = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    var res = new DeferredResult<ResponseEntity<Boolean>>(5000L, noContent);  //timeout after 5 seconds
+
+    var key = new Object();
+    listeners.put(key, u -> {
+      res.setResult(ResponseEntity.ok(u));
+    });
+
+    res.onCompletion(() -> {
+      listeners.remove(key);
+    });
+
+    return res;
   }
 }

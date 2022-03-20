@@ -13,10 +13,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
 public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initializable {
@@ -29,6 +32,26 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
   private Button button2;
   @FXML
   private Text points;
+  @FXML
+  private Circle circle;
+  @FXML
+  private Label emoji1;
+  @FXML
+  private Label emoji2;
+  @FXML
+  private Label emoji3;
+  @FXML
+  private Label emoji4;
+  @FXML
+  private Label emoji5;
+  @FXML
+  private GridPane emojiGrid;
+  @FXML
+  private Button emojiButton;
+  @FXML
+  private StackPane pane;
+
+  private Label[] emojis;
 
   private Button clickedButton;
 
@@ -42,6 +65,7 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
 
   @FXML
   public void checkCorrectAnswer(MouseEvent event) {
+    mainCtrl.stopPointsTimer();
     this.clickedButton = (Button) event.getSource();
 
     for (Button button : buttons) {
@@ -59,17 +83,31 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
   }
 
   public void showUserCorrect() {
-    mainCtrl.addPoints(100);
+    mainCtrl.addPoints(mainCtrl.getPointsOffset());
     showPoints();
   }
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     buttons = new Button[] {button0, button1, button2};
+    emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
+    emojiButton.setOnMouseEntered(event -> {
+      pane.setVisible(true);
+      circle.setVisible(true);
+      emojiGrid.setVisible(true);
+    });
+    pane.setOnMouseExited(event -> {
+      pane.setVisible(false);
+      circle.setVisible(false);
+      emojiGrid.setVisible(false);
+    });
   }
 
   @Override
   public void displayQuestion(Question question) {
+    pane.setVisible(false);
+    circle.setVisible(false);
+    emojiGrid.setVisible(false);
     this.question = (MultipleChoiceQuestion) question;
     this.clickedButton = null;
 
@@ -87,12 +125,8 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
     };
 
     boolean[] correctAnswers = this.question.getCorrect();
-
-    //TODO: change i < 0 -> i < buttons.length when activities can be get
     for (int i = 0; i < buttons.length; i++) {
       Activity activity = activities[i];
-
-      String path = "/client/JSON/" + activity.getImage_path();
 
       // get image
       StackPane imgContainer = new StackPane();
@@ -120,9 +154,7 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
 
       // image is displayed on top of text
       buttons[i].setContentDisplay(ContentDisplay.TOP);
-
       buttons[i].setText(activity.getTitle());
-      // TODO: buttons[i].setUserData(), put if answer is correct or not
       buttons[i].setUserData(correctAnswers[i]);
     }
   }

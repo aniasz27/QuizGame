@@ -2,42 +2,49 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 <StackPane
-  id="root" xmlns="http://javafx.com/javafx"
-  xmlns:fx="http://javafx.com/fxml"
-  fx:controller="client.scenes.WaitingRoomCtrl"
-  prefHeight="1080.0" prefWidth="1920.0"
+        id="root" xmlns="http://javafx.com/javafx"
+        xmlns:fx="http://javafx.com/fxml"
+        fx:controller="client.scenes.WaitingRoomCtrl"
+        prefHeight="1080.0" prefWidth="1920.0"
+        stylesheets="@../css/WaitingRoom.css"
 >
   <StackPane styleClass="pad, margin">
     <Button
-      fx:id="backButton"
-      styleClass="icon, border, rounded, drop-shadow"
-      StackPane.alignment="TOP_LEFT"
-      onAction="#back"
-      text=""
+            fx:id="backButton"
+            styleClass="icon, border, rounded, drop-shadow"
+            StackPane.alignment="TOP_LEFT"
+            onAction="#back"
+            text=""
     /> <!-- text is \uf053 (back arrow in font awesome) -->
     <Button
-      fx:id="helpButton"
-      styleClass="icon, border, rounded, drop-shadow"
-      StackPane.alignment="TOP_RIGHT"
-      onAction="#help"
-      text=""
+            fx:id="helpButton"
+            styleClass="icon, border, rounded, drop-shadow"
+            StackPane.alignment="TOP_RIGHT"
+            onAction="#help"
+            text=""
     /> <!-- text is \uf059 (help in font awesome) -->
   </StackPane>
   <VBox maxWidth="640" StackPane.alignment="CENTER" alignment="CENTER">
     <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="20" minHeight="20"/>
     <Text styleClass="title" text="Waiting for players..." textAlignment="CENTER" StackPane.alignment="CENTER"/>
     <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="20" minHeight="20"/>
+    <HBox StackPane.alignment="CENTER" alignment="CENTER">
+      <Text text="Players currently in the waiting room: " textAlignment="CENTER" StackPane.alignment="CENTER"/>
+      <Text fx:id="playerCounterField" text="" StackPane.alignment="CENTER"/>
+    </HBox>
+    <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="20" minHeight="20"/>
     <ScrollPane
-      styleClass="border, rounded, drop-shadow, no-pad, transparent"
-      VBox.vgrow="ALWAYS"
-      fitToWidth="true"
-      hbarPolicy="NEVER"
-      vbarPolicy="NEVER"
+            styleClass="border, rounded, drop-shadow, no-pad, transparent"
+            VBox.vgrow="ALWAYS"
+            fitToWidth="true"
+            hbarPolicy="NEVER"
+            vbarPolicy="NEVER"
     >
       <VBox fx:id="playerListDisplay" maxWidth="Infinity">
         <!-- List of players -->
