@@ -76,4 +76,23 @@
       <Label fx:id="emoji5" styleClass="icon, emoji" text="" GridPane.columnIndex="4" GridPane.halignment="CENTER"/>
     </children>
   </GridPane>
+  <GridPane maxHeight="70.0" maxWidth="521.0" translateX="20.0" translateY="-20.0" StackPane.alignment="BOTTOM_LEFT">
+    <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="20.0"/>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="20.0"/>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+    </columnConstraints>
+    <rowConstraints>
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+    </rowConstraints>
+    <children>
+      <Button mnemonicParsing="false" styleClass="border, rounded, drop-shadow, button" text="x2"/>
+      <Button mnemonicParsing="false" styleClass="border, rounded, drop-shadow, button" text="-50%"
+              GridPane.columnIndex="2"/>
+      <Button mnemonicParsing="false" styleClass="border, rounded, drop-shadow, button" text="Hint"
+              GridPane.columnIndex="4"/>
+    </children>
+  </GridPane>
 </StackPane>
