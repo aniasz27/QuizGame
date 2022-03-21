@@ -30,8 +30,6 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
   public StackPane imgContainer;
   @FXML
   private ImageView imageView;
-
-  //change the description based on activity
   @FXML
   private Text description;
   @FXML
@@ -66,7 +64,6 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
   private Button hint;
   @FXML
   private Button minusTime;
-
 
   private Button[] buttons;
   private Label[] emojis;

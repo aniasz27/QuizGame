@@ -88,11 +88,12 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
     </rowConstraints>
     <children>
-      <Button mnemonicParsing="false" styleClass="border, rounded, drop-shadow, button" text="x2"/>
-      <Button mnemonicParsing="false" styleClass="border, rounded, drop-shadow, button" text="-50%"
+      <Button fx:id="doublePts" mnemonicParsing="false" onMouseClicked="#doublePoints"
+              styleClass="border, rounded, drop-shadow, button" text="x2"/>
+      <Button fx:id="minusTime" mnemonicParsing="false" styleClass="border, rounded, drop-shadow, button" text="-50%"
               GridPane.columnIndex="2"/>
-      <Button mnemonicParsing="false" styleClass="border, rounded, drop-shadow, button" text="Hint"
-              GridPane.columnIndex="4"/>
+      <Button fx:id="hint" mnemonicParsing="false" onMouseClicked="#hint"
+              styleClass="border, rounded, drop-shadow, button" text="Hint" GridPane.columnIndex="4"/>
     </children>
   </GridPane>
 </StackPane>

@@ -8,6 +8,7 @@ import commons.MultipleChoiceQuestion;
 import commons.Question;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
+import java.util.Random;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -50,13 +51,20 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
   private Button emojiButton;
   @FXML
   private StackPane pane;
+  @FXML
+  private Button doublePts;
+  @FXML
+  private Button hint;
+  @FXML
+  private Button minusTime;
 
+  private Button[] buttons;
   private Label[] emojis;
+  private Button[] jokers;
 
   private Button clickedButton;
-
-  Button[] buttons;
-  MultipleChoiceQuestion question;
+  private MultipleChoiceQuestion question;
+  private boolean dbPoint;
 
   @Inject
   WhatRequiresMoreEnergyCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -73,17 +81,19 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
     }
   }
 
-
   /**
    * Displays user points at the start of the question
    */
   public void showPoints() {
-    int userPoints = mainCtrl.getPoints();
-    points.setText("Points: " + userPoints);
+    points.setText("Points: " + mainCtrl.getPoints());
   }
 
   public void showUserCorrect() {
-    mainCtrl.addPoints(mainCtrl.getPointsOffset());
+    int toAdd = mainCtrl.getPointsOffset();
+    if (dbPoint) {
+      toAdd *= 2;
+    }
+    mainCtrl.addPoints(toAdd);
     showPoints();
   }
 
@@ -91,6 +101,7 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
   public void initialize(URL location, ResourceBundle resources) {
     buttons = new Button[] {button0, button1, button2};
     emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
+    jokers = new Button[] {doublePts, hint, minusTime};
     emojiButton.setOnMouseEntered(event -> {
       pane.setVisible(true);
       circle.setVisible(true);
@@ -157,6 +168,9 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
       buttons[i].setText(activity.getTitle());
       buttons[i].setUserData(correctAnswers[i]);
     }
+    for (Button joker : jokers) {
+      joker.setDisable(false);
+    }
   }
 
   /**
@@ -180,5 +194,31 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
     for (Button button : buttons) {
       button.setDisable(true);
     }
+    for (Button joker : jokers) {
+      joker.setDisable(true);
+    }
+  }
+
+  public void hint() {
+    if (hint.getStyleClass().contains("used")) {
+      return;
+    }
+    Random random = new Random();
+    int guess;
+    do {
+      guess = random.nextInt(3);
+    } while (question.getCorrect()[guess]);
+    buttons[guess].setDisable(true);
+    hint.getStyleClass().add("used");
+    hint.getStyleClass().remove("drop-shadow");
+  }
+
+  public void doublePoints() {
+    if (doublePts.getStyleClass().contains("used")) {
+      return;
+    }
+    this.dbPoint = true;
+    doublePts.getStyleClass().add("used");
+    doublePts.getStyleClass().remove("drop-shadow");
   }
 }
