@@ -78,7 +78,7 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
-    jokers = new Button[] {doublePts, hint, minusTime};
+    jokers = new Button[] {doublePts, minusTime, hint};
     emojiButton.setOnMouseEntered(event -> {
       pane.setVisible(true);
       circle.setVisible(true);
@@ -89,7 +89,6 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
       circle.setVisible(false);
       emojiGrid.setVisible(false);
     });
-    this.hint.setDisable(true);
   }
 
   @Override
@@ -103,9 +102,8 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     this.submit.setDisable(false);
     this.answer.getStyleClass().remove("good");
     this.answer.getStyleClass().remove("bad");
-    for (Button joker : jokers) {
-      joker.setDisable(false);
-    }
+    displayJokers(jokers);
+    this.hint.setDisable(true);
 
     Rectangle clip = new Rectangle(
       imgContainer.getWidth(), imgContainer.getHeight()
@@ -128,7 +126,7 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     if (answer.getText() == "") {
       return;
     }
-    int value = Integer.parseInt(answer.getText());
+    long value = Long.parseLong(answer.getText());
     point = (int) (question.calculateHowClose(value) * 100);
     submit.setDisable(true);
   }
@@ -169,11 +167,11 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   }
 
   public void doublePoints() {
-    if (doublePts.getStyleClass().contains("used")) {
+    if (mainCtrl.usedJokers[0]) {
       return;
     }
     this.dbPoint = true;
-    doublePts.getStyleClass().add("used");
-    doublePts.getStyleClass().remove("drop-shadow");
+    useJoker(doublePts);
+    mainCtrl.usedJokers[0] = true;
   }
 }

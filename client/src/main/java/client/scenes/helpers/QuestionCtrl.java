@@ -54,4 +54,20 @@ public abstract class QuestionCtrl {
   public abstract void showCorrect();
 
   public abstract void disableButtons();
+
+  public void useJoker(Button joker) {
+    joker.getStyleClass().add("used");
+    joker.getStyleClass().remove("drop-shadow");
+  }
+
+  public void displayJokers(Button[] jokers) {
+    for (int i = 0; i < 3; i++) {
+      jokers[i].setDisable(false);
+      if (mainCtrl.usedJokers[i]) {
+        useJoker(jokers[i]);
+      }
+    }
+    if (!mainCtrl.multiplayer)
+      jokers[1].setDisable(true);
+  }
 }

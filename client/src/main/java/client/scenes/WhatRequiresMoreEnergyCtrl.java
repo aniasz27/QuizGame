@@ -101,7 +101,7 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
   public void initialize(URL location, ResourceBundle resources) {
     buttons = new Button[] {button0, button1, button2};
     emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
-    jokers = new Button[] {doublePts, hint, minusTime};
+    jokers = new Button[] {doublePts, minusTime, hint};
     emojiButton.setOnMouseEntered(event -> {
       pane.setVisible(true);
       circle.setVisible(true);
@@ -168,9 +168,7 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
       buttons[i].setText(activity.getTitle());
       buttons[i].setUserData(correctAnswers[i]);
     }
-    for (Button joker : jokers) {
-      joker.setDisable(false);
-    }
+    displayJokers(jokers);
     for (boolean yes : correctAnswers) {
       System.out.println(yes);
     }
@@ -203,7 +201,7 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
   }
 
   public void hint() {
-    if (hint.getStyleClass().contains("used")) {
+    if (mainCtrl.usedJokers[2]) {
       return;
     }
     Random random = new Random();
@@ -212,16 +210,16 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
       guess = random.nextInt(3);
     } while (question.getCorrect()[guess]);
     buttons[guess].setDisable(true);
-    hint.getStyleClass().add("used");
-    hint.getStyleClass().remove("drop-shadow");
+    useJoker(hint);
+    mainCtrl.usedJokers[2] = true;
   }
 
   public void doublePoints() {
-    if (doublePts.getStyleClass().contains("used")) {
+    if (mainCtrl.usedJokers[0]) {
       return;
     }
     this.dbPoint = true;
-    doublePts.getStyleClass().add("used");
-    doublePts.getStyleClass().remove("drop-shadow");
+    useJoker(doublePts);
+    mainCtrl.usedJokers[0] = true;
   }
 }

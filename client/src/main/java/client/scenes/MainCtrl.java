@@ -94,6 +94,7 @@ public class MainCtrl {
   public String gameId;
   public ScheduledExecutorService keepAliveExec;
   public boolean waitingForGame;
+  public boolean[] usedJokers;
 
   private Score points;
 
@@ -195,7 +196,6 @@ public class MainCtrl {
     primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
     // set initial scene (splash) and show
-
     primaryStage.setScene(new Scene(connectParent));
     primaryStage.show();
     primaryStage.setFullScreen(true);
@@ -229,12 +229,14 @@ public class MainCtrl {
   }
 
   public void showWaitingRoom() {
+    this.usedJokers = new boolean[3];
     primaryStage.getScene().setRoot(waitingRoomParent);
     waitingForGame = true;
     waitingRoomCtrl.listenForNewPlayers();
   }
 
   public void showSpWaitingRoom() {
+    this.usedJokers = new boolean[3];
     primaryStage.getScene().setRoot(spWaitingRoomParent);
     spWaitingRoomCtrl.refresh();
   }
@@ -312,7 +314,7 @@ public class MainCtrl {
           Platform.runLater(() -> howMuchCtrl.showCorrect());
           break;
         default:
-          System.out.println("Wrong question type");
+          System.out.println("Not a question");
           break;
       }
       startBreakTimer();

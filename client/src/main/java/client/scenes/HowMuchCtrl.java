@@ -87,7 +87,7 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
   public void initialize(URL location, ResourceBundle resources) {
     buttons = new Button[] {answer_1, answer_2, answer_3};
     emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
-    jokers = new Button[] {doublePts, hint, minusTime};
+    jokers = new Button[] {doublePts, minusTime, hint};
     emojiButton.setOnMouseEntered(event -> {
       pane.setVisible(true);
       circle.setVisible(true);
@@ -131,14 +131,12 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
       button.getStyleClass().remove("bad");
       button.setDisable(false);
     }
-    for (Button joker : jokers) {
-      joker.setDisable(false);
-    }
     for (int i = 0; i < 3; i++) {
       buttons[i].setText(answers[i] + " Wh");
       buttons[i].setUserData(correct[i]);
     }
     showPoints();
+    displayJokers(jokers);
     for (boolean yes : correct) {
       System.out.println(yes);
     }
@@ -193,7 +191,7 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
   }
 
   public void hint() {
-    if (hint.getStyleClass().contains("used")) {
+    if (mainCtrl.usedJokers[2]) {
       return;
     }
     Random random = new Random();
@@ -202,16 +200,16 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
       guess = random.nextInt(3);
     } while (correct[guess]);
     buttons[guess].setDisable(true);
-    hint.getStyleClass().add("used");
-    hint.getStyleClass().remove("drop-shadow");
+    useJoker(hint);
+    mainCtrl.usedJokers[2] = true;
   }
 
   public void doublePoints() {
-    if (doublePts.getStyleClass().contains("used")) {
+    if (mainCtrl.usedJokers[0]) {
       return;
     }
     this.dbPoint = true;
-    doublePts.getStyleClass().add("used");
-    doublePts.getStyleClass().remove("drop-shadow");
+    useJoker(doublePts);
+    mainCtrl.usedJokers[0] = true;
   }
 }
