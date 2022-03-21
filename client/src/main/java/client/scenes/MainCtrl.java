@@ -74,10 +74,6 @@ public class MainCtrl {
   private IntermediateLeaderboardCtrl intermediateLeaderboardCtrl;
   private Parent intermediateLeaderboardParent;
 
-  //if false, the player plays in singleplayer mode
-  // if true, the player plays in multiplayer mode
-  public boolean multiplayer;
-
   private ActivityListCtrl activityListCtrl;
   private Parent activityListParent;
 
@@ -93,25 +89,21 @@ public class MainCtrl {
   private EndScreenCtrl endScreenCtrl;
   private Parent endScreenParent;
 
+  //if false, the player plays in singleplayer mode
+  // if true, the player plays in multiplayer mode
+  public boolean multiplayer;
   public String serverIp;
   public String clientId;
   public String gameId;
   public ScheduledExecutorService keepAliveExec;
   public boolean waitingForGame;
   public boolean[] usedJokers;
-
   private Score points;
-
   private Question question;
-
   public Thread timerThread;
-
   public boolean playerExited = false;
-
   private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSS");
-
   private Date pointsTimer;
-
   private int pointsOffset;
 
   @Inject
@@ -272,10 +264,8 @@ public class MainCtrl {
 
   /**
    * Shows the next question, starts a timer from the server and uses long polling to determine when to change state
-   *
-   * @throws InterruptedException if server long polling was unsuccessful
    */
-  public void nextRound() throws InterruptedException {
+  public void nextRound() {
     if (playerExited) {
       return;
     }
@@ -284,7 +274,7 @@ public class MainCtrl {
 
     Task<Void> task = new Task<Void>() {
       @Override
-      protected Void call() throws Exception {
+      protected Void call() {
         // do not start timer for next question if on end screen
         if (!question.type.equals(Question.Type.ENDSCREEN)) {
           startQuestionTimer();
@@ -299,7 +289,7 @@ public class MainCtrl {
     timerThread.start();
   }
 
-  public void startQuestionTimer() throws InterruptedException {
+  public void startQuestionTimer() {
     // set a timer for 10s (question duration)
     boolean finished = server.startServerTimer(serverIp, 10000);
 
@@ -327,7 +317,7 @@ public class MainCtrl {
     }
   }
 
-  public void startBreakTimer() throws InterruptedException {
+  public void startBreakTimer() {
     boolean finished = server.startServerTimer(serverIp, 2000); // 2s time given for break
 
     if (finished) {
@@ -337,7 +327,7 @@ public class MainCtrl {
     }
   }
 
-  private void nextQuestion() throws InterruptedException {
+  private void nextQuestion() {
     question = server.nextQuestion(serverIp);
     switch (question.type) {
       case MULTICHOICE:
@@ -354,12 +344,12 @@ public class MainCtrl {
         break;
       case INTERLEADERBOARD:
         System.out.println("Showed Intermediate Leaderboard");
-        Platform.runLater(() -> showIntermediateLeaderboard());
+        Platform.runLater(this::showIntermediateLeaderboard);
         break;
       case ENDSCREEN:
         System.out.println("Showed end screen");
         server.addScore(serverIp, points);
-        Platform.runLater(() -> showEndScreen());
+        Platform.runLater(this::showEndScreen);
         break;
       default:
         System.out.println("Wrong question type");
