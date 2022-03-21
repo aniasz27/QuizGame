@@ -8,6 +8,7 @@ import commons.HowMuchQuestion;
 import commons.Question;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
+import java.util.Random;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -59,12 +60,21 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
   private Button emojiButton;
   @FXML
   private StackPane pane;
+  @FXML
+  private Button doublePts;
+  @FXML
+  private Button hint;
+  @FXML
+  private Button minusTime;
+
 
   private Button[] buttons;
   private Label[] emojis;
+  private Button[] jokers;
 
   private Activity activity;
   private HowMuchQuestion question;
+  private boolean dbPoint;
 
   private boolean[] correct;
   private long[] answers;
@@ -80,6 +90,7 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
   public void initialize(URL location, ResourceBundle resources) {
     buttons = new Button[] {answer_1, answer_2, answer_3};
     emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
+    jokers = new Button[] {doublePts, hint, minusTime};
     emojiButton.setOnMouseEntered(event -> {
       pane.setVisible(true);
       circle.setVisible(true);
@@ -103,6 +114,7 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
     circle.setVisible(false);
     emojiGrid.setVisible(false);
     this.clickedButton = null;
+    this.dbPoint = false;
     this.question = (HowMuchQuestion) question;
     this.activity = this.question.getActivity();
     this.correct = this.question.getCorrect();
@@ -122,6 +134,9 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
       button.getStyleClass().remove("bad");
       button.setDisable(false);
     }
+    for (Button joker : jokers) {
+      joker.setDisable(false);
+    }
     for (int i = 0; i < 3; i++) {
       buttons[i].setText(answers[i] + " Wh");
       buttons[i].setUserData(correct[i]);
@@ -140,7 +155,11 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
   }
 
   public void showUserCorrect() {
-    mainCtrl.addPoints(mainCtrl.getPointsOffset());
+    int toAdd = mainCtrl.getPointsOffset();
+    if (dbPoint) {
+      toAdd *= 2;
+    }
+    mainCtrl.addPoints(toAdd);
     showPoints();
   }
 
@@ -148,8 +167,7 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
    * Displays user points at the start of the question
    */
   public void showPoints() {
-    int userPoints = mainCtrl.getPoints();
-    points.setText("Points: " + userPoints);
+    points.setText("Points: " + mainCtrl.getPoints());
   }
 
   @FXML
@@ -169,5 +187,31 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
     for (Button button : buttons) {
       button.setDisable(true);
     }
+    for (Button joker : jokers) {
+      joker.setDisable(true);
+    }
+  }
+
+  public void hint() {
+    if (hint.getStyleClass().contains("used")) {
+      return;
+    }
+    Random random = new Random();
+    int guess;
+    do {
+      guess = random.nextInt(3);
+    } while (correct[guess]);
+    buttons[guess].setDisable(true);
+    hint.getStyleClass().add("used");
+    hint.getStyleClass().remove("drop-shadow");
+  }
+
+  public void doublePoints() {
+    if (doublePts.getStyleClass().contains("used")) {
+      return;
+    }
+    this.dbPoint = true;
+    doublePts.getStyleClass().add("used");
+    doublePts.getStyleClass().remove("drop-shadow");
   }
 }
