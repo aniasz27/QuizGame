@@ -67,7 +67,8 @@ public abstract class QuestionCtrl {
         useJoker(jokers[i]);
       }
     }
-    if (!mainCtrl.multiplayer)
+    if (!mainCtrl.multiplayer) {
       jokers[1].setDisable(true);
+    }
   }
 }
