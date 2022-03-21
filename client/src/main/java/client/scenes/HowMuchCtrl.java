@@ -139,6 +139,9 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
       buttons[i].setUserData(correct[i]);
     }
     showPoints();
+    for (boolean yes : correct) {
+      System.out.println(yes);
+    }
   }
 
   @Override

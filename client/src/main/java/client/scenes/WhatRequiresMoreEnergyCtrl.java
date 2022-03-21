@@ -171,6 +171,9 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
     for (Button joker : jokers) {
       joker.setDisable(false);
     }
+    for (boolean yes : correctAnswers) {
+      System.out.println(yes);
+    }
   }
 
   /**

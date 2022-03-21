@@ -8,6 +8,7 @@ import commons.EstimateQuestion;
 import commons.Question;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
+import java.util.Random;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -57,9 +58,17 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   private Button emojiButton;
   @FXML
   private StackPane pane;
+  @FXML
+  private Button doublePts;
+  @FXML
+  private Button hint;
+  @FXML
+  private Button minusTime;
 
   private Label[] emojis;
-  private boolean correct;
+  private boolean dbPoint;
+  private Button[] jokers;
+  private int point;
 
   @Inject
   GuessCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -69,6 +78,7 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
+    jokers = new Button[] {doublePts, hint, minusTime};
     emojiButton.setOnMouseEntered(event -> {
       pane.setVisible(true);
       circle.setVisible(true);
@@ -79,6 +89,7 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
       circle.setVisible(false);
       emojiGrid.setVisible(false);
     });
+    this.hint.setDisable(true);
   }
 
   @Override
@@ -86,12 +97,15 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     pane.setVisible(false);
     circle.setVisible(false);
     emojiGrid.setVisible(false);
-    this.correct = false;
+    this.dbPoint = false;
     this.question = (EstimateQuestion) question;
     this.activity = this.question.getActivity();
     this.submit.setDisable(false);
     this.answer.getStyleClass().remove("good");
     this.answer.getStyleClass().remove("bad");
+    for (Button joker : jokers) {
+      joker.setDisable(false);
+    }
 
     Rectangle clip = new Rectangle(
       imgContainer.getWidth(), imgContainer.getHeight()
@@ -104,6 +118,7 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     description.setText(activity.getTitle());
     points.setText("Points: " + mainCtrl.getPoints());
     answer.setText("Type in your answer");
+    System.out.println(this.question.getAnswer());
   }
 
   /**
@@ -114,12 +129,8 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
       return;
     }
     int value = Integer.parseInt(answer.getText());
-    int point = (int) (question.calculateHowClose(value) * 100);
+    point = (int) (question.calculateHowClose(value) * 100);
     submit.setDisable(true);
-    if (point != 0) {
-      correct = true;
-      mainCtrl.addPoints(point);
-    }
   }
 
   /**
@@ -133,12 +144,11 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
    * Sets the color to green/red, shows the right answer and updates the points on the screen
    */
   public void showPoints() {
-    int userPoints = mainCtrl.getPoints();
-    points.setText("Points: " + userPoints);
+    points.setText("Points: " + mainCtrl.getPoints());
   }
 
   public void showCorrect() {
-    answer.getStyleClass().add(correct ? "good" : "bad");
+    answer.getStyleClass().add(point != 0 ? "good" : "bad");
     showPoints();
     answer.setText("Correct answer is: " + question.getAnswer());
   }
@@ -149,5 +159,21 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   @Override
   public void disableButtons() {
     submit.setDisable(true);
+    for (Button joker : jokers) {
+      joker.setDisable(true);
+    }
+    if (dbPoint) {
+      point *= 2;
+    }
+    mainCtrl.addPoints(point);
+  }
+
+  public void doublePoints() {
+    if (doublePts.getStyleClass().contains("used")) {
+      return;
+    }
+    this.dbPoint = true;
+    doublePts.getStyleClass().add("used");
+    doublePts.getStyleClass().remove("drop-shadow");
   }
 }
