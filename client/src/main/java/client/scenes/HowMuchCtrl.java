@@ -88,28 +88,12 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
     buttons = new Button[] {answer_1, answer_2, answer_3};
     emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
     jokers = new Button[] {doublePts, minusTime, hint};
-    emojiButton.setOnMouseEntered(event -> {
-      pane.setVisible(true);
-      circle.setVisible(true);
-      emojiGrid.setVisible(true);
-    });
-    pane.setOnMouseExited(event -> {
-      pane.setVisible(false);
-      circle.setVisible(false);
-      emojiGrid.setVisible(false);
-    });
+    hoverEffect(circle, emojiGrid, emojiButton, pane);
   }
 
-  /**
-   * Display the question on the screen
-   *
-   * @param question to show
-   */
   @Override
   public void displayQuestion(Question question) {
-    pane.setVisible(false);
-    circle.setVisible(false);
-    emojiGrid.setVisible(false);
+    displayEmojis(circle, emojiGrid, pane);
     this.clickedButton = null;
     this.dbPoint = false;
     this.question = (HowMuchQuestion) question;
@@ -135,11 +119,8 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
       buttons[i].setText(answers[i] + " Wh");
       buttons[i].setUserData(correct[i]);
     }
-    showPoints();
+    showPoints(points);
     displayJokers(jokers);
-    for (boolean yes : correct) {
-      System.out.println(yes);
-    }
   }
 
   @Override
@@ -152,22 +133,23 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
     }
   }
 
+  /**
+   * Adds points to the user if they choose correct answer
+   */
   public void showUserCorrect() {
     int toAdd = mainCtrl.getPointsOffset();
     if (dbPoint) {
       toAdd *= 2;
     }
     mainCtrl.addPoints(toAdd);
-    showPoints();
+    showPoints(points);
   }
 
   /**
-   * Displays user points at the start of the question
+   * Stops timer after clicking on the button
+   *
+   * @param event click on the button
    */
-  public void showPoints() {
-    points.setText("Points: " + mainCtrl.getPoints());
-  }
-
   @FXML
   public void checkCorrectAnswer(MouseEvent event) {
     mainCtrl.stopPointsTimer();
@@ -177,9 +159,6 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
     }
   }
 
-  /**
-   * Disable buttons in case when user does not pick an answer
-   */
   @Override
   public void disableButtons() {
     for (Button button : buttons) {
@@ -191,25 +170,10 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
   }
 
   public void hint() {
-    if (mainCtrl.usedJokers[2]) {
-      return;
-    }
-    Random random = new Random();
-    int guess;
-    do {
-      guess = random.nextInt(3);
-    } while (correct[guess]);
-    buttons[guess].setDisable(true);
-    useJoker(hint);
-    mainCtrl.usedJokers[2] = true;
+    hintQ(correct, buttons, hint);
   }
 
   public void doublePoints() {
-    if (mainCtrl.usedJokers[0]) {
-      return;
-    }
-    this.dbPoint = true;
-    useJoker(doublePts);
-    mainCtrl.usedJokers[0] = true;
+    dbPoint = doublePoints(doublePts);
   }
 }

@@ -71,54 +71,17 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
     super(server, mainCtrl);
   }
 
-  @FXML
-  public void checkCorrectAnswer(MouseEvent event) {
-    mainCtrl.stopPointsTimer();
-    this.clickedButton = (Button) event.getSource();
-
-    for (Button button : buttons) {
-      button.setDisable(true);
-    }
-  }
-
-  /**
-   * Displays user points at the start of the question
-   */
-  public void showPoints() {
-    points.setText("Points: " + mainCtrl.getPoints());
-  }
-
-  public void showUserCorrect() {
-    int toAdd = mainCtrl.getPointsOffset();
-    if (dbPoint) {
-      toAdd *= 2;
-    }
-    mainCtrl.addPoints(toAdd);
-    showPoints();
-  }
-
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     buttons = new Button[] {button0, button1, button2};
     emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
     jokers = new Button[] {doublePts, minusTime, hint};
-    emojiButton.setOnMouseEntered(event -> {
-      pane.setVisible(true);
-      circle.setVisible(true);
-      emojiGrid.setVisible(true);
-    });
-    pane.setOnMouseExited(event -> {
-      pane.setVisible(false);
-      circle.setVisible(false);
-      emojiGrid.setVisible(false);
-    });
+    hoverEffect(circle, emojiGrid, emojiButton, pane);
   }
 
   @Override
   public void displayQuestion(Question question) {
-    pane.setVisible(false);
-    circle.setVisible(false);
-    emojiGrid.setVisible(false);
+    displayEmojis(circle, emojiGrid, pane);
     this.question = (MultipleChoiceQuestion) question;
     this.clickedButton = null;
 
@@ -169,14 +132,9 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
       buttons[i].setUserData(correctAnswers[i]);
     }
     displayJokers(jokers);
-    for (boolean yes : correctAnswers) {
-      System.out.println(yes);
-    }
+    showPoints(points);
   }
 
-  /**
-   * Sets button color to appropriate given correctness of answer
-   */
   @Override
   public void showCorrect() {
     for (Button button : buttons) {
@@ -187,9 +145,6 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
     }
   }
 
-  /**
-   * Disable buttons in case when user does not pick an answer
-   */
   @Override
   public void disableButtons() {
     for (Button button : buttons) {
@@ -200,26 +155,29 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
     }
   }
 
-  public void hint() {
-    if (mainCtrl.usedJokers[2]) {
-      return;
+  @FXML
+  public void checkCorrectAnswer(MouseEvent event) {
+    mainCtrl.stopPointsTimer();
+    this.clickedButton = (Button) event.getSource();
+    for (Button button : buttons) {
+      button.setDisable(true);
     }
-    Random random = new Random();
-    int guess;
-    do {
-      guess = random.nextInt(3);
-    } while (question.getCorrect()[guess]);
-    buttons[guess].setDisable(true);
-    useJoker(hint);
-    mainCtrl.usedJokers[2] = true;
+  }
+
+  public void showUserCorrect() {
+    int toAdd = mainCtrl.getPointsOffset();
+    if (dbPoint) {
+      toAdd *= 2;
+    }
+    mainCtrl.addPoints(toAdd);
+    showPoints(points);
+  }
+
+  public void hint() {
+    hintQ(question.getCorrect(), buttons, hint);
   }
 
   public void doublePoints() {
-    if (mainCtrl.usedJokers[0]) {
-      return;
-    }
-    this.dbPoint = true;
-    useJoker(doublePts);
-    mainCtrl.usedJokers[0] = true;
+    dbPoint = doublePoints(doublePts);
   }
 }

@@ -25,9 +25,6 @@ import javafx.scene.text.Text;
 
 
 public class GuessCtrl extends QuestionCtrl implements Initializable {
-  private EstimateQuestion question;
-  private Activity activity;
-
   @FXML
   public StackPane imgContainer;
   @FXML
@@ -69,6 +66,8 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   private boolean dbPoint;
   private Button[] jokers;
   private int point;
+  private EstimateQuestion question;
+  private Activity activity;
 
   @Inject
   GuessCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -79,23 +78,17 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   public void initialize(URL location, ResourceBundle resources) {
     emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
     jokers = new Button[] {doublePts, minusTime, hint};
-    emojiButton.setOnMouseEntered(event -> {
-      pane.setVisible(true);
-      circle.setVisible(true);
-      emojiGrid.setVisible(true);
-    });
-    pane.setOnMouseExited(event -> {
-      pane.setVisible(false);
-      circle.setVisible(false);
-      emojiGrid.setVisible(false);
-    });
+    hoverEffect(circle, emojiGrid, emojiButton, pane);
   }
 
+  /**
+   * Displays question on the screen
+   *
+   * @param question to display
+   */
   @Override
   public void displayQuestion(Question question) {
-    pane.setVisible(false);
-    circle.setVisible(false);
-    emojiGrid.setVisible(false);
+    displayEmojis(circle, emojiGrid, pane);
     this.dbPoint = false;
     this.question = (EstimateQuestion) question;
     this.activity = this.question.getActivity();
@@ -114,13 +107,12 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     imageView.setImage(new Image(new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity.id))));
 
     description.setText(activity.getTitle());
-    points.setText("Points: " + mainCtrl.getPoints());
+    showPoints(points);
     answer.setText("Type in your answer");
-    System.out.println(this.question.getAnswer());
   }
 
   /**
-   * On clicking the submit button on the screen, the answer gets evaluated and the correct score is shown
+   * On clicking the submit button on the screen, the answer gets evaluated
    */
   public void checkCorrect() {
     if (answer.getText() == "") {
@@ -138,40 +130,26 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     answer.setText("");
   }
 
-  /**
-   * Sets the color to green/red, shows the right answer and updates the points on the screen
-   */
-  public void showPoints() {
-    points.setText("Points: " + mainCtrl.getPoints());
-  }
-
+  @Override
   public void showCorrect() {
     answer.getStyleClass().add(point != 0 ? "good" : "bad");
-    showPoints();
+    if (dbPoint) {
+      point *= 2;
+    }
+    mainCtrl.addPoints(point);
+    showPoints(points);
     answer.setText("Correct answer is: " + question.getAnswer());
   }
 
-  /**
-   * Disable button in case when user does not pick an answer
-   */
   @Override
   public void disableButtons() {
     submit.setDisable(true);
     for (Button joker : jokers) {
       joker.setDisable(true);
     }
-    if (dbPoint) {
-      point *= 2;
-    }
-    mainCtrl.addPoints(point);
   }
 
   public void doublePoints() {
-    if (mainCtrl.usedJokers[0]) {
-      return;
-    }
-    this.dbPoint = true;
-    useJoker(doublePts);
-    mainCtrl.usedJokers[0] = true;
+    dbPoint = doublePoints(doublePts);
   }
 }

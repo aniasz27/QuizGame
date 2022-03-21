@@ -366,7 +366,6 @@ public class MainCtrl {
   public void showGuess(EstimateQuestion question) {
     primaryStage.getScene().setRoot(guessParent);
     guessCtrl.displayQuestion(question);
-    guessCtrl.showPoints();
     guessCtrl.startTimer();
     this.startPointsTimer();
   }
@@ -374,7 +373,6 @@ public class MainCtrl {
   public void showWhatRequiresMoreEnergy(MultipleChoiceQuestion question) {
     primaryStage.getScene().setRoot(whatRequiresMoreEnergyParent);
     whatRequiresMoreEnergyCtrl.displayQuestion(question);
-    whatRequiresMoreEnergyCtrl.showPoints();
     whatRequiresMoreEnergyCtrl.startTimer();
     this.startPointsTimer();
   }
@@ -382,7 +380,6 @@ public class MainCtrl {
   public void showHowMuch(HowMuchQuestion question) {
     primaryStage.getScene().setRoot(howMuchParent);
     howMuchCtrl.displayQuestion(question);
-    howMuchCtrl.showPoints();
     howMuchCtrl.startTimer();
     this.startPointsTimer();
   }

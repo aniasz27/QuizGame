@@ -1,7 +1,9 @@
 package client.scenes;
 
+import client.scenes.helpers.QuestionCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
+import commons.Question;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -54,22 +56,11 @@ public class IntermediateLeaderboardCtrl implements Initializable {
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
-    emojiButton.setOnMouseEntered(event -> {
-      pane.setVisible(true);
-      circle.setVisible(true);
-      emojiGrid.setVisible(true);
-    });
-    pane.setOnMouseExited(event -> {
-      pane.setVisible(false);
-      circle.setVisible(false);
-      emojiGrid.setVisible(false);
-    });
+    QuestionCtrl.hoverEffect(circle, emojiGrid, emojiButton, pane);
   }
 
   public void display() {
-    pane.setVisible(false);
-    circle.setVisible(false);
-    emojiGrid.setVisible(false);
+    QuestionCtrl.displayEmojis(circle, emojiGrid, pane);
   }
 
   public void refresh() {
@@ -97,6 +88,4 @@ public class IntermediateLeaderboardCtrl implements Initializable {
   private void help(ActionEvent actionEvent) {
     mainCtrl.openHelp();
   }
-
-
 }
