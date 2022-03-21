@@ -3,7 +3,6 @@ package client.scenes;
 import client.scenes.helpers.QuestionCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
-import commons.Question;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;

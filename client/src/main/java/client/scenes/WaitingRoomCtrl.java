@@ -32,6 +32,8 @@ public class WaitingRoomCtrl implements Initializable {
   @FXML
   private Text playerCounterField;
 
+  private static ScheduledExecutorService EXECGameStarted = Executors.newSingleThreadScheduledExecutor();
+
   @Inject
   public WaitingRoomCtrl(ServerUtils server, MainCtrl mainCtrl) {
     this.server = server;
@@ -55,7 +57,7 @@ public class WaitingRoomCtrl implements Initializable {
   }
 
   @FXML
-  private void play(ActionEvent actionEvent) throws InterruptedException {
+  private void play(ActionEvent actionEvent) {
     mainCtrl.waitingForGame = false;
     mainCtrl.start();
     stop();
@@ -90,8 +92,6 @@ public class WaitingRoomCtrl implements Initializable {
     });
   }
 
-  private static ScheduledExecutorService EXECGameStarted = Executors.newSingleThreadScheduledExecutor();
-
   /**
    * Checks every second if a game containing the player has started
    */
@@ -120,12 +120,10 @@ public class WaitingRoomCtrl implements Initializable {
     server.stopUpdates();
   }
 
-  /*
+  /**
    * Call long polling method to update the waiting room automatically
    */
   public void listenForNewPlayers() {
-    server.registerForPlayerUpdates(mainCtrl.serverIp, np -> {
-      Platform.runLater(this::refresh);
-    });
+    server.registerForPlayerUpdates(mainCtrl.serverIp, np -> Platform.runLater(this::refresh));
   }
 }

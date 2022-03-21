@@ -8,7 +8,6 @@ import commons.MultipleChoiceQuestion;
 import commons.Question;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
-import java.util.Random;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

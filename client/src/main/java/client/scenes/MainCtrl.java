@@ -34,8 +34,12 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import javax.inject.Inject;
@@ -260,7 +264,7 @@ public class MainCtrl {
   }
 
   /**
-   * Returns the points the player has aquired so far
+   * Returns the points the player has acquired so far
    */
   public int getPoints() {
     return points.getPoints();
@@ -477,5 +481,34 @@ public class MainCtrl {
       return 100;
     }
     return Math.max(pointsOffset, 0);
+  }
+
+  public static void refreshLeaderboard(VBox leaderboardDisplay, Iterable<Score> scores) {
+    leaderboardDisplay.getChildren().removeAll(leaderboardDisplay.getChildren());
+
+    final boolean[] first = {true};
+
+    scores.forEach(s -> {
+      Label label = new Label(s.getName());
+      label.getStyleClass().add("expand");
+      label.getStyleClass().add("list-item");
+      label.getStyleClass().add("border-bottom");
+      if (first[0]) {
+        label.getStyleClass().add("list-item-top-left");
+      }
+      HBox score = new HBox();
+      HBox.setHgrow(label, Priority.ALWAYS);
+      score.getChildren().add(label);
+      label = new Label(String.valueOf(s.getPoints()));
+      label.getStyleClass().add("expand");
+      label.getStyleClass().add("list-item");
+      label.getStyleClass().add("border-bottom");
+      if (first[0]) {
+        label.getStyleClass().add("list-item-top-right");
+        first[0] = false;
+      }
+      score.getChildren().add(label);
+      leaderboardDisplay.getChildren().add(score);
+    });
   }
 }

@@ -41,39 +41,16 @@ public class EndScreenCtrl implements Initializable {
   }
 
   @FXML
-  private void playAgain() throws InterruptedException {
-    //TODO check if multiplayer or singleplayer
-    mainCtrl.start();
+  private void playAgain() {
+    if (mainCtrl.multiplayer) {
+      mainCtrl.showWaitingRoom();
+    } else {
+      mainCtrl.showSpWaitingRoom();
+    }
   }
 
   public void refresh() {
     Iterable<Score> scores = server.getSingleLeaderboard(mainCtrl.serverIp);
-    leaderboardDisplay.getChildren().removeAll(leaderboardDisplay.getChildren());
-
-    final boolean[] first = {true};
-
-    scores.forEach(s -> {
-      Label label = new Label(s.getName());
-      label.getStyleClass().add("expand");
-      label.getStyleClass().add("list-item");
-      label.getStyleClass().add("border-bottom");
-      if (first[0]) {
-        label.getStyleClass().add("list-item-top-left");
-      }
-      HBox score = new HBox();
-      HBox.setHgrow(label, Priority.ALWAYS);
-      score.getChildren().add(label);
-      label = new Label(String.valueOf(s.getPoints()));
-      label.getStyleClass().add("expand");
-      label.getStyleClass().add("list-item");
-      label.getStyleClass().add("border-bottom");
-      if (first[0]) {
-        label.getStyleClass().add("list-item-top-right");
-        first[0] = false;
-      }
-      score.getChildren().add(label);
-      leaderboardDisplay.getChildren().add(score);
-    });
-
+    MainCtrl.refreshLeaderboard(leaderboardDisplay, scores);
   }
 }
