@@ -225,14 +225,12 @@ public class MainCtrl {
   }
 
   public void showWaitingRoom() {
-    this.usedJokers = new boolean[3];
     primaryStage.getScene().setRoot(waitingRoomParent);
     waitingForGame = true;
     waitingRoomCtrl.listenForNewPlayers();
   }
 
   public void showSpWaitingRoom() {
-    this.usedJokers = new boolean[3];
     primaryStage.getScene().setRoot(spWaitingRoomParent);
     spWaitingRoomCtrl.refresh();
   }
@@ -241,6 +239,7 @@ public class MainCtrl {
    * Starts the game, assigns the points from the game controller
    */
   public void start() {
+    this.usedJokers = new boolean[3];
     server.startGame(serverIp);
     points = new Score(clientId, name, 0);
     try {
