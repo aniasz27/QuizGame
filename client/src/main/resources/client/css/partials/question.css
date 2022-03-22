@@ -10,3 +10,13 @@
 .chosen {
   -fx-background-color: #2B145B;
 }
+
+.used {
+  -fx-border-color: #553794;
+  -fx-text-fill: #553794;
+  -fx-cursor: default;
+}
+
+.used:hover {
+  -fx-background-color: #1E0A49;
+}

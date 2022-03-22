@@ -34,8 +34,12 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import javax.inject.Inject;
@@ -70,10 +74,6 @@ public class MainCtrl {
   private IntermediateLeaderboardCtrl intermediateLeaderboardCtrl;
   private Parent intermediateLeaderboardParent;
 
-  //if false, the player plays in singleplayer mode
-  // if true, the player plays in multiplayer mode
-  public boolean multiplayer;
-
   private ActivityListCtrl activityListCtrl;
   private Parent activityListParent;
 
@@ -89,24 +89,21 @@ public class MainCtrl {
   private EndScreenCtrl endScreenCtrl;
   private Parent endScreenParent;
 
+  //if false, the player plays in singleplayer mode
+  // if true, the player plays in multiplayer mode
+  public boolean multiplayer;
   public String serverIp;
   public String clientId;
   public String gameId;
   public ScheduledExecutorService keepAliveExec;
   public boolean waitingForGame;
-
+  public boolean[] usedJokers;
   private Score points;
-
   private Question question;
-
   public Thread timerThread;
-
   public boolean playerExited = false;
-
   private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSS");
-
   private Date pointsTimer;
-
   private int pointsOffset;
 
   @Inject
@@ -195,7 +192,6 @@ public class MainCtrl {
     primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
     // set initial scene (splash) and show
-
     primaryStage.setScene(new Scene(connectParent));
     primaryStage.show();
     primaryStage.setFullScreen(true);
@@ -243,6 +239,7 @@ public class MainCtrl {
    * Starts the game, assigns the points from the game controller
    */
   public void start() {
+    this.usedJokers = new boolean[3];
     server.startGame(serverIp);
     points = new Score(clientId, name, 0);
     try {
@@ -258,7 +255,7 @@ public class MainCtrl {
   }
 
   /**
-   * Returns the points the player has aquired so far
+   * Returns the points the player has acquired so far
    */
   public int getPoints() {
     return points.getPoints();
@@ -266,10 +263,8 @@ public class MainCtrl {
 
   /**
    * Shows the next question, starts a timer from the server and uses long polling to determine when to change state
-   *
-   * @throws InterruptedException if server long polling was unsuccessful
    */
-  public void nextRound() throws InterruptedException {
+  public void nextRound() {
     if (playerExited) {
       return;
     }
@@ -278,7 +273,7 @@ public class MainCtrl {
 
     Task<Void> task = new Task<Void>() {
       @Override
-      protected Void call() throws Exception {
+      protected Void call() {
         // do not start timer for next question if on end screen
         if (!question.type.equals(Question.Type.ENDSCREEN)) {
           startQuestionTimer();
@@ -293,7 +288,7 @@ public class MainCtrl {
     timerThread.start();
   }
 
-  public void startQuestionTimer() throws InterruptedException {
+  public void startQuestionTimer() {
     // set a timer for 10s (question duration)
     boolean finished = server.startServerTimer(serverIp, 10000);
 
@@ -312,7 +307,7 @@ public class MainCtrl {
           Platform.runLater(() -> howMuchCtrl.showCorrect());
           break;
         default:
-          System.out.println("Wrong question type");
+          System.out.println("Not a question");
           break;
       }
       startBreakTimer();
@@ -321,7 +316,7 @@ public class MainCtrl {
     }
   }
 
-  public void startBreakTimer() throws InterruptedException {
+  public void startBreakTimer() {
     boolean finished = server.startServerTimer(serverIp, 2000); // 2s time given for break
 
     if (finished) {
@@ -331,7 +326,7 @@ public class MainCtrl {
     }
   }
 
-  private void nextQuestion() throws InterruptedException {
+  private void nextQuestion() {
     question = server.nextQuestion(serverIp);
     switch (question.type) {
       case MULTICHOICE:
@@ -348,12 +343,12 @@ public class MainCtrl {
         break;
       case INTERLEADERBOARD:
         System.out.println("Showed Intermediate Leaderboard");
-        Platform.runLater(() -> showIntermediateLeaderboard());
+        Platform.runLater(this::showIntermediateLeaderboard);
         break;
       case ENDSCREEN:
         System.out.println("Showed end screen");
         server.addScore(serverIp, points);
-        Platform.runLater(() -> showEndScreen());
+        Platform.runLater(this::showEndScreen);
         break;
       default:
         System.out.println("Wrong question type");
@@ -364,7 +359,6 @@ public class MainCtrl {
   public void showGuess(EstimateQuestion question) {
     primaryStage.getScene().setRoot(guessParent);
     guessCtrl.displayQuestion(question);
-    guessCtrl.showPoints();
     guessCtrl.startTimer();
     this.startPointsTimer();
   }
@@ -372,7 +366,6 @@ public class MainCtrl {
   public void showWhatRequiresMoreEnergy(MultipleChoiceQuestion question) {
     primaryStage.getScene().setRoot(whatRequiresMoreEnergyParent);
     whatRequiresMoreEnergyCtrl.displayQuestion(question);
-    whatRequiresMoreEnergyCtrl.showPoints();
     whatRequiresMoreEnergyCtrl.startTimer();
     this.startPointsTimer();
   }
@@ -380,7 +373,6 @@ public class MainCtrl {
   public void showHowMuch(HowMuchQuestion question) {
     primaryStage.getScene().setRoot(howMuchParent);
     howMuchCtrl.displayQuestion(question);
-    howMuchCtrl.showPoints();
     howMuchCtrl.startTimer();
     this.startPointsTimer();
   }
@@ -478,5 +470,34 @@ public class MainCtrl {
       return 100;
     }
     return Math.max(pointsOffset, 0);
+  }
+
+  public static void refreshLeaderboard(VBox leaderboardDisplay, Iterable<Score> scores) {
+    leaderboardDisplay.getChildren().removeAll(leaderboardDisplay.getChildren());
+
+    final boolean[] first = {true};
+
+    scores.forEach(s -> {
+      Label label = new Label(s.getName());
+      label.getStyleClass().add("expand");
+      label.getStyleClass().add("list-item");
+      label.getStyleClass().add("border-bottom");
+      if (first[0]) {
+        label.getStyleClass().add("list-item-top-left");
+      }
+      HBox score = new HBox();
+      HBox.setHgrow(label, Priority.ALWAYS);
+      score.getChildren().add(label);
+      label = new Label(String.valueOf(s.getPoints()));
+      label.getStyleClass().add("expand");
+      label.getStyleClass().add("list-item");
+      label.getStyleClass().add("border-bottom");
+      if (first[0]) {
+        label.getStyleClass().add("list-item-top-right");
+        first[0] = false;
+      }
+      score.getChildren().add(label);
+      leaderboardDisplay.getChildren().add(score);
+    });
   }
 }

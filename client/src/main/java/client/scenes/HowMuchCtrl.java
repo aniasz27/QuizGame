@@ -8,6 +8,7 @@ import commons.HowMuchQuestion;
 import commons.Question;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
+import java.util.Random;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -29,8 +30,6 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
   public StackPane imgContainer;
   @FXML
   private ImageView imageView;
-
-  //change the description based on activity
   @FXML
   private Text description;
   @FXML
@@ -59,12 +58,20 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
   private Button emojiButton;
   @FXML
   private StackPane pane;
+  @FXML
+  private Button doublePts;
+  @FXML
+  private Button hint;
+  @FXML
+  private Button minusTime;
 
   private Button[] buttons;
   private Label[] emojis;
+  private Button[] jokers;
 
   private Activity activity;
   private HowMuchQuestion question;
+  private boolean dbPoint;
 
   private boolean[] correct;
   private long[] answers;
@@ -80,29 +87,15 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
   public void initialize(URL location, ResourceBundle resources) {
     buttons = new Button[] {answer_1, answer_2, answer_3};
     emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
-    emojiButton.setOnMouseEntered(event -> {
-      pane.setVisible(true);
-      circle.setVisible(true);
-      emojiGrid.setVisible(true);
-    });
-    pane.setOnMouseExited(event -> {
-      pane.setVisible(false);
-      circle.setVisible(false);
-      emojiGrid.setVisible(false);
-    });
+    jokers = new Button[] {doublePts, minusTime, hint};
+    hoverEffect(circle, emojiGrid, emojiButton, pane);
   }
 
-  /**
-   * Display the question on the screen
-   *
-   * @param question to show
-   */
   @Override
   public void displayQuestion(Question question) {
-    pane.setVisible(false);
-    circle.setVisible(false);
-    emojiGrid.setVisible(false);
+    displayEmojis(circle, emojiGrid, pane);
     this.clickedButton = null;
+    this.dbPoint = false;
     this.question = (HowMuchQuestion) question;
     this.activity = this.question.getActivity();
     this.correct = this.question.getCorrect();
@@ -126,7 +119,8 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
       buttons[i].setText(answers[i] + " Wh");
       buttons[i].setUserData(correct[i]);
     }
-    showPoints();
+    showPoints(points);
+    displayJokers(jokers);
   }
 
   @Override
@@ -139,19 +133,23 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
     }
   }
 
+  /**
+   * Adds points to the user if they choose correct answer
+   */
   public void showUserCorrect() {
-    mainCtrl.addPoints(mainCtrl.getPointsOffset());
-    showPoints();
+    int toAdd = mainCtrl.getPointsOffset();
+    if (dbPoint) {
+      toAdd *= 2;
+    }
+    mainCtrl.addPoints(toAdd);
+    showPoints(points);
   }
 
   /**
-   * Displays user points at the start of the question
+   * Stops timer after clicking on the button
+   *
+   * @param event click on the button
    */
-  public void showPoints() {
-    int userPoints = mainCtrl.getPoints();
-    points.setText("Points: " + userPoints);
-  }
-
   @FXML
   public void checkCorrectAnswer(MouseEvent event) {
     mainCtrl.stopPointsTimer();
@@ -161,13 +159,21 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
     }
   }
 
-  /**
-   * Disable buttons in case when user does not pick an answer
-   */
   @Override
   public void disableButtons() {
     for (Button button : buttons) {
       button.setDisable(true);
     }
+    for (Button joker : jokers) {
+      joker.setDisable(true);
+    }
+  }
+
+  public void hint() {
+    hintQ(correct, buttons, hint);
+  }
+
+  public void doublePoints() {
+    dbPoint = doublePoints(doublePts);
   }
 }
