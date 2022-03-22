@@ -157,10 +157,11 @@ public class ServerUtils {
    *
    * @return true if 10s have passed and connection closes, false if an exception has been thrown
    */
-  public boolean startServerTimer(String ip, int duration) {
+  public boolean startServerTimer(String ip, String clientId, int duration) {
     return ClientBuilder.newClient(new ClientConfig())
       .target(ip)
-      .path("/api/game/finished/" + duration)
+      .path("/api/game/startTimer/" + clientId)
+      .queryParam("duration", (long) duration)
       .request(APPLICATION_JSON)
       .accept(APPLICATION_JSON)
       .get().readEntity(Boolean.class);

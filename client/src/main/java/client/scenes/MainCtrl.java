@@ -289,7 +289,7 @@ public class MainCtrl {
 
   public void startQuestionTimer() {
     // set a timer for 10s (question duration)
-    boolean finished = server.startServerTimer(serverIp, 10000);
+    boolean finished = server.startServerTimer(serverIp, clientId, 10000);
 
     if (finished) {
       switch (question.type) {
@@ -316,7 +316,7 @@ public class MainCtrl {
   }
 
   public void startBreakTimer() {
-    boolean finished = server.startServerTimer(serverIp, 2000); // 2s time given for break
+    boolean finished = server.startServerTimer(serverIp, clientId, 2000); // 2s time given for break
 
     if (finished) {
       nextRound();
