@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 @Entity
 @JsonTypeInfo(
@@ -28,8 +27,9 @@ public abstract class Question {
   @GeneratedValue(strategy = GenerationType.AUTO)
   public long id;
 
-  public Type type;
+  public int number;
 
+  public Type type;
 
   public enum Type {
     MULTICHOICE(0),
@@ -60,5 +60,4 @@ public abstract class Question {
   public Question(Type type) {
     this.type = type;
   }
-
 }

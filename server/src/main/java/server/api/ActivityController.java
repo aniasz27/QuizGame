@@ -157,7 +157,7 @@ public class ActivityController {
       InputStream imageStream = getClass().getResourceAsStream(
         "/JSON/" + repo.findById(id).orElseThrow(IOException::new).getImage_path()
       );
-      return ResponseEntity.status(HttpStatus.OK).body(imageStream.readAllBytes());
+      return ResponseEntity.ok(imageStream.readAllBytes());
     } catch (Exception e) {
       e.printStackTrace();
       return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

@@ -98,7 +98,10 @@ public class MainCtrl {
   public ScheduledExecutorService keepAliveExec;
   public boolean waitingForGame;
   public boolean[] usedJokers;
-  private Score points;
+  public int questionNumber = -1;
+
+  private int points;
+
   private Question question;
   public Thread timerThread;
   public boolean playerExited = false;
@@ -211,7 +214,7 @@ public class MainCtrl {
   // instead of swapping entire scene, just swap parent
   public void showSplash() {
     // reset name and list of players if coming out of a game
-    this.points = new Score(clientId, name, 0);
+    this.points = 0;
     //players = null;
     primaryStage.getScene().setRoot(splashParent);
   }
@@ -240,16 +243,12 @@ public class MainCtrl {
    */
   public void start() {
     this.usedJokers = new boolean[3];
-    server.startGame(serverIp);
-    points = new Score(clientId, name, 0);
-    try {
-      play();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
+    gameId = server.startGame(serverIp);
+    points = 0;
+    play();
   }
 
-  public void play() throws InterruptedException {
+  public void play() {
     playerExited = false;
     nextRound();
   }
@@ -258,7 +257,7 @@ public class MainCtrl {
    * Returns the points the player has acquired so far
    */
   public int getPoints() {
-    return points.getPoints();
+    return points;
   }
 
   /**
@@ -271,7 +270,7 @@ public class MainCtrl {
 
     nextQuestion();
 
-    Task<Void> task = new Task<Void>() {
+    Task<Void> task = new Task<>() {
       @Override
       protected Void call() {
         // do not start timer for next question if on end screen
@@ -327,7 +326,8 @@ public class MainCtrl {
   }
 
   private void nextQuestion() {
-    question = server.nextQuestion(serverIp);
+    question = server.nextQuestion(serverIp, gameId, questionNumber);
+    questionNumber = question.number;
     switch (question.type) {
       case MULTICHOICE:
         System.out.println("Showed multiple choice");
@@ -347,7 +347,7 @@ public class MainCtrl {
         break;
       case ENDSCREEN:
         System.out.println("Showed end screen");
-        server.addScore(serverIp, points);
+        server.addScore(serverIp, new Score(clientId, name, points));
         Platform.runLater(this::showEndScreen);
         break;
       default:
@@ -425,7 +425,7 @@ public class MainCtrl {
   }
 
   public void addPoints(int toAdd) {
-    points.addPoints(toAdd);
+    points += toAdd;
   }
 
   /**
@@ -499,5 +499,17 @@ public class MainCtrl {
       score.getChildren().add(label);
       leaderboardDisplay.getChildren().add(score);
     });
+  }
+
+  public void reset() {
+    serverIp = null;
+    clientId = null;
+    gameId = null;
+    waitingForGame = false;
+    questionNumber = -1;
+    points = 0;
+    question = null;
+    keepAliveExec.shutdownNow();
+    keepAliveExec = null;
   }
 }
