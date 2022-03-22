@@ -1,12 +1,10 @@
 package client.scenes;
 
+import client.utils.GameUtils;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -19,6 +17,7 @@ import javafx.scene.text.Text;
 
 public class WaitingRoomCtrl implements Initializable {
   private final ServerUtils server;
+  private final GameUtils gameUtils;
   private final MainCtrl mainCtrl;
 
   @FXML
@@ -32,11 +31,10 @@ public class WaitingRoomCtrl implements Initializable {
   @FXML
   private Text playerCounterField;
 
-  private static ScheduledExecutorService EXECGameStarted = Executors.newSingleThreadScheduledExecutor();
-
   @Inject
-  public WaitingRoomCtrl(ServerUtils server, MainCtrl mainCtrl) {
+  public WaitingRoomCtrl(ServerUtils server, GameUtils gameUtils, MainCtrl mainCtrl) {
     this.server = server;
+    this.gameUtils = gameUtils;
     this.mainCtrl = mainCtrl;
   }
 
@@ -46,7 +44,6 @@ public class WaitingRoomCtrl implements Initializable {
 
   @FXML
   private void back(ActionEvent actionEvent) {
-    stop();
     mainCtrl.waitingForGame = false;
     mainCtrl.showSplash();
   }
@@ -60,7 +57,6 @@ public class WaitingRoomCtrl implements Initializable {
   private void play(ActionEvent actionEvent) {
     mainCtrl.waitingForGame = false;
     mainCtrl.start();
-    stop();
   }
 
   /**
@@ -90,34 +86,8 @@ public class WaitingRoomCtrl implements Initializable {
       }
       playerListDisplay.getChildren().add(l);
     });
-  }
 
-  /**
-   * Checks every second if a game containing the player has started
-   */
-  public void checkGameActive() {
-    try {
-      EXECGameStarted = Executors.newSingleThreadScheduledExecutor();
-      EXECGameStarted.scheduleAtFixedRate(() -> {
-        String gameId = server.isGameActive(mainCtrl.serverIp, mainCtrl.clientId);
-        if (!gameId.equals("")) {
-          mainCtrl.gameId = gameId;
-          stop();
-          try {
-            mainCtrl.play();
-          } catch (Exception e) {
-            e.printStackTrace();
-          }
-        }
-      }, 0, 1, TimeUnit.SECONDS);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
-  public void stop() {
-    EXECGameStarted.shutdownNow();
-    server.stopUpdates();
+    gameUtils.isActive(mainCtrl.serverIp, mainCtrl.clientId);
   }
 
   /**

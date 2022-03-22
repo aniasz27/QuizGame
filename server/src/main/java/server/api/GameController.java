@@ -1,61 +1,80 @@
 package server.api;
 
-import commons.EndScreen;
+import commons.Client;
 import commons.EstimateQuestion;
+import commons.Game;
 import commons.HowMuchQuestion;
-import commons.IntermediateLeaderboardQuestion;
 import commons.MultipleChoiceQuestion;
 import commons.Question;
 import commons.Score;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
-import server.database.QuestionRepository;
 
 @RestController
 @RequestMapping("/api/game")
 public class GameController {
+  private final Random random;
 
   private final ActivityController activityController;
-  private final Random random;
-  private static int questionCounter = 0;
-  private final QuestionRepository questionRepository;
   private final PlayerController playerController;
-
-
-  private ExecutorService timerThreads = Executors.newFixedThreadPool(10);
-
   private final ScoreController scoreController;
-  private String uniqueServerId;
 
+  private final ExecutorService timerThreads = Executors.newFixedThreadPool(10);
 
-  // TODO: change this to Map<String, Pair<Client, Integer>> (store Clients instead of Strings)
-  /**
-   * Maps the unique game ID with a Pair of < username, points >
-   */
-  private Map<String, Score> games = new HashMap<>();
-  private boolean showedIntermediateLeaderboard = false; // TODO: implement this on a game-by-game basis.
+  private final List<Game> games = new ArrayList<>();
 
-  public GameController(ActivityController activityController, Random random,
-                        QuestionRepository questionRepository, PlayerController playerController,
-                        ScoreController scoreController) {
+  public GameController(
+    ActivityController activityController,
+    Random random,
+    PlayerController playerController,
+    ScoreController scoreController
+  ) {
     this.activityController = activityController;
     this.random = random;
-    this.questionRepository = questionRepository;
     this.playerController = playerController;
     this.scoreController = scoreController;
+  }
+
+  private Question[] generateQuestions() {
+    Question[] questions = new Question[20];
+
+    for (int i = 0; i < 20; i++) {
+      switch (random.nextInt(3)) {
+        case 0:
+          questions[i] = new MultipleChoiceQuestion(
+            activityController.getRandomActivity().getBody(),
+            activityController.getRandomActivity().getBody(),
+            activityController.getRandomActivity().getBody()
+          );
+          break;
+        case 1:
+          questions[i] = new EstimateQuestion(activityController.getRandomActivity().getBody());
+          break;
+        case 2:
+          questions[i] = new HowMuchQuestion(activityController.getRandomActivity().getBody());
+          break;
+        default:
+          break;
+      }
+      questions[i].number = i;
+    }
+
+    return questions;
   }
 
   /**
@@ -65,16 +84,42 @@ public class GameController {
    * @return generated game id
    */
   @PostMapping("/play")
-  public String play() {
-    String uniqueServerID = UUID.randomUUID().toString();
+  public synchronized String play() {
+    String gameID = UUID.randomUUID().toString();
+    List<Client> waiting = playerController.getPlayers().stream()
+      .filter(client -> client.waitingForGame).collect(Collectors.toList());
+    games.add(new Game(
+      gameID,
+      waiting,
+      generateQuestions()
+    ));
 
-    playerController.getPlayers().forEach(p -> {
-      if (p.waitingForGame) {
-        games.put(uniqueServerID, new Score(p.id, p.username, 0));
-      }
-    });
-    this.uniqueServerId = uniqueServerID;
-    return uniqueServerID;
+    for (Client client : waiting) {
+      client.waitingForGame = false;
+    }
+
+    System.out.println(gameID);
+    System.out.println(games);
+
+    notifyAll();
+
+    return gameID;
+  }
+
+  /**
+   * Starts a singleplayer game
+   *
+   * @return generated game id
+   */
+  @PostMapping("/playSingle")
+  public String playSingle(@RequestParam String uid) {
+    String gameID = UUID.randomUUID().toString();
+    games.add(new Game(
+      gameID,
+      playerController.getPlayers().stream().filter(client -> client.id.equals(uid)).collect(Collectors.toList()),
+      generateQuestions()
+    ));
+    return gameID;
   }
 
   /**
@@ -82,70 +127,62 @@ public class GameController {
    * <p>
    * Endpoint to check if a user has been assigned to a game or not
    *
-   * @param userID - unique id of player
+   * @param uid the player's id
    * @return the game id or null if not assigned yet
    */
-  @PutMapping("/isGameActive")
-  public String isGameActive(@RequestBody String userID) {
-    for (String key : games.keySet()) {
-      if (games.get(key).getPlayer().equals(userID)) {
-        return key;
-      }
+  @PutMapping("/isActive")
+  public synchronized String isActive(@RequestParam String uid) {
+    try {
+      do {
+        wait();
+      } while (games.stream()
+        .noneMatch(game -> game.containsPlayer(uid)));
+    } catch (InterruptedException e) {
+      // Expected
     }
-    return null;
+    return games.stream()
+      .filter(game -> game.players.keySet().stream().anyMatch(client -> client.id.equals(uid))).findFirst().get().id;
   }
 
   /**
-   * Endpoint to get the next question
-   * Randomly selects a type of question and return it
-   * <p>
-   * Returns NULL to indicate the end of the game
+   * Gets the next question or screen in a game
    *
-   * @return ResponseEntity < Question > or null
+   * @param id             ID of the game
+   * @param questionNumber the number of the question the client is currently on
+   * @return the next screen, with status 410 if the game ended
    */
-  @GetMapping("/next")
-  public ResponseEntity<Question> nextStep() {
-    if (questionCounter >= 20) {
-      questionCounter = 0;
-      return ResponseEntity.ok(new EndScreen());  // game ended
-    } else if (questionCounter == 10 && !showedIntermediateLeaderboard) { // show intermediate leaderboard
-      showedIntermediateLeaderboard = true;
-      return ResponseEntity.ok(new IntermediateLeaderboardQuestion()); // TODO: include leaderboard info in question
+  @GetMapping("/next/{id}")
+  public ResponseEntity<Question> next(
+    @PathVariable String id,
+    @RequestParam("q") int questionNumber
+  ) {
+    System.out.println(id);
+    System.out.println(games);
+
+    Game game = games.stream().filter(g -> g.id.equals(id)).findFirst()
+      .orElseThrow(StringIndexOutOfBoundsException::new);
+
+    Question question;
+    if (questionNumber < game.questionCounter) {
+      question = game.current();
     } else {
-      questionCounter++;
+      question = game.next();
     }
-    Question question = null;
-
-    switch (random.nextInt(3)) {
-
-      case 0: // Multiple choice
-        question = new MultipleChoiceQuestion(
-          activityController.getRandomActivity().getBody(),
-          activityController.getRandomActivity().getBody(),
-          activityController.getRandomActivity().getBody()
-        );
-        break;
-
-      case 1: // Estimate
-        question = new EstimateQuestion(activityController.getRandomActivity().getBody());
-        break;
-
-      case 2: // How much
-        question = new HowMuchQuestion(activityController.getRandomActivity().getBody());
-        break;
-
-      default:
-        break;
+    System.out.println(question.type);
+    if (question.type.equals(Question.Type.ENDSCREEN)) {
+      if (game.players.size() == 1) {
+        Client player = (Client) game.players.keySet().toArray()[0];
+        scoreController.addScore(new Score(player.id, player.username, game.players.get(player)));
+      }
+      return ResponseEntity.status(HttpStatus.GONE).body(question);
     }
-    //questionRepository.save(question);
+
     return ResponseEntity.ok(question);
   }
 
-
-  @GetMapping("/finished/{duration}")
-  public DeferredResult<Boolean> serverTimerStart(@PathVariable(name = "duration") long duration) {
+  @GetMapping("/startTimer/{id}")
+  public DeferredResult<Boolean> serverTimerStart(@PathVariable String id, @RequestParam long duration) {
     DeferredResult<Boolean> result = new DeferredResult<>();
-    System.out.println("timing");
     timerThreads.execute(() -> {
       try {
         Thread.sleep(duration);
@@ -162,43 +199,46 @@ public class GameController {
   /**
    * Endpoint to get a player score by id
    *
-   * @return int score or -1 if the player is not in the game
+   * @return the player's score or -1 if the player is not in a game
    */
 
-  @GetMapping("/{id}/score")
-  public int playerScore(String ip, @PathVariable("id") String id) {
-    String playerName = playerController.clients.get(id).username;
-    for (String key : games.keySet()) {
-      if (games.get(key).getPlayer().equals(playerName)) {
-        return games.get(key).getPoints();
-
+  @GetMapping("/score/{userId}")
+  public int playerScore(@PathVariable String userId) {
+    for (Game game : games) {
+      if (game.containsPlayer(userId)) {
+        return game.players.get(game.getPlayerById(userId));
       }
     }
     return -1;
-
   }
 
   /**
    * Update a score of a player
    *
-   * @return true if the score was updated or false if the player is not in the game
+   * @return the updated score or -1 if the player is not in a game
    */
-  @GetMapping("/{id}/score/update")
-  public Score playerScoreUpdate(String ip, @PathVariable("id") String id, Score score) {
-    String player = playerController.clients.get(id).username;
-    return games.replace(this.uniqueServerId, score);
+  @GetMapping("/score/update/{userId}")
+  public int playerScoreUpdate(@PathVariable String userId, @RequestParam int score) {
+    for (Game game : games) {
+      if (game.containsPlayer(userId)) {
+        return game.changeScore(game.getPlayerById(userId), score);
+      }
+    }
+    return -1;
   }
 
   /**
    * TODO: implement actual game sessions and non-global questionCounter
    * Returns the number of the round the player is in for a given player id
    *
-   * @param id player id
-   * @return round number of player
+   * @param id game id
+   * @return round number of game
    */
   @GetMapping("/getRoundNumber/{id}")
-  public int getRoundNumber(@PathVariable("id") String id) {
-    return questionCounter;
+  public int getRoundNumber(@PathVariable String id) {
+    Game game = games.stream().filter(g -> g.id.equals(id)).findFirst()
+      .orElseThrow(StringIndexOutOfBoundsException::new);
+    return game.questionCounter;
   }
 }
 

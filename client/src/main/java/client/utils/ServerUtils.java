@@ -95,21 +95,6 @@ public class ServerUtils {
   }
 
   /**
-   * Returns a game id or null if
-   * A game has started for that player or no game started yet respectively
-   *
-   * @param clientId the client's UUID
-   * @return null if the client is not in a game, the game's id if they are
-   */
-  public String isGameActive(String ip, String clientId) {
-    return ClientBuilder.newClient(new ClientConfig())
-      .target(ip).path("api/game/isGameActive")
-      .request(APPLICATION_JSON)
-      .accept(APPLICATION_JSON)
-      .put(Entity.json(clientId), String.class);
-  }
-
-  /**
    * Request to take all players from the waiting room and assign them to a game
    *
    * @return unique generated game id
@@ -128,10 +113,10 @@ public class ServerUtils {
    *
    * @return new Question / null if game ended (after 20 questions)
    */
-  public Question nextQuestion(String ip) {
+  public Question nextQuestion(String ip, String gameId, int questionNumber) {
     return ClientBuilder.newClient(new ClientConfig())
       .target(ip)
-      .path("/api/game/next")
+      .path("/api/game/next/" + gameId).queryParam("q", questionNumber)
       .request(APPLICATION_JSON)
       .accept(APPLICATION_JSON)
       .get().readEntity(Question.class);
@@ -172,10 +157,11 @@ public class ServerUtils {
    *
    * @return true if 10s have passed and connection closes, false if an exception has been thrown
    */
-  public boolean startServerTimer(String ip, int duration) {
+  public boolean startServerTimer(String ip, String clientId, int duration) {
     return ClientBuilder.newClient(new ClientConfig())
       .target(ip)
-      .path("/api/game/finished/" + duration)
+      .path("/api/game/startTimer/" + clientId)
+      .queryParam("duration", (long) duration)
       .request(APPLICATION_JSON)
       .accept(APPLICATION_JSON)
       .get().readEntity(Boolean.class);
@@ -248,7 +234,7 @@ public class ServerUtils {
    */
   public int playerScore(String ip, String id) {
     return ClientBuilder.newClient(new ClientConfig())
-      .target(ip).path("api/game/" + id + "/score")
+      .target(ip).path("api/game/score/" + id)
       .request(APPLICATION_JSON)
       .accept(APPLICATION_JSON)
       .get(Integer.class);
@@ -261,13 +247,11 @@ public class ServerUtils {
    * @return true if the score was updated, false otherwise
    */
 
-  public Score updateScore(String ip, String id, Score score) {
+  public Score updateScore(String ip, String id, int score) {
     return ClientBuilder.newClient(new ClientConfig())
-      .target(ip).path("api/game/" + id + "/score/update")
+      .target(ip).path("api/game/score/update/" + id).queryParam("score", score)
       .request(APPLICATION_JSON)
       .accept(APPLICATION_JSON)
       .get(Score.class);
   }
-
-
 }
