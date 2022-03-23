@@ -45,6 +45,7 @@ public class WaitingRoomCtrl implements Initializable {
   @FXML
   private void back(ActionEvent actionEvent) {
     mainCtrl.waitingForGame = false;
+    server.stopUpdates();
     mainCtrl.showSplash();
   }
 
@@ -56,6 +57,7 @@ public class WaitingRoomCtrl implements Initializable {
   @FXML
   private void play(ActionEvent actionEvent) {
     mainCtrl.waitingForGame = false;
+    server.stopUpdates();
     mainCtrl.start();
   }
 

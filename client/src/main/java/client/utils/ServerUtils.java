@@ -82,6 +82,7 @@ public class ServerUtils {
           }
           consumer.accept(res.readEntity(Boolean.class));
         }
+        consumer.accept(true);
       });
     } catch (Exception e) {
       if (!Thread.interrupted()) {
