@@ -229,6 +229,7 @@ public class MainCtrl {
 
   public void showWaitingRoom() {
     primaryStage.getScene().setRoot(waitingRoomParent);
+    waitingRoomCtrl.refresh();
     waitingForGame = true;
     waitingRoomCtrl.listenForNewPlayers();
   }
