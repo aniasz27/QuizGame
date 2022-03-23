@@ -191,11 +191,15 @@ public class Game {
       return false;
     }
 
-    return Objects.equals(id, ((Game) o).id);
+    return Objects.equals(id, ((Game) o).id) && Objects.equals(players, ((Game) o).players)
+      && questionCounter == ((Game) o).questionCounter && showedLeaderboard == ((Game) o).showedLeaderboard
+      && Objects.equals(questions, ((Game) o).questions);
   }
 
   @Override
   public int hashCode() {
-    return id != null ? id.hashCode() : 0;
+    int result = Objects.hash(id, players, questionCounter, showedLeaderboard);
+    result = 31 * result + Arrays.hashCode(questions);
+    return result;
   }
 }
