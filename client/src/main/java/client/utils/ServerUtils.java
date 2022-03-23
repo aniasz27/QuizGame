@@ -25,6 +25,7 @@ import commons.Score;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -150,6 +151,20 @@ public class ServerUtils {
       .target(ip).path("api/activity/image/" + id)
       .request("image/jpeg")
       .get(byte[].class);
+  }
+
+  /**
+   * Get all activities from the server
+   *
+   * @param ip the server's IP address
+   * @param id the ID of the activity
+   * @return list of all activities
+   */
+  public void changeActivityImage(String ip, String id, byte[] image) {
+    ClientBuilder.newClient(new ClientConfig())
+      .target(ip).path("api/activity/image/" + id)
+      .request("image/jpeg")
+      .put(Entity.entity(image, MediaType.APPLICATION_OCTET_STREAM));
   }
 
   /**
