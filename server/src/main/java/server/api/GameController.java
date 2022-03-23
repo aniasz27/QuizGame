@@ -1,5 +1,6 @@
 package server.api;
 
+import commons.Activity;
 import commons.Client;
 import commons.EstimateQuestion;
 import commons.Game;
@@ -56,10 +57,11 @@ public class GameController {
     for (int i = 0; i < 20; i++) {
       switch (random.nextInt(3)) {
         case 0:
+          Activity[] activities = activityController.getRandomActivityMultiple();
           questions[i] = new MultipleChoiceQuestion(
-            activityController.getRandomActivity().getBody(),
-            activityController.getRandomActivity().getBody(),
-            activityController.getRandomActivity().getBody()
+            activities[0],
+            activities[1],
+            activities[2]
           );
           break;
         case 1:
