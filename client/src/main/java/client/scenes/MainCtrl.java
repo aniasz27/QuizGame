@@ -48,7 +48,7 @@ public class MainCtrl {
 
   private final ServerUtils server;
 
-  private Stage primaryStage;
+  public Stage primaryStage;
 
   private SplashCtrl splashCtrl;
   private Parent splashParent;

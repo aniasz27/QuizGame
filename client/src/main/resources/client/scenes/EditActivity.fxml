@@ -2,37 +2,38 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 <StackPane
-        xmlns="http://javafx.com/javafx"
-        xmlns:fx="http://javafx.com/fxml"
-        fx:controller="client.scenes.EditActivityCtrl"
-        stylesheets="@../css/EditActivity.css"
+  xmlns="http://javafx.com/javafx"
+  xmlns:fx="http://javafx.com/fxml"
+  fx:controller="client.scenes.EditActivityCtrl"
+  stylesheets="@../css/EditActivity.css"
 >
   <StackPane styleClass="pad, margin">
     <Button
-            fx:id="backButton"
-            styleClass="icon, border, rounded, drop-shadow"
-            StackPane.alignment="TOP_LEFT"
-            onAction="#back"
-            text=""
+      fx:id="backButton"
+      styleClass="icon, border, rounded, drop-shadow"
+      StackPane.alignment="TOP_LEFT"
+      onAction="#back"
+      text=""
     /> <!-- text is \uf053 (back arrow in font awesome) -->
   </StackPane>
-  <VBox maxWidth="640" StackPane.alignment="CENTER" alignment="CENTER">
+  <VBox maxWidth="640" StackPane.alignment="CENTER" alignment="CENTER" spacing="40">
     <Region styleClass="margin" VBox.vgrow="ALWAYS"/>
     <Text styleClass="title" text="Edit activity" textAlignment="CENTER"/>
-    <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="20"/>
     <Text styleClass="subtitle" fx:id="activityAuthor" textAlignment="CENTER"/>
     <Region styleClass="margin" VBox.vgrow="ALWAYS"/>
+    <StackPane fx:id="imgContainer" styleClass="rounded, img">
+      <ImageView fx:id="imageView" fitHeight="250.0" fitWidth="350.0" pickOnBounds="true" preserveRatio="true"/>
+    </StackPane>
+    <Button styleClass="border, rounded, drop-shadow" fx:id="imgButton" onAction="#changeImage" text="Change image"/>
     <TextField styleClass="border, rounded, drop-shadow" fx:id="titleField" promptText="Name (Optional)"/>
-    <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="40"/>
     <TextField styleClass="border, rounded, drop-shadow" fx:id="consumptionField" promptText="Server IP"/>
-    <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="40"/>
     <TextField styleClass="border, rounded, drop-shadow" fx:id="sourceField" promptText="Server IP"/>
-    <Region styleClass="margin" VBox.vgrow="ALWAYS" maxHeight="40"/>
     <Button styleClass="border, rounded, drop-shadow" fx:id="saveButton" onAction="#save" text="Save"/>
     <Region styleClass="margin" VBox.vgrow="ALWAYS"/>
   </VBox>
