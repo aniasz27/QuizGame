@@ -8,7 +8,6 @@ import commons.EstimateQuestion;
 import commons.Question;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
-import java.util.Random;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -116,7 +115,7 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
    */
   public void checkCorrect() {
     mainCtrl.stopPointsTimer();
-    if (answer.getText() == "") {
+    if (answer.getText().equals("")) {
       return;
     }
 

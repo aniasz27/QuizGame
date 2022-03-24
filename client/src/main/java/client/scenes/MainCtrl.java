@@ -541,7 +541,7 @@ public class MainCtrl {
         maxScore.set(s.getPoints());
 
       } else {
-        line.setEndX(200 * s.getPoints() / maxScore.get());
+        line.setEndX(200.0 * s.getPoints() / maxScore.get());
       }
       line.getStyleClass().add("timer-bar");
 

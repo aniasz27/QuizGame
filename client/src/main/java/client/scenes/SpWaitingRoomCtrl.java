@@ -37,9 +37,7 @@ public class SpWaitingRoomCtrl implements Initializable {
 
   public void refresh() {
     Iterable<Score> scores = server.getSingleLeaderboard(mainCtrl.serverIp);
-    Platform.runLater(() -> {
-      MainCtrl.refreshLeaderboard(leaderboardDisplay, scores);
-    });
+    Platform.runLater(() -> MainCtrl.refreshLeaderboard(leaderboardDisplay, scores));
   }
 
   @FXML

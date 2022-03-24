@@ -66,9 +66,7 @@ public class IntermediateLeaderboardCtrl implements Initializable {
   public void refresh() {
     var leaderboard = server.getMultiLeaderboard(mainCtrl.serverIp, mainCtrl.gameId);
 
-    Platform.runLater(() -> {
-      MainCtrl.refreshLeaderboard(leaderboardDisplay, leaderboard);
-    });
+    Platform.runLater(() -> MainCtrl.refreshLeaderboard(leaderboardDisplay, leaderboard));
   }
 
   @FXML
