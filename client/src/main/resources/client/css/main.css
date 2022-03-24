@@ -222,6 +222,19 @@
   -fx-stroke: #553794;
 }
 
+.score-bar, .score-bar-bg {
+  -fx-stroke-width: 20px;
+  -fx-stroke-line-cap: round;
+}
+
+.score-bar {
+  -fx-stroke: #0586e3;
+}
+
+.score-bar-bg {
+  -fx-stroke: #553794;
+}
+
 .popup-text, .popup-text > * {
   -fx-wrap-text: true;
 }
