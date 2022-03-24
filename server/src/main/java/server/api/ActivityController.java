@@ -73,7 +73,7 @@ public class ActivityController {
     if (sortedActivities == null) {
       sortedActivities = repo.getSortedActivities();
     }
-    int counter = random.nextInt(sortedActivities.size() + 1);
+    int counter = random.nextInt(sortedActivities.size());
     return ResponseEntity.ok(sortedActivities.get(counter));
   }
 
@@ -88,31 +88,69 @@ public class ActivityController {
     }
     Activity[] activities = new Activity[3];
     int counter = random.nextInt(sortedActivities.size() + 1);
-    int start = counter + 1;
     activities[0] = sortedActivities.get(counter);
-    boolean added = false;
-    while (!added) {
-      Activity activity = sortedActivities.get(start);
-      if (activity.getConsumption_in_wh() != activities[0].getConsumption_in_wh()) {
-        activities[1] = activity;
-        added = true;
-      } else {
-        start++;
-      }
-    }
-    added = false;
-    start = counter - 1;
-    while (!added) {
-      Activity activity = sortedActivities.get(start);
-      if (activity.getConsumption_in_wh() != activities[0].getConsumption_in_wh()
-        && activity.getConsumption_in_wh() != activities[1].getConsumption_in_wh()) {
-        activities[2] = activity;
-        added = true;
-      } else {
-        start--;
-      }
+    if (counter < 3) {
+      goHigher(1, activities, counter + 1);
+      goHigher(2, activities, counter + 2);
+
+    } else if (counter > sortedActivities.size() - 2) {
+      goLower(1, activities, counter - 1);
+      goLower(2, activities, counter - 2);
+    } else {
+      goLower(1, activities, counter - 1);
+      goHigher(2, activities, counter + 1);
     }
     return activities;
+  }
+
+  public void goLower(int place, Activity[] activities, int start) {
+    int current = start;
+    Activity toBeAdded;
+    boolean added = false;
+    while (!added) {
+      toBeAdded = sortedActivities.get(current);
+      if (place == 2) {
+        if (toBeAdded.getConsumption_in_wh() != activities[0].getConsumption_in_wh()
+          && toBeAdded.getConsumption_in_wh() != activities[1].getConsumption_in_wh()) {
+          activities[place] = toBeAdded;
+          added = true;
+          return;
+        }
+      } else {
+        if (toBeAdded.getConsumption_in_wh() != activities[0].getConsumption_in_wh()) {
+          activities[place] = toBeAdded;
+          added = true;
+          return;
+        }
+      }
+      current--;
+    }
+
+  }
+
+  public void goHigher(int place, Activity[] activities, int start) {
+    int current = start;
+    Activity toBeAdded;
+    boolean added = false;
+    while (!added) {
+      toBeAdded = sortedActivities.get(current);
+      if (place == 2) {
+        if (toBeAdded.getConsumption_in_wh() != activities[0].getConsumption_in_wh()
+          && toBeAdded.getConsumption_in_wh() != activities[1].getConsumption_in_wh()) {
+          activities[place] = toBeAdded;
+          added = true;
+          return;
+        }
+      } else {
+        if (toBeAdded.getConsumption_in_wh() != activities[0].getConsumption_in_wh()) {
+          activities[place] = toBeAdded;
+          added = true;
+          return;
+        }
+      }
+      current++;
+    }
+
   }
 
 

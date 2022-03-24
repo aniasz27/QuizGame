@@ -9,6 +9,8 @@ import commons.MultipleChoiceQuestion;
 import commons.Question;
 import commons.Score;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -58,6 +60,9 @@ public class GameController {
       switch (random.nextInt(3)) {
         case 0:
           Activity[] activities = activityController.getRandomActivityMultiple();
+          List<Activity> list = Arrays.asList(activities);
+          Collections.shuffle(list);
+          list.toArray(activities);
           questions[i] = new MultipleChoiceQuestion(
             activities[0],
             activities[1],
