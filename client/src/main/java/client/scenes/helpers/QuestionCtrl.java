@@ -4,6 +4,7 @@ import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Emoji;
+import commons.EmojiMessage;
 import commons.Question;
 import java.util.Random;
 import javafx.animation.KeyFrame;
@@ -13,7 +14,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
@@ -27,8 +27,6 @@ public abstract class QuestionCtrl {
 
   @FXML
   public Line timer;
-
-  private Label[] emojis;
 
   @Inject
   public QuestionCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -143,7 +141,12 @@ public abstract class QuestionCtrl {
     });
   }
 
-  public void initializeEmojis(Label[] emojis) {
+  /**
+   * Initializes what emoji should be sent via websockets for every emoji
+   *
+   * @param emojis to be sent
+   */
+  public void initializeEmojiEvents(Label[] emojis) {
     for (Label emoji : emojis) {
       // TODO: add emoji animations and sending
       emoji.setOnMouseClicked((event) -> {

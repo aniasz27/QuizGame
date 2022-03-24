@@ -8,7 +8,6 @@ import commons.HowMuchQuestion;
 import commons.Question;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
-import java.util.Random;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -87,7 +86,7 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
   public void initialize(URL location, ResourceBundle resources) {
     buttons = new Button[] {answer_1, answer_2, answer_3};
     emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
-    initializeEmojis(emojis);
+    initializeEmojiEvents(emojis);
     jokers = new Button[] {doublePts, minusTime, hint};
     hoverEffect(circle, emojiGrid, emojiButton, pane);
   }

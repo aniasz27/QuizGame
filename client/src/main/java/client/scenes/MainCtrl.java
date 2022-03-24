@@ -20,6 +20,7 @@ import client.utils.EmojiWebSocket;
 import client.utils.ServerUtils;
 import commons.Activity;
 import commons.Emoji;
+import commons.EmojiMessage;
 import commons.EstimateQuestion;
 import commons.HowMuchQuestion;
 import commons.MultipleChoiceQuestion;
@@ -249,7 +250,8 @@ public class MainCtrl {
    */
   public void start() {
     this.usedJokers = new boolean[3];
-    gameId = server.startGame(serverIp);
+    gameId = server.startGame(serverIp); // TODO: gameId should be the same for players in the same session
+    System.out.println("session: " + gameId);
     emojiWebSocket = new EmojiWebSocket(this, serverIp, gameId);
     points = 0;
     play();

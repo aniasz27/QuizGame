@@ -35,7 +35,7 @@ public class GameUtils {
         if (mainCtrl.waitingForGame && gameId != null && !gameId.isBlank()) {
           mainCtrl.gameId = gameId;
           mainCtrl.waitingForGame = false;
-          mainCtrl.play();
+          mainCtrl.start(); // absolutely critical that this is .start()
           break;
         }
       }
