@@ -20,13 +20,14 @@ public class JokerStompSessionHandler implements StompSessionHandler {
   @Override
   public void afterConnected(
     StompSession session, StompHeaders connectedHeaders) {
-    session.subscribe("/queue/" + gameSession, this);
+    session.subscribe("/queue/jokerChat" + gameSession, this);
   }
 
   @Override
   public void handleFrame(StompHeaders headers, Object payload) {
     System.out.println("Handled framed!");
     JokerMessage message = (JokerMessage) payload;
+    mainCtrl.showJoker(message.joker, message.screen);
   }
 
   @Override

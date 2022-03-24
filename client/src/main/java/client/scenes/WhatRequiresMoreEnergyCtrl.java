@@ -173,10 +173,14 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
   }
 
   public void hint() {
-    hintQ(question.getCorrect(), buttons, hint);
+    hintQ(question.getCorrect(), buttons, hint, question.type);
   }
 
   public void doublePoints() {
-    dbPoint = doublePoints(doublePts);
+    dbPoint = doublePoints(doublePts, question.type);
+  }
+
+  public void decreaseTime() {
+    decreaseTimeQ(minusTime, question.type);
   }
 }

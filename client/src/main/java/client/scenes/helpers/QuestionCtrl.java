@@ -3,6 +3,7 @@ package client.scenes.helpers;
 import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
+import commons.Joker;
 import commons.Question;
 import java.util.Random;
 import javafx.animation.KeyFrame;
@@ -160,7 +161,7 @@ public abstract class QuestionCtrl {
    * @param buttons answers
    * @param hint    button
    */
-  public void hintQ(boolean[] correct, Button[] buttons, Button hint) {
+  public void hintQ(boolean[] correct, Button[] buttons, Button hint, Question.Type screen) {
     if (mainCtrl.usedJokers[2]) {
       return;
     }
@@ -172,6 +173,7 @@ public abstract class QuestionCtrl {
     buttons[guess].setDisable(true);
     useJoker(hint);
     mainCtrl.usedJokers[2] = true;
+    mainCtrl.jokerWebSocket.sendMessage(Joker.HINT, screen);
   }
 
   /**
@@ -180,16 +182,26 @@ public abstract class QuestionCtrl {
    * @param doublePts button
    * @return boolean
    */
-  public boolean doublePoints(Button doublePts) {
+  public boolean doublePoints(Button doublePts, Question.Type screen) {
     if (mainCtrl.usedJokers[0]) {
       return false;
     }
     useJoker(doublePts);
     mainCtrl.usedJokers[0] = true;
+    mainCtrl.jokerWebSocket.sendMessage(Joker.DOUBLE, screen);
     return true;
   }
 
-  public void decreaseTime() {
+  public void decreaseTimeQ(Button minusTime, Question.Type screen) {
+    if (mainCtrl.usedJokers[1]) {
+      return;
+    }
+    useJoker(minusTime);
+    mainCtrl.usedJokers[1] = true;
+    mainCtrl.jokerWebSocket.sendMessage(Joker.TIME, screen);
+  }
+
+  public void reduceTime() {
     double position = timer.getEndX() / 2.0;
     double time = 10.0 * position / 800.0;
     timer.setVisible(true);

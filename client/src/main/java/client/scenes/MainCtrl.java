@@ -16,10 +16,12 @@
 
 package client.scenes;
 
+import client.utils.JokerWebSocket;
 import client.utils.ServerUtils;
 import commons.Activity;
 import commons.EstimateQuestion;
 import commons.HowMuchQuestion;
+import commons.Joker;
 import commons.MultipleChoiceQuestion;
 import commons.Question;
 import commons.Score;
@@ -114,6 +116,7 @@ public class MainCtrl {
   private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSS");
   private Date pointsTimer;
   private int pointsOffset;
+  public JokerWebSocket jokerWebSocket;
 
   @Inject
   public MainCtrl(ServerUtils server) {
@@ -251,6 +254,7 @@ public class MainCtrl {
   public void start() {
     this.usedJokers = new boolean[3];
     gameId = server.startGame(serverIp);
+    jokerWebSocket = new JokerWebSocket(this, serverIp, gameId);
     points = 0;
     play();
   }
@@ -564,6 +568,32 @@ public class MainCtrl {
     leaderboardDisplay.getChildren().add(gridpane);
   }
 
+  /**
+   * Shows joker on the screen
+   */
+  public void showJoker(Joker joker, Question.Type screen) {
+    //TODO: show jokers on the screen
+    System.out.println(joker);
+    if (joker.equals(Joker.TIME)) {
+      switch (screen) {
+        case MULTICHOICE:
+          System.out.println("Showed multiple choice - joker");
+          Platform.runLater(() -> whatRequiresMoreEnergyCtrl.reduceTime());
+          break;
+        case ESTIMATE:
+          System.out.println("Showed guess - joker");
+          Platform.runLater(() -> guessCtrl.reduceTime());
+          break;
+        case HOWMUCH:
+          System.out.println("Showed how much - joker");
+          Platform.runLater(() -> howMuchCtrl.reduceTime());
+          break;
+        default:
+          System.out.println("Wrong question type - joker");
+          break;
+      }
+    }
+  }
 
   public void reset() {
     serverIp = null;
