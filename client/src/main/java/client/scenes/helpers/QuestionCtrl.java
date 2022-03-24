@@ -25,6 +25,8 @@ public abstract class QuestionCtrl {
   @FXML
   public Line timer;
 
+  public Timeline timerAnimation;
+
   @Inject
   public QuestionCtrl(ServerUtils server, MainCtrl mainCtrl) {
     this.server = server;
@@ -37,7 +39,7 @@ public abstract class QuestionCtrl {
   public void startTimer() {
     timer.setVisible(true);
     timer.setEndX(800);
-    Timeline timerAnimation = new Timeline(
+    this.timerAnimation = new Timeline(
       new KeyFrame(Duration.seconds(10), new KeyValue(timer.endXProperty(), 0))
     );
     timerAnimation.setOnFinished(e -> timer.setVisible(false));
@@ -185,5 +187,18 @@ public abstract class QuestionCtrl {
     useJoker(doublePts);
     mainCtrl.usedJokers[0] = true;
     return true;
+  }
+
+  public void decreaseTime() {
+    double position = timer.getEndX() / 2.0;
+    double time = 10.0 * position / 800.0;
+    timer.setVisible(true);
+    timer.setEndX(position);
+    this.timerAnimation = new Timeline(
+      new KeyFrame(Duration.seconds(time), new KeyValue(timer.endXProperty(), 0))
+    );
+    timerAnimation.setOnFinished(e -> timer.setVisible(false));
+    timerAnimation.setCycleCount(1);
+    timerAnimation.play();
   }
 }

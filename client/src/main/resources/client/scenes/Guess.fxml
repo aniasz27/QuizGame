@@ -124,7 +124,8 @@
     <children>
       <Button fx:id="doublePts" mnemonicParsing="false" onMouseClicked="#doublePoints"
               styleClass="border, rounded, drop-shadow, button" text="x2"/>
-      <Button fx:id="minusTime" mnemonicParsing="false" styleClass="border, rounded, drop-shadow, button" text="-50%"
+      <Button fx:id="minusTime" mnemonicParsing="false" onMouseClicked="#decreaseTime"
+              styleClass="border, rounded, drop-shadow, button" text="-50%"
               GridPane.columnIndex="2"/>
       <Button fx:id="hint" mnemonicParsing="false" styleClass="border, rounded, drop-shadow, button" text="Hint"
               GridPane.columnIndex="4"/>
