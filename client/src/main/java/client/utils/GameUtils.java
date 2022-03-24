@@ -5,6 +5,7 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import client.scenes.MainCtrl;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
+import javafx.application.Platform;
 import javax.inject.Inject;
 import org.glassfish.jersey.client.ClientConfig;
 
@@ -35,7 +36,7 @@ public class GameUtils {
         if (mainCtrl.waitingForGame && gameId != null && !gameId.isBlank()) {
           mainCtrl.gameId = gameId;
           mainCtrl.waitingForGame = false;
-          mainCtrl.start(); // absolutely critical that this is .start()
+          Platform.runLater(() -> mainCtrl.start()); // absolutely critical that this is .start()
           break;
         }
       }
