@@ -200,5 +200,14 @@ public abstract class QuestionCtrl {
     timerAnimation.setOnFinished(e -> timer.setVisible(false));
     timerAnimation.setCycleCount(1);
     timerAnimation.play();
+    Thread thread = new Thread(() -> {
+      try {
+        Thread.sleep((long) (time * 1000));
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+      disableButtons();
+    });
+    thread.start();
   }
 }
