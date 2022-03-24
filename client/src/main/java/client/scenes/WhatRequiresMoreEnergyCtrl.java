@@ -74,6 +74,7 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
   public void initialize(URL location, ResourceBundle resources) {
     buttons = new Button[] {button0, button1, button2};
     emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
+    initializeEmojis(emojis);
     jokers = new Button[] {doublePts, minusTime, hint};
     hoverEffect(circle, emojiGrid, emojiButton, pane);
   }

@@ -16,8 +16,10 @@
 
 package client.scenes;
 
+import client.utils.EmojiWebSocket;
 import client.utils.ServerUtils;
 import commons.Activity;
+import commons.Emoji;
 import commons.EstimateQuestion;
 import commons.HowMuchQuestion;
 import commons.MultipleChoiceQuestion;
@@ -108,6 +110,9 @@ public class MainCtrl {
   private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSS");
   private Date pointsTimer;
   private int pointsOffset;
+
+  // Emoji WebSockets
+  public EmojiWebSocket emojiWebSocket;
 
   @Inject
   public MainCtrl(ServerUtils server) {
@@ -245,6 +250,7 @@ public class MainCtrl {
   public void start() {
     this.usedJokers = new boolean[3];
     gameId = server.startGame(serverIp);
+    emojiWebSocket = new EmojiWebSocket(this, serverIp, gameId);
     points = 0;
     play();
   }
@@ -500,6 +506,11 @@ public class MainCtrl {
       score.getChildren().add(label);
       leaderboardDisplay.getChildren().add(score);
     });
+  }
+
+  public void showEmoji(Emoji emoji) {
+    // TODO: show emojis per screen
+    System.out.println(emoji);
   }
 
   public void reset() {

@@ -77,6 +77,7 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
+    initializeEmojis(emojis);
     jokers = new Button[] {doublePts, minusTime, hint};
     hoverEffect(circle, emojiGrid, emojiButton, pane);
   }

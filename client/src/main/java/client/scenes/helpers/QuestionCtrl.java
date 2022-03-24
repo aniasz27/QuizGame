@@ -3,6 +3,7 @@ package client.scenes.helpers;
 import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
+import commons.Emoji;
 import commons.Question;
 import java.util.Random;
 import javafx.animation.KeyFrame;
@@ -11,6 +12,8 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
@@ -24,6 +27,8 @@ public abstract class QuestionCtrl {
 
   @FXML
   public Line timer;
+
+  private Label[] emojis;
 
   @Inject
   public QuestionCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -136,6 +141,16 @@ public abstract class QuestionCtrl {
       circle.setVisible(false);
       emojiGrid.setVisible(false);
     });
+  }
+
+  public void initializeEmojis(Label[] emojis) {
+    for (Label emoji : emojis) {
+      // TODO: add emoji animations and sending
+      emoji.setOnMouseClicked((event) -> {
+        System.out.println("Emoji Shown!");
+        mainCtrl.emojiWebSocket.sendMessage(Emoji.ANGRY); // TODO: vary emojis sent by actual emoji
+      });
+    }
   }
 
   /**
