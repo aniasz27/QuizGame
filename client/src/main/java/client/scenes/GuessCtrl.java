@@ -151,10 +151,10 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   }
 
   public void doublePoints() {
-    dbPoint = doublePoints(doublePts, question.type);
+    dbPoint = doublePoints(doublePts);
   }
 
   public void decreaseTime() {
-    decreaseTimeQ(minusTime, question.type);
+    decreaseTimeQ(minusTime);
   }
 }

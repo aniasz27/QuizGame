@@ -27,7 +27,7 @@ public class JokerStompSessionHandler implements StompSessionHandler {
   public void handleFrame(StompHeaders headers, Object payload) {
     System.out.println("Handled framed!");
     JokerMessage message = (JokerMessage) payload;
-    mainCtrl.showJoker(message.joker, message.screen);
+    mainCtrl.showJoker(message.joker);
   }
 
   @Override

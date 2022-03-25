@@ -169,14 +169,14 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
   }
 
   public void hint() {
-    hintQ(correct, buttons, hint, question.type);
+    hintQ(correct, buttons, hint);
   }
 
   public void doublePoints() {
-    dbPoint = doublePoints(doublePts, question.type);
+    dbPoint = doublePoints(doublePts);
   }
 
   public void decreaseTime() {
-    decreaseTimeQ(minusTime, question.type);
+    decreaseTimeQ(minusTime);
   }
 }

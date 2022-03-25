@@ -571,11 +571,11 @@ public class MainCtrl {
   /**
    * Shows joker on the screen
    */
-  public void showJoker(Joker joker, Question.Type screen) {
+  public void showJoker(Joker joker) {
     //TODO: show jokers on the screen
     System.out.println(joker);
     if (joker.equals(Joker.TIME)) {
-      switch (screen) {
+      switch (question.type) {
         case MULTICHOICE:
           System.out.println("Showed multiple choice - joker");
           Platform.runLater(() -> whatRequiresMoreEnergyCtrl.reduceTime());
