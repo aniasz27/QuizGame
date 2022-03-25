@@ -87,7 +87,7 @@ public class ActivityController {
       sortedActivities = repo.getSortedActivities();
     }
     Activity[] activities = new Activity[3];
-    int counter = random.nextInt(sortedActivities.size() + 1);
+    int counter = random.nextInt(sortedActivities.size());
     activities[0] = sortedActivities.get(counter);
     if (counter < 3) {
       findActivity(1, activities, counter + 1, 1);
