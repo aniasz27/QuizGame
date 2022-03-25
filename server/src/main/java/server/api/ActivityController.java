@@ -90,20 +90,28 @@ public class ActivityController {
     int counter = random.nextInt(sortedActivities.size() + 1);
     activities[0] = sortedActivities.get(counter);
     if (counter < 3) {
-      goHigher(1, activities, counter + 1);
-      goHigher(2, activities, counter + 2);
+      findActivity(1, activities, counter + 1, 1);
+      findActivity(2, activities, counter + 2, 1);
 
     } else if (counter > sortedActivities.size() - 2) {
-      goLower(1, activities, counter - 1);
-      goLower(2, activities, counter - 2);
+      findActivity(1, activities, counter - 1, -1);
+      findActivity(2, activities, counter - 2, -1);
     } else {
-      goLower(1, activities, counter - 1);
-      goHigher(2, activities, counter + 1);
+      findActivity(1, activities, counter - 1, -1);
+      findActivity(2, activities, counter + 1, 1);
     }
     return activities;
   }
 
-  public void goLower(int place, Activity[] activities, int start) {
+  /**
+   * Adds an activity to the activity array for the multipleChoice question
+   *
+   * @param place      where in the array we're placing a new activity
+   * @param activities array of activities we're using
+   * @param start      where to move from in the sorted activities list
+   * @param direction  which direction to move to based on the starting counter
+   */
+  public void findActivity(int place, Activity[] activities, int start, int direction) {
     int current = start;
     Activity toBeAdded;
     boolean added = false;
@@ -123,32 +131,7 @@ public class ActivityController {
           return;
         }
       }
-      current--;
-    }
-
-  }
-
-  public void goHigher(int place, Activity[] activities, int start) {
-    int current = start;
-    Activity toBeAdded;
-    boolean added = false;
-    while (!added) {
-      toBeAdded = sortedActivities.get(current);
-      if (place == 2) {
-        if (toBeAdded.getConsumption_in_wh() != activities[0].getConsumption_in_wh()
-          && toBeAdded.getConsumption_in_wh() != activities[1].getConsumption_in_wh()) {
-          activities[place] = toBeAdded;
-          added = true;
-          return;
-        }
-      } else {
-        if (toBeAdded.getConsumption_in_wh() != activities[0].getConsumption_in_wh()) {
-          activities[place] = toBeAdded;
-          added = true;
-          return;
-        }
-      }
-      current++;
+      current += direction;
     }
 
   }
