@@ -36,7 +36,7 @@ public class GameUtils {
         if (mainCtrl.waitingForGame && gameId != null && !gameId.isBlank()) {
           mainCtrl.gameId = gameId;
           mainCtrl.waitingForGame = false;
-          Platform.runLater(() -> mainCtrl.start()); // absolutely critical that this is .start()
+          Platform.runLater(() -> mainCtrl.play());
           break;
         }
       }

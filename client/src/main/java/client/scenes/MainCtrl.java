@@ -250,18 +250,14 @@ public class MainCtrl {
    */
   public void start() {
     this.usedJokers = new boolean[3];
-
-    if (!multiplayer) {
-      gameId = server.startGame(serverIp); // TODO: gameId should be the same for players in the same session
-    }
-
-    System.out.println("session: " + gameId);
-    emojiWebSocket = new EmojiWebSocket(this, serverIp, gameId);
+    gameId = server.startGame(serverIp);
     points = 0;
     play();
   }
 
   public void play() {
+    System.out.println("session: " + gameId);
+    emojiWebSocket = new EmojiWebSocket(this, serverIp, gameId);
     playerExited = false;
     nextRound();
   }
