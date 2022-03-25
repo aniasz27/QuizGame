@@ -115,7 +115,7 @@ public class ActivityController {
     int current = start;
     Activity toBeAdded;
     boolean added = false;
-    while (!added) {
+    while (!added && (current != sortedActivities.size()) && current != -1) {
       toBeAdded = sortedActivities.get(current);
       if (place == 2) {
         if (toBeAdded.getConsumption_in_wh() != activities[0].getConsumption_in_wh()
@@ -132,6 +132,9 @@ public class ActivityController {
         }
       }
       current += direction;
+    }
+    if (activities[place] == null) {
+      findActivity(place, activities, start, direction * -1);
     }
 
   }
