@@ -17,6 +17,13 @@ public class JokerWebSocket {
   private final String gameSession;
   private StompSession session;
 
+  /**
+   * Creates and connects a joker websocket for a given gameSession
+   *
+   * @param mainCtrl    scene control object
+   * @param ip          of the server
+   * @param gameSession of the game to send the emojis through
+   */
   public JokerWebSocket(MainCtrl mainCtrl, String ip, String gameSession) {
     this.mainCtrl = mainCtrl;
     this.gameSession = gameSession;
@@ -24,6 +31,9 @@ public class JokerWebSocket {
     connectWebSocket();
   }
 
+  /**
+   * Connects the joker websocket to the server
+   */
   private void connectWebSocket() {
     WebSocketClient client = new StandardWebSocketClient();
     WebSocketStompClient stompClient = new WebSocketStompClient(client);
@@ -41,6 +51,11 @@ public class JokerWebSocket {
     System.out.println("session + " + session.toString());
   }
 
+  /**
+   * Wrapper around the session, sends a joker to the gameSession of the websocket
+   *
+   * @param joker being sent
+   */
   public void sendMessage(Joker joker) {
     System.out.println(joker);
     this.session.send("/app/joker", new JokerMessage(joker, gameSession));

@@ -192,6 +192,11 @@ public abstract class QuestionCtrl {
     return true;
   }
 
+  /**
+   * Sends message to other users to reduce time
+   *
+   * @param minusTime button
+   */
   public void decreaseTimeQ(Button minusTime) {
     if (mainCtrl.usedJokers[1]) {
       return;
@@ -201,6 +206,9 @@ public abstract class QuestionCtrl {
     mainCtrl.jokerWebSocket.sendMessage(Joker.TIME);
   }
 
+  /**
+   * Reduces time on the screen
+   */
   public void reduceTime() {
     double position = timer.getEndX() / 2.0;
     double time = 10.0 * position / 800.0;
