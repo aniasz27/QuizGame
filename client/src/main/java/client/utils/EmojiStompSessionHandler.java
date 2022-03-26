@@ -4,6 +4,7 @@ import client.scenes.MainCtrl;
 import commons.Emoji;
 import commons.EmojiMessage;
 import java.lang.reflect.Type;
+import javafx.application.Platform;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
@@ -29,8 +30,8 @@ public class EmojiStompSessionHandler implements StompSessionHandler {
   @Override
   public void handleFrame(StompHeaders headers, Object payload) {
     System.out.println("Handled framed!");
-    EmojiMessage message = (EmojiMessage) payload;
-    mainCtrl.showEmoji(message.emoji);
+    Emoji emoji = (Emoji) payload;
+    Platform.runLater(() -> mainCtrl.showEmoji(emoji));
   }
 
   @Override

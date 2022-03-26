@@ -86,7 +86,7 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
   public void initialize(URL location, ResourceBundle resources) {
     buttons = new Button[] {answer_1, answer_2, answer_3};
     emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
-    initializeEmojiEvents(emojis);
+    initializeEmojiEvents();
     jokers = new Button[] {doublePts, minusTime, hint};
     hoverEffect(circle, emojiGrid, emojiButton, pane);
   }
