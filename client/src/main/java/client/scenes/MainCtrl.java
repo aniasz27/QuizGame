@@ -16,8 +16,12 @@
 
 package client.scenes;
 
+import client.scenes.helpers.QuestionCtrl;
+import client.utils.EmojiWebSocket;
 import client.utils.ServerUtils;
 import commons.Activity;
+import commons.Emoji;
+import commons.EmojiMessage;
 import commons.EstimateQuestion;
 import commons.HowMuchQuestion;
 import commons.MultipleChoiceQuestion;
@@ -115,6 +119,14 @@ public class MainCtrl {
   private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSS");
   private Date pointsTimer;
   private int pointsOffset;
+
+  /**
+   * The controller of the question that was last shown (ie currently being shown)
+   */
+  public QuestionCtrl currentQuestionCtrl;
+
+  // Emoji WebSockets
+  public EmojiWebSocket emojiWebSocket;
 
   @Inject
   public MainCtrl(ServerUtils server) {
@@ -250,13 +262,15 @@ public class MainCtrl {
    * Starts the game, assigns the points from the game controller
    */
   public void start() {
-    this.usedJokers = new boolean[3];
     gameId = server.startGame(serverIp);
     points = 0;
     play();
   }
 
   public void play() {
+    this.usedJokers = new boolean[3];
+    System.out.println("session: " + gameId);
+    emojiWebSocket = new EmojiWebSocket(this, serverIp, gameId);
     playerExited = false;
     nextRound();
   }
@@ -379,6 +393,7 @@ public class MainCtrl {
   }
 
   public void showGuess(EstimateQuestion question) {
+    currentQuestionCtrl = guessCtrl;
     primaryStage.getScene().setRoot(guessParent);
     guessCtrl.displayQuestion(question);
     guessCtrl.startTimer();
@@ -386,6 +401,7 @@ public class MainCtrl {
   }
 
   public void showWhatRequiresMoreEnergy(MultipleChoiceQuestion question) {
+    currentQuestionCtrl = whatRequiresMoreEnergyCtrl;
     primaryStage.getScene().setRoot(whatRequiresMoreEnergyParent);
     whatRequiresMoreEnergyCtrl.displayQuestion(question);
     whatRequiresMoreEnergyCtrl.startTimer();
@@ -393,6 +409,7 @@ public class MainCtrl {
   }
 
   public void showHowMuch(HowMuchQuestion question) {
+    currentQuestionCtrl = howMuchCtrl;
     primaryStage.getScene().setRoot(howMuchParent);
     howMuchCtrl.displayQuestion(question);
     howMuchCtrl.startTimer();
@@ -579,6 +596,11 @@ public class MainCtrl {
     leaderboardDisplay.getChildren().add(gridpane);
   }
 
+  public void showEmoji(Emoji emoji) {
+    // TODO: show emojis per screen
+    System.out.println("Shown emoji: " + emoji + " in controller: " + currentQuestionCtrl);
+    currentQuestionCtrl.showEmoji(emoji);
+  }
 
   public void reset() {
     serverIp = null;
