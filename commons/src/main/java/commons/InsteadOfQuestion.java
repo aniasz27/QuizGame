@@ -57,6 +57,8 @@ public class InsteadOfQuestion extends Question {
         factor2++;
         inputValues(false, false, true);
         break;
+      default:
+        System.out.println("Error creating InsteadOf question");
     }
     factors[0] = factor1;
     factors[1] = factor2;

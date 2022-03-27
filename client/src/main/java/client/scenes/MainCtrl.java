@@ -145,7 +145,7 @@ public class MainCtrl {
     Pair<WaitingRoomCtrl, Parent> waitingRoom,
     Pair<SpWaitingRoomCtrl, Parent> spWaitingRoom,
     Pair<HowMuchCtrl, Parent> howMuch,
-    Pair<InsteadOfCtrl, Parent> InsteadOf,
+    Pair<InsteadOfCtrl, Parent> insteadOf,
     Pair<WhatRequiresMoreEnergyCtrl, Parent> whatRequiresMoreEnergy,
     Pair<GuessCtrl, Parent> guess,
     Pair<IntermediateLeaderboardCtrl, Parent> intermediateLeaderboard,
@@ -171,8 +171,8 @@ public class MainCtrl {
     this.howMuchCtrl = howMuch.getKey();
     this.howMuchParent = howMuch.getValue();
 
-    this.insteadOfCtrl = InsteadOf.getKey();
-    this.insteadOfParent = InsteadOf.getValue();
+    this.insteadOfCtrl = insteadOf.getKey();
+    this.insteadOfParent = insteadOf.getValue();
 
     this.whatRequiresMoreEnergyCtrl = whatRequiresMoreEnergy.getKey();
     this.whatRequiresMoreEnergyParent = whatRequiresMoreEnergy.getValue();

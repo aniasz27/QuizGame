@@ -99,6 +99,7 @@ public class GameController {
             activities1[0],
             activities1[1],
             activities1[2], activity);
+          break;
         default:
           break;
       }
