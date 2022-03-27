@@ -201,7 +201,6 @@ public class GameTest {
 
   @Test
   public void nextQuestionEndTest() {
-    String id = "ID";
     Client c1 = new Client("ID1", "US1", true);
     Client c2 = new Client("ID2", "US2", true);
     Client c3 = new Client("ID3", "US3", true);
@@ -218,6 +217,7 @@ public class GameTest {
     questions[10].number = 10;
     questions[21] = new EndScreen();
     questions[21].number = 21;
+    String id = "ID";
     Game game = new Game(id, collection, questions, false);
     Game game2 = new Game(id, collection, questions, true);
 
