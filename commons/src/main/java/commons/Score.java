@@ -56,19 +56,48 @@ public class Score {
       + '}';
   }
 
+  /**
+   * Getter for the player
+   *
+   * @return String representing the playerId
+   */
   public String getPlayer() {
     return player;
   }
 
+  /**
+   * Getter for points field
+   *
+   * @return int representing the number of points the player has
+   */
   public int getPoints() {
     return points;
   }
 
+  /**
+   * Increases points
+   *
+   * @param points amount of points that should be added
+   */
   public void addPoints(int points) {
     this.points += points;
   }
 
+  /**
+   * Getter for the name attribute
+   *
+   * @return String with the username of the player
+   */
   public String getName() {
     return name;
+  }
+
+  /**
+   * Setter for points field
+   *
+   * @param amount of points
+   */
+  public void setPoints(int amount) {
+    this.points = amount;
   }
 }
