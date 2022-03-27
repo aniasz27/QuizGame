@@ -5,6 +5,7 @@ import commons.Client;
 import commons.EstimateQuestion;
 import commons.Game;
 import commons.HowMuchQuestion;
+import commons.InsteadOfQuestion;
 import commons.MultipleChoiceQuestion;
 import commons.Question;
 import commons.Score;
@@ -57,7 +58,7 @@ public class GameController {
     Question[] questions = new Question[20];
 
     for (int i = 0; i < 20; i++) {
-      switch (random.nextInt(3)) {
+      switch (random.nextInt(4)) {
         case 0:
           Activity[] activities = activityController.getRandomActivityMultiple();
           List<Activity> list = Arrays.asList(activities);
@@ -75,6 +76,29 @@ public class GameController {
         case 2:
           questions[i] = new HowMuchQuestion(activityController.getRandomActivity().getBody());
           break;
+        case 3:
+          Activity[] activities1 = activityController.getRandomActivityMultiple();
+          Activity activity = activityController.getRandomActivity().getBody();
+          boolean more = false;
+          while (!more) {
+            if (activities1[0].getConsumption_in_wh() < activity.getConsumption_in_wh()) {
+              if (activities1[1].getConsumption_in_wh() < activity.getConsumption_in_wh()) {
+                if (activities1[2].getConsumption_in_wh() < activity.getConsumption_in_wh()) {
+                  more = true;
+                }
+              }
+            } else {
+              activity = activityController.getRandomActivity().getBody();
+            }
+          }
+          System.out.println("Activity1:" + activities1[0].getConsumption_in_wh());
+          System.out.println("Activity2:" + activities1[1].getConsumption_in_wh());
+          System.out.println("Activity3:" + activities1[2].getConsumption_in_wh());
+          System.out.println("Activity4:" + activity.getConsumption_in_wh());
+          questions[i] = new InsteadOfQuestion(
+            activities1[0],
+            activities1[1],
+            activities1[2], activity);
         default:
           break;
       }
