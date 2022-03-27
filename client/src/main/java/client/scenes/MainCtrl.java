@@ -615,7 +615,7 @@ public class MainCtrl {
   public void showJoker(Joker joker, String playerId) {
     System.out.println("Shown joker: " + joker + " in controller: " + currentQuestionCtrl);
     currentQuestionCtrl.showJoker(joker);
-    if (!clientId.equals(playerId)) {
+    if (joker == Joker.TIME && !clientId.equals(playerId)) {
       currentQuestionCtrl.reduceTime();
     }
   }
