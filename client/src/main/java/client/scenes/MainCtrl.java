@@ -125,33 +125,14 @@ public class MainCtrl {
   private Date pointsTimer;
   private int pointsOffset;
   public JokerWebSocket jokerWebSocket;
-
-  /**
-   * The controller of the question that was last shown (ie currently being shown)
-   */
-  public QuestionCtrl currentQuestionCtrl;
-
-  // Emoji WebSockets
   public EmojiWebSocket emojiWebSocket;
+  public QuestionCtrl currentQuestionCtrl;
+    //The controller of the question that was last shown (ie currently being shown)
 
   @Inject
   public MainCtrl(ServerUtils server) {
     this.server = server;
   }
-
-  public enum Mode {
-    MULTI(0),
-    SINGLE(1),
-    ADMIN(2);
-
-    private final int mode;
-
-    private Mode(int m) {
-      mode = m;
-    }
-  }
-
-  public Mode mode;
 
   /**
    * The user's name in the current game.
@@ -273,7 +254,6 @@ public class MainCtrl {
    */
   public void start() {
     gameId = server.startGame(serverIp);
-    jokerWebSocket = new JokerWebSocket(this, serverIp, gameId);
     points = 0;
     play();
   }
@@ -282,6 +262,7 @@ public class MainCtrl {
     this.usedJokers = new boolean[3];
     System.out.println("session: " + gameId);
     emojiWebSocket = new EmojiWebSocket(this, serverIp, gameId);
+    jokerWebSocket = new JokerWebSocket(this, serverIp, gameId);
     playerExited = false;
     nextRound();
   }

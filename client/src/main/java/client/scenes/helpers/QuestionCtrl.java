@@ -200,6 +200,12 @@ public abstract class QuestionCtrl {
     }
   }
 
+  /**
+   * Return text on the joker to show
+   *
+   * @param joker to show appropriate text
+   * @return Button to show
+   */
   public Button getJokerElement(Joker joker) {
     switch (joker) {
       case DOUBLE:
@@ -235,38 +241,43 @@ public abstract class QuestionCtrl {
     Label movingEmoji = new Label(emojiText);
     movingEmoji.getStyleClass().addAll("icon", "emoji");
 
-
     // set initial position
     movingEmoji.setTranslateX(1920 / 2.0);
-    movingEmoji.setTranslateY(-350 + 100 * notRandom.nextDouble()); // vary height slightly
-
-    // add emoji to scene (in line with the timer)
-    root.getChildren().add(movingEmoji);
-
-    Timeline emojiAnimation = new Timeline(
-      new KeyFrame(Duration.seconds(6), new KeyValue(movingEmoji.translateXProperty(), 0)), // move
-      new KeyFrame(Duration.seconds(6), new KeyValue(movingEmoji.opacityProperty(), 0)) // disappear
-    );
-
-    emojiAnimation.setOnFinished(e -> root.getChildren().remove(movingEmoji)); // remove emoji when finished
-    emojiAnimation.setCycleCount(1);
-    emojiAnimation.play();
+    makeAnimation(movingEmoji);
   }
 
+  /**
+   * Makes animation for a Label
+   *
+   * @param movingElement element to animate
+   */
+  public void makeAnimation(Label movingElement) {
+    movingElement.setTranslateY(-350 + 100 * notRandom.nextDouble()); // vary height slightly
+
+    // add emoji to scene (in line with the timer)
+    root.getChildren().add(movingElement);
+
+    Timeline animation = new Timeline(
+      new KeyFrame(Duration.seconds(6), new KeyValue(movingElement.translateXProperty(), 0)), // move
+      new KeyFrame(Duration.seconds(6), new KeyValue(movingElement.opacityProperty(), 0)) // disappear
+    );
+
+    animation.setOnFinished(e -> root.getChildren().remove(movingElement)); // remove emoji when finished
+    animation.setCycleCount(1);
+    animation.play();
+  }
+
+  /**
+   * Shows joker on the screen
+   *
+   * @param joker to show
+   */
   public void showJoker(Joker joker) {
     System.out.println("SHOWN JOKER");
     String jokerText = getJokerElement(joker).getText();
     Label movingJoker = new Label(jokerText);
     movingJoker.setTranslateX(-1920.0 / 2.0);
-    movingJoker.setTranslateY(-350 + 100 * notRandom.nextDouble());
-    root.getChildren().add(movingJoker);
-    Timeline jokerAnimation = new Timeline(
-      new KeyFrame(Duration.seconds(6), new KeyValue(movingJoker.translateXProperty(), 0)),
-      new KeyFrame(Duration.seconds(6), new KeyValue(movingJoker.opacityProperty(), 0))
-    );
-    jokerAnimation.setOnFinished(e -> root.getChildren().remove(movingJoker));
-    jokerAnimation.setCycleCount(1);
-    jokerAnimation.play();
+    makeAnimation(movingJoker);
   }
 
   /**
@@ -302,7 +313,7 @@ public abstract class QuestionCtrl {
   /**
    * Gives double Points to the user
    *
-   * @return boolean
+   * @return boolean to double points
    */
   public boolean doublePointsQ() {
     if (mainCtrl.usedJokers[0]) {
@@ -351,6 +362,12 @@ public abstract class QuestionCtrl {
     thread.start();
   }
 
+  /**
+   * Initializes question screen
+   *
+   * @param location  URL
+   * @param resources ResourceBundle
+   */
   public void initialize(URL location, ResourceBundle resources) {
     emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
     jokers = new Button[] {doublePts, minusTime, hint};

@@ -1,8 +1,9 @@
 package client.utils;
 
 import client.scenes.MainCtrl;
-import commons.JokerMessage;
+import commons.Joker;
 import java.lang.reflect.Type;
+import javafx.application.Platform;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -20,19 +21,20 @@ public class JokerStompSessionHandler implements StompSessionHandler {
   @Override
   public void afterConnected(
     StompSession session, StompHeaders connectedHeaders) {
-    session.subscribe("/queue/jokerChat" + gameSession, this);
+    System.out.println("Subscribed to: " + gameSession);
+    session.subscribe("/queue/jokerChat/" + gameSession, this);
   }
 
   @Override
   public void handleFrame(StompHeaders headers, Object payload) {
     System.out.println("Handled framed!");
-    JokerMessage message = (JokerMessage) payload;
-    mainCtrl.showJoker(message.joker);
+    Joker joker = (Joker) payload;
+    Platform.runLater(() -> mainCtrl.showJoker(joker));
   }
 
   @Override
   public Type getPayloadType(StompHeaders headers) {
-    return JokerMessage.class;
+    return Joker.class;
   }
 
   @Override

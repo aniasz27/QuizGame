@@ -1,6 +1,7 @@
 package client.utils;
 
 import client.scenes.MainCtrl;
+import commons.EmojiMessage;
 import commons.Joker;
 import commons.JokerMessage;
 import commons.Question;
@@ -36,18 +37,21 @@ public class JokerWebSocket {
    */
   private void connectWebSocket() {
     WebSocketClient client = new StandardWebSocketClient();
+
     WebSocketStompClient stompClient = new WebSocketStompClient(client);
     stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+
     JokerStompSessionHandler sessionHandler = new JokerStompSessionHandler(mainCtrl, gameSession);
+
     String url = mainCtrl.serverIp.replace("http", "ws") + "/websocket";
     try {
-      this.session = stompClient.connect(URI.create(url).toString(), sessionHandler).get();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    } catch (ExecutionException e) {
-      System.err.println("Error creating StompSession");
+      this.session =
+        stompClient.connect(URI.create(url).toString(), sessionHandler).get();
+    } catch (Exception e) {
+      System.err.println("Error creating stompSession");
       e.printStackTrace();
     }
+
     System.out.println("session + " + session.toString());
   }
 
