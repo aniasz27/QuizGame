@@ -6,6 +6,7 @@ import com.google.inject.Inject;
 import commons.Question;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -47,16 +48,8 @@ public class IntermediateLeaderboardCtrl extends QuestionCtrl implements Initial
   public void refresh() {
     var leaderboard = server.getMultiLeaderboard(mainCtrl.serverIp, mainCtrl.gameId);
 
-    leaderboardDisplay.getChildren().removeAll(leaderboardDisplay.getChildren());
-    int[] i = {1};
-    leaderboard.forEach(score -> {
-      Label l = new Label(i[0] + ". " + score.getPlayer() + " " + score.getPoints());
-      l.getStyleClass().add("list-item");
-      l.getStyleClass().add("border-bottom");
-      if (i[0]++ == 1) {
-        l.getStyleClass().add("list-item-top");
-      }
-      leaderboardDisplay.getChildren().add(l);
+    Platform.runLater(() -> {
+      MainCtrl.refreshLeaderboard(leaderboardDisplay, leaderboard);
     });
   }
 

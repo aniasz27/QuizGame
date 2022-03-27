@@ -33,17 +33,23 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.atomic.AtomicInteger;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.StrokeLineCap;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import javax.inject.Inject;
@@ -52,7 +58,7 @@ public class MainCtrl {
 
   private final ServerUtils server;
 
-  private Stage primaryStage;
+  public Stage primaryStage;
 
   private SplashCtrl splashCtrl;
   private Parent splashParent;
@@ -398,6 +404,7 @@ public class MainCtrl {
   public void showIntermediateLeaderboard() {
     primaryStage.getScene().setRoot(intermediateLeaderboardParent);
     intermediateLeaderboardCtrl.display();
+    intermediateLeaderboardCtrl.refresh();
   }
 
   public void showActivityList() {
@@ -490,23 +497,77 @@ public class MainCtrl {
     return Math.max(pointsOffset, 0);
   }
 
+  /**
+   * Leaderboard creator method. Will display:
+   * - playerName
+   * - visual representation of the progress between player
+   * - points
+   *
+   * @param leaderboardDisplay VBox which will include the leaderboard
+   * @param scores             Information
+   */
   public static void refreshLeaderboard(VBox leaderboardDisplay, Iterable<Score> scores) {
     leaderboardDisplay.getChildren().removeAll(leaderboardDisplay.getChildren());
 
     final boolean[] first = {true};
 
+    AtomicInteger maxScore;
+    maxScore = new AtomicInteger();
+    AtomicInteger rowCounter = new AtomicInteger();
+    rowCounter.set(0);
+    GridPane gridpane = new GridPane();
+    gridpane.setMaxWidth(640);
+    gridpane.setAlignment(Pos.CENTER);
+    ColumnConstraints name = new ColumnConstraints(290);
+    ColumnConstraints bar = new ColumnConstraints(240);
+    ColumnConstraints points = new ColumnConstraints(100);
+    name.setHgrow(Priority.SOMETIMES);
+    bar.setHgrow(Priority.SOMETIMES);
+    points.setHgrow(Priority.SOMETIMES);
+    gridpane.getColumnConstraints().addAll(name, bar, points);
+
+    leaderboardDisplay.getChildren().removeAll();
     scores.forEach(s -> {
-      Label label = new Label(s.getName());
+      Label label = new Label();
       label.getStyleClass().add("expand");
       label.getStyleClass().add("list-item");
       label.getStyleClass().add("border-bottom");
+      label.setText(s.getName());
       if (first[0]) {
         label.getStyleClass().add("list-item-top-left");
       }
-      HBox score = new HBox();
-      HBox.setHgrow(label, Priority.ALWAYS);
-      score.getChildren().add(label);
-      label = new Label(String.valueOf(s.getPoints()));
+      gridpane.add(label, 0, rowCounter.get());
+
+      StackPane stackPane = new StackPane();
+      stackPane.setAlignment(Pos.CENTER_LEFT);
+      stackPane.getStyleClass().add("list-item");
+      stackPane.getStyleClass().add("border-bottom");
+      Line line = new Line();
+      line.setEndX(200);
+      line.setStrokeLineCap(StrokeLineCap.ROUND);
+      line.setStrokeWidth(20);
+      line.setStroke(Paint.valueOf("#553794"));
+
+      stackPane.getChildren().add(line);
+      line = new Line();
+      line.setStrokeLineCap(StrokeLineCap.ROUND);
+      line.setStrokeWidth(20);
+      line.setStroke(Paint.valueOf("#0586e3"));
+      if (first[0]) {
+        line.setEndX(200);
+        maxScore.set(s.getPoints());
+
+      } else {
+        line.setEndX(200 * s.getPoints() / maxScore.get());
+      }
+      line.getStyleClass().add("timer-bar");
+
+      stackPane.getChildren().add(line);
+
+      gridpane.add(stackPane, 1, rowCounter.get());
+
+      label = new Label();
+      label.setText(String.valueOf(s.getPoints()));
       label.getStyleClass().add("expand");
       label.getStyleClass().add("list-item");
       label.getStyleClass().add("border-bottom");
@@ -514,9 +575,10 @@ public class MainCtrl {
         label.getStyleClass().add("list-item-top-right");
         first[0] = false;
       }
-      score.getChildren().add(label);
-      leaderboardDisplay.getChildren().add(score);
+      gridpane.add(label, 2, rowCounter.get());
+      rowCounter.getAndIncrement();
     });
+    leaderboardDisplay.getChildren().add(gridpane);
   }
 
   public void showEmoji(Emoji emoji) {
