@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -16,6 +17,7 @@ public class Game {
   public Question[] questions;
   public boolean multiplayer = false;
   public Map<Object, Consumer<Question>> playerListeners = new HashMap<>();
+  public ScheduledExecutorService execTiming;
 
   @SuppressWarnings("unused")
   public Game() {
@@ -148,7 +150,7 @@ public class Game {
    *
    * @return true if player is in multiplayer game, false otherwise
    */
-  public boolean getMultiplayer() {
+  public boolean isMultiplayer() {
     return this.multiplayer;
   }
 
@@ -168,7 +170,6 @@ public class Game {
    *
    * @return the next question
    */
-<<<<<<< commons/src/main/java/commons/Game.java
   public void increaseQuestionCounter() {
     questionCounter++;
   }
@@ -187,14 +188,6 @@ public class Game {
       return current(showCorrect);
     }
     return question;
-  }
-
-  public boolean isMultiplayer() {
-    return multiplayer;
-  }
-
-  public void setMultiplayer(boolean multiplayer) {
-    this.multiplayer = multiplayer;
   }
 
   public Map<Client, Integer> getPlayers() {
@@ -220,10 +213,10 @@ public class Game {
       return false;
     }
     Game game = (Game) o;
-    return questionCounter == game.questionCounter && multiplayer == game.multiplayer &&
-      Objects.equals(id, game.id) && Objects.equals(players, game.players) &&
-      Arrays.equals(questions, game.questions) &&
-      Objects.equals(playerListeners, game.playerListeners);
+    return questionCounter == game.questionCounter && multiplayer == game.multiplayer
+      && Objects.equals(id, game.id) && Objects.equals(players, game.players)
+      && Arrays.equals(questions, game.questions)
+      && Objects.equals(playerListeners, game.playerListeners);
   }
 
   @Override
@@ -231,5 +224,9 @@ public class Game {
     int result = Objects.hash(id, players, questionCounter, multiplayer, playerListeners);
     result = 31 * result + Arrays.hashCode(questions);
     return result;
+  }
+
+  public void stopExecTiming() {
+    execTiming.shutdownNow();
   }
 }

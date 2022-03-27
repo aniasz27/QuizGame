@@ -316,6 +316,7 @@ public class MainCtrl {
         Platform.runLater(() -> insteadOfCtrl.showCorrect());
         break;
       case INTERLEADERBOARD:
+      case ENDSCREEN:
         break;
       default:
         System.out.println("Not a question");
@@ -331,6 +332,7 @@ public class MainCtrl {
   }
 
   public void showCurrentQuestion() {
+    System.out.println(question.number + " " + question.showCorrect + " " + question.type);
     if (question.showCorrect) {
       showAnswer();
     } else {
@@ -346,6 +348,10 @@ public class MainCtrl {
         case HOWMUCH:
           System.out.println("Showed how much");
           Platform.runLater(() -> showHowMuch((HowMuchQuestion) this.question));
+          break;
+        case INSTEAD:
+          System.out.println("Showed instead");
+          Platform.runLater(() -> showInstead((InsteadOfQuestion) this.question));
           break;
         case INTERLEADERBOARD:
           System.out.println("Showed Intermediate Leaderboard");

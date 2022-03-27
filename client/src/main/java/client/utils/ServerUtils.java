@@ -124,6 +124,7 @@ public class ServerUtils {
   }
 
   private static ScheduledExecutorService EXECNextQuestion;
+
   /**
    * Request to get a new question from the server
    * <p>
@@ -199,21 +200,6 @@ public class ServerUtils {
       .target(ip).path("api/activity/image/" + id)
       .request("image/jpeg")
       .put(Entity.entity(image, MediaType.APPLICATION_OCTET_STREAM));
-  }
-
-  /**
-   * Long polling: starts a timer with the server and keeps the connection open
-   *
-   * @return true if 10s have passed and connection closes, false if an exception has been thrown
-   */
-  public boolean startServerTimer(String ip, String clientId, int duration) {
-    return ClientBuilder.newClient(new ClientConfig())
-      .target(ip)
-      .path("/api/game/startTimer/" + clientId)
-      .queryParam("duration", (long) duration)
-      .request(APPLICATION_JSON)
-      .accept(APPLICATION_JSON)
-      .get().readEntity(Boolean.class);
   }
 
   public Activity updateActivity(String ip, Activity activity) {
