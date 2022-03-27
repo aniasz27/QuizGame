@@ -39,19 +39,7 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   @FXML
   private Circle circle;
   @FXML
-  private Label emoji1;
-  @FXML
-  private Label emoji2;
-  @FXML
-  private Label emoji3;
-  @FXML
-  private Label emoji4;
-  @FXML
-  private Label emoji5;
-  @FXML
   private GridPane emojiGrid;
-  @FXML
-  private Button emojiButton;
   @FXML
   private StackPane pane;
   @FXML
@@ -61,7 +49,6 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   @FXML
   private Button minusTime;
 
-  private Label[] emojis;
   private boolean dbPoint;
   private Button[] jokers;
   private int point;
@@ -75,10 +62,8 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
-    initializeEmojiEvents();
+    super.initialize(location, resources);
     jokers = new Button[] {doublePts, minusTime, hint};
-    hoverEffect(circle, emojiGrid, emojiButton, pane);
   }
 
   /**

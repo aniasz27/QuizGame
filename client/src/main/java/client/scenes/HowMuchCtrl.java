@@ -42,19 +42,7 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
   @FXML
   private Circle circle;
   @FXML
-  private Label emoji1;
-  @FXML
-  private Label emoji2;
-  @FXML
-  private Label emoji3;
-  @FXML
-  private Label emoji4;
-  @FXML
-  private Label emoji5;
-  @FXML
   private GridPane emojiGrid;
-  @FXML
-  private Button emojiButton;
   @FXML
   private StackPane pane;
   @FXML
@@ -65,7 +53,6 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
   private Button minusTime;
 
   private Button[] buttons;
-  private Label[] emojis;
   private Button[] jokers;
 
   private Activity activity;
@@ -84,11 +71,9 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+    super.initialize(location, resources);
     buttons = new Button[] {answer_1, answer_2, answer_3};
-    emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
-    initializeEmojiEvents();
     jokers = new Button[] {doublePts, minusTime, hint};
-    hoverEffect(circle, emojiGrid, emojiButton, pane);
   }
 
   @Override

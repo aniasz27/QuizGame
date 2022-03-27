@@ -6,14 +6,17 @@ import com.google.inject.Inject;
 import commons.Emoji;
 import commons.EmojiMessage;
 import commons.Question;
+import java.net.URL;
 import java.util.Optional;
 import java.util.Random;
+import java.util.ResourceBundle;
 import java.util.Stack;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -40,6 +43,14 @@ public abstract class QuestionCtrl {
   public Line timer;
 
   @FXML
+  private Circle circle;
+  @FXML
+  private GridPane emojiGrid;
+  @FXML
+  private Button emojiButton;
+  @FXML
+  private StackPane pane;
+  @FXML
   private Label emoji1;
   @FXML
   private Label emoji2;
@@ -49,6 +60,7 @@ public abstract class QuestionCtrl {
   private Label emoji4;
   @FXML
   private Label emoji5;
+  private Label[] emojis;
 
   private final Random notificationRandomiser = new Random();
 
@@ -273,5 +285,11 @@ public abstract class QuestionCtrl {
     useJoker(doublePts);
     mainCtrl.usedJokers[0] = true;
     return true;
+  }
+
+  public void initialize(URL location, ResourceBundle resources) {
+    emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
+    initializeEmojiEvents();
+    hoverEffect(circle, emojiGrid, emojiButton, pane);
   }
 }
