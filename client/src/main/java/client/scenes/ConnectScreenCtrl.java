@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
+import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.WebApplicationException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -73,6 +74,7 @@ public class ConnectScreenCtrl {
         TimeUnit.SECONDS
       );
 
+      serverField.getStyleClass().remove("bad");
       nameField.getStyleClass().remove("bad");
       playButton.getStyleClass().remove("bad");
 
@@ -82,11 +84,9 @@ public class ConnectScreenCtrl {
         nameField.getStyleClass().add("bad");
       }
       playButton.getStyleClass().add("bad");
+    } catch (ProcessingException e) {
+      serverField.getStyleClass().add("bad");
+      playButton.getStyleClass().add("bad");
     }
-  }
-
-  private void play(ActionEvent actionEvent) {
-    mainCtrl.name = nameField.getText();
-    mainCtrl.showSplash();
   }
 }

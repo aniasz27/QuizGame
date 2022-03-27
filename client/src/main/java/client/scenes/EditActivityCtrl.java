@@ -95,16 +95,20 @@ public class EditActivityCtrl implements Initializable {
   public void changeImage() {
     File file = fileChooser.showOpenDialog(mainCtrl.primaryStage);
 
-    byte[] bytes = new byte[(int) file.length()];
-    try (FileInputStream fis = new FileInputStream(file)) {
-      fis.read(bytes);
-    } catch (IOException e) {
-      e.printStackTrace();
+    try {
+      byte[] bytes = new byte[(int) file.length()];
+      try (FileInputStream fis = new FileInputStream(file)) {
+        fis.read(bytes);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+
+      server.changeActivityImage(mainCtrl.serverIp, activity.id, bytes);
+
+      imageView.setImage(new Image(new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity.id))));
+    } catch (NullPointerException e) {
+      // Ignore, user didn't choose an image
     }
-
-    server.changeActivityImage(mainCtrl.serverIp, activity.id, bytes);
-
-    imageView.setImage(new Image(new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity.id))));
   }
 
   @FXML

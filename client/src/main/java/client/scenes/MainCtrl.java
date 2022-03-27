@@ -393,7 +393,8 @@ public class MainCtrl {
   public void showActivityList() {
     // reset name and list of players if coming out of a game
     primaryStage.getScene().setRoot(activityListParent);
-    activityListCtrl.refresh();
+    activityListCtrl.activities = server.getActivities(serverIp);
+    activityListCtrl.search(activityListCtrl.searchField.getText());
   }
 
   public void showEditActivity(Activity activity) {
