@@ -3,6 +3,8 @@ package server.api;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import commons.Activity;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -224,6 +226,23 @@ public class ActivityController {
         "/JSON/" + repo.findById(id).orElseThrow(IOException::new).getImage_path()
       );
       return ResponseEntity.ok(imageStream.readAllBytes());
+    } catch (Exception e) {
+      e.printStackTrace();
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+  }
+
+  @PutMapping("/image/{id}")
+  public ResponseEntity<Void> setImage(@PathVariable String id, @RequestBody byte[] image) {
+    try {
+      File f = new File(
+        getClass().getResource("/JSON/" + repo.findById(id).orElseThrow(IOException::new).getImage_path()).toURI()
+      );
+
+      try (FileOutputStream fos = new FileOutputStream(f)) {
+        fos.write(image);
+      }
+      return ResponseEntity.ok().build();
     } catch (Exception e) {
       e.printStackTrace();
       return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

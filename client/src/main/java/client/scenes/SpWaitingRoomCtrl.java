@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import commons.Score;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -36,7 +37,7 @@ public class SpWaitingRoomCtrl implements Initializable {
 
   public void refresh() {
     Iterable<Score> scores = server.getSingleLeaderboard(mainCtrl.serverIp);
-    MainCtrl.refreshLeaderboard(leaderboardDisplay, scores);
+    Platform.runLater(() -> MainCtrl.refreshLeaderboard(leaderboardDisplay, scores));
   }
 
   @FXML

@@ -4,12 +4,10 @@ import client.utils.ServerUtils;
 import commons.Score;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javax.inject.Inject;
 
@@ -51,6 +49,7 @@ public class EndScreenCtrl implements Initializable {
 
   public void refresh() {
     Iterable<Score> scores = server.getSingleLeaderboard(mainCtrl.serverIp);
-    MainCtrl.refreshLeaderboard(leaderboardDisplay, scores);
+    Platform.runLater(() -> MainCtrl.refreshLeaderboard(leaderboardDisplay, scores));
+
   }
 }

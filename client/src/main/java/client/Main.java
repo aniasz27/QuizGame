@@ -37,6 +37,7 @@ import com.google.inject.Injector;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -131,5 +132,11 @@ public class Main extends Application {
     mainCtrl.initialize(primaryStage, splash, connectScreen, waitingRoom, spWaitingRoom, howMuch, instead,
       whatRequiresMoreEnergy, guess, intermediateLeaderboard, activityList, editActivity, helpOverlay, exitOverlay,
       endScreen);
+
+    //stops the thread when user closes the window
+    primaryStage.setOnCloseRequest(e -> {
+      Platform.exit();
+      System.exit(0);
+    });
   }
 }

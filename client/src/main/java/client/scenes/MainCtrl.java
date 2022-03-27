@@ -16,11 +16,17 @@
 
 package client.scenes;
 
+import client.scenes.helpers.QuestionCtrl;
+import client.utils.EmojiWebSocket;
+import client.utils.JokerWebSocket;
 import client.utils.ServerUtils;
 import commons.Activity;
+import commons.Emoji;
+import commons.EmojiMessage;
 import commons.EstimateQuestion;
 import commons.HowMuchQuestion;
 import commons.InsteadOfQuestion;
+import commons.Joker;
 import commons.MultipleChoiceQuestion;
 import commons.Question;
 import commons.Score;
@@ -30,17 +36,23 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.atomic.AtomicInteger;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.StrokeLineCap;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import javax.inject.Inject;
@@ -49,7 +61,7 @@ public class MainCtrl {
 
   private final ServerUtils server;
 
-  private Stage primaryStage;
+  public Stage primaryStage;
 
   private SplashCtrl splashCtrl;
   private Parent splashParent;
@@ -99,6 +111,7 @@ public class MainCtrl {
   public String serverIp;
   public String clientId;
   public String gameId;
+  public String previousGameId;
   public ScheduledExecutorService keepAliveExec;
   public boolean waitingForGame;
   public boolean[] usedJokers;
@@ -112,6 +125,15 @@ public class MainCtrl {
   private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSS");
   private Date pointsTimer;
   private int pointsOffset;
+  public JokerWebSocket jokerWebSocket;
+
+  /**
+   * The controller of the question that was last shown (ie currently being shown)
+   */
+  public QuestionCtrl currentQuestionCtrl;
+
+  // Emoji WebSockets
+  public EmojiWebSocket emojiWebSocket;
 
   @Inject
   public MainCtrl(ServerUtils server) {
@@ -237,6 +259,7 @@ public class MainCtrl {
 
   public void showWaitingRoom() {
     primaryStage.getScene().setRoot(waitingRoomParent);
+    waitingRoomCtrl.refresh();
     waitingForGame = true;
     waitingRoomCtrl.listenForNewPlayers();
   }
@@ -250,13 +273,16 @@ public class MainCtrl {
    * Starts the game, assigns the points from the game controller
    */
   public void start() {
-    this.usedJokers = new boolean[3];
     gameId = server.startGame(serverIp);
+    jokerWebSocket = new JokerWebSocket(this, serverIp, gameId);
     points = 0;
     play();
   }
 
   public void play() {
+    this.usedJokers = new boolean[3];
+    System.out.println("session: " + gameId);
+    emojiWebSocket = new EmojiWebSocket(this, serverIp, gameId);
     playerExited = false;
     nextRound();
   }
@@ -272,6 +298,7 @@ public class MainCtrl {
    * Shows the next question, starts a timer from the server and uses long polling to determine when to change state
    */
   public void nextRound() {
+    System.out.println(playerExited);
     if (playerExited) {
       return;
     }
@@ -296,8 +323,14 @@ public class MainCtrl {
   }
 
   public void startQuestionTimer() {
+    String lastGameId = gameId;
     // set a timer for 10s (question duration)
     boolean finished = server.startServerTimer(serverIp, clientId, 10000);
+
+    // game has changed, ie player has exited and gone into new game
+    if (!lastGameId.equals(gameId) || playerExited) {
+      return;
+    }
 
     if (finished) {
       switch (question.type) {
@@ -328,7 +361,14 @@ public class MainCtrl {
   }
 
   public void startBreakTimer() {
+    String lastGameId = gameId;
+
     boolean finished = server.startServerTimer(serverIp, clientId, 2000); // 2s time given for break
+
+    // game has changed, ie player has exited and gone into new game
+    if (!lastGameId.equals(gameId) || playerExited) {
+      return;
+    }
 
     if (finished) {
       nextRound();
@@ -373,6 +413,7 @@ public class MainCtrl {
   }
 
   public void showGuess(EstimateQuestion question) {
+    currentQuestionCtrl = guessCtrl;
     primaryStage.getScene().setRoot(guessParent);
     guessCtrl.displayQuestion(question);
     guessCtrl.startTimer();
@@ -380,6 +421,7 @@ public class MainCtrl {
   }
 
   public void showWhatRequiresMoreEnergy(MultipleChoiceQuestion question) {
+    currentQuestionCtrl = whatRequiresMoreEnergyCtrl;
     primaryStage.getScene().setRoot(whatRequiresMoreEnergyParent);
     whatRequiresMoreEnergyCtrl.displayQuestion(question);
     whatRequiresMoreEnergyCtrl.startTimer();
@@ -387,6 +429,7 @@ public class MainCtrl {
   }
 
   public void showHowMuch(HowMuchQuestion question) {
+    currentQuestionCtrl = howMuchCtrl;
     primaryStage.getScene().setRoot(howMuchParent);
     howMuchCtrl.displayQuestion(question);
     howMuchCtrl.startTimer();
@@ -403,6 +446,7 @@ public class MainCtrl {
   public void showIntermediateLeaderboard() {
     primaryStage.getScene().setRoot(intermediateLeaderboardParent);
     intermediateLeaderboardCtrl.display();
+    intermediateLeaderboardCtrl.refresh();
   }
 
   public void showActivityList() {
@@ -495,23 +539,77 @@ public class MainCtrl {
     return Math.max(pointsOffset, 0);
   }
 
+  /**
+   * Leaderboard creator method. Will display:
+   * - playerName
+   * - visual representation of the progress between player
+   * - points
+   *
+   * @param leaderboardDisplay VBox which will include the leaderboard
+   * @param scores             Information
+   */
   public static void refreshLeaderboard(VBox leaderboardDisplay, Iterable<Score> scores) {
     leaderboardDisplay.getChildren().removeAll(leaderboardDisplay.getChildren());
 
     final boolean[] first = {true};
 
+    AtomicInteger maxScore;
+    maxScore = new AtomicInteger();
+    AtomicInteger rowCounter = new AtomicInteger();
+    rowCounter.set(0);
+    GridPane gridpane = new GridPane();
+    gridpane.setMaxWidth(640);
+    gridpane.setAlignment(Pos.CENTER);
+    ColumnConstraints name = new ColumnConstraints(290);
+    ColumnConstraints bar = new ColumnConstraints(240);
+    ColumnConstraints points = new ColumnConstraints(100);
+    name.setHgrow(Priority.SOMETIMES);
+    bar.setHgrow(Priority.SOMETIMES);
+    points.setHgrow(Priority.SOMETIMES);
+    gridpane.getColumnConstraints().addAll(name, bar, points);
+
+    leaderboardDisplay.getChildren().removeAll();
     scores.forEach(s -> {
-      Label label = new Label(s.getName());
+      Label label = new Label();
       label.getStyleClass().add("expand");
       label.getStyleClass().add("list-item");
       label.getStyleClass().add("border-bottom");
+      label.setText(s.getName());
       if (first[0]) {
         label.getStyleClass().add("list-item-top-left");
       }
-      HBox score = new HBox();
-      HBox.setHgrow(label, Priority.ALWAYS);
-      score.getChildren().add(label);
-      label = new Label(String.valueOf(s.getPoints()));
+      gridpane.add(label, 0, rowCounter.get());
+
+      StackPane stackPane = new StackPane();
+      stackPane.setAlignment(Pos.CENTER_LEFT);
+      stackPane.getStyleClass().add("list-item");
+      stackPane.getStyleClass().add("border-bottom");
+      Line line = new Line();
+      line.setEndX(200);
+      line.setStrokeLineCap(StrokeLineCap.ROUND);
+      line.setStrokeWidth(20);
+      line.setStroke(Paint.valueOf("#553794"));
+
+      stackPane.getChildren().add(line);
+      line = new Line();
+      line.setStrokeLineCap(StrokeLineCap.ROUND);
+      line.setStrokeWidth(20);
+      line.setStroke(Paint.valueOf("#0586e3"));
+      if (first[0]) {
+        line.setEndX(200);
+        maxScore.set(s.getPoints());
+
+      } else {
+        line.setEndX(200.0 * s.getPoints() / maxScore.get());
+      }
+      line.getStyleClass().add("timer-bar");
+
+      stackPane.getChildren().add(line);
+
+      gridpane.add(stackPane, 1, rowCounter.get());
+
+      label = new Label();
+      label.setText(String.valueOf(s.getPoints()));
       label.getStyleClass().add("expand");
       label.getStyleClass().add("list-item");
       label.getStyleClass().add("border-bottom");
@@ -519,9 +617,43 @@ public class MainCtrl {
         label.getStyleClass().add("list-item-top-right");
         first[0] = false;
       }
-      score.getChildren().add(label);
-      leaderboardDisplay.getChildren().add(score);
+      gridpane.add(label, 2, rowCounter.get());
+      rowCounter.getAndIncrement();
     });
+    leaderboardDisplay.getChildren().add(gridpane);
+  }
+
+  /**
+   * Shows joker on the screen
+   */
+  public void showJoker(Joker joker) {
+    //TODO: show jokers on the screen
+    System.out.println(joker);
+    if (joker.equals(Joker.TIME)) {
+      switch (question.type) {
+        case MULTICHOICE:
+          System.out.println("Showed multiple choice - joker");
+          Platform.runLater(() -> whatRequiresMoreEnergyCtrl.reduceTime());
+          break;
+        case ESTIMATE:
+          System.out.println("Showed guess - joker");
+          Platform.runLater(() -> guessCtrl.reduceTime());
+          break;
+        case HOWMUCH:
+          System.out.println("Showed how much - joker");
+          Platform.runLater(() -> howMuchCtrl.reduceTime());
+          break;
+        default:
+          System.out.println("Wrong question type - joker");
+          break;
+      }
+    }
+  }
+
+  public void showEmoji(Emoji emoji) {
+    // TODO: show emojis per screen
+    System.out.println("Shown emoji: " + emoji + " in controller: " + currentQuestionCtrl);
+    currentQuestionCtrl.showEmoji(emoji);
   }
 
   public void reset() {

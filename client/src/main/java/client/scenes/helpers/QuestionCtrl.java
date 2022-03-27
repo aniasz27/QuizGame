@@ -3,16 +3,29 @@ package client.scenes.helpers;
 import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
+import commons.Emoji;
+import commons.Joker;
 import commons.Question;
+import java.net.URL;
+import java.util.Optional;
 import java.util.Random;
+import java.util.ResourceBundle;
+import java.util.Stack;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
@@ -22,8 +35,35 @@ public abstract class QuestionCtrl {
   protected final ServerUtils server;
   protected final MainCtrl mainCtrl;
 
+
+  @FXML
+  private StackPane root;
+
   @FXML
   public Line timer;
+
+  public Timeline timerAnimation;
+  @FXML
+  private Circle circle;
+  @FXML
+  private GridPane emojiGrid;
+  @FXML
+  private Button emojiButton;
+  @FXML
+  private StackPane pane;
+  @FXML
+  private Label emoji1;
+  @FXML
+  private Label emoji2;
+  @FXML
+  private Label emoji3;
+  @FXML
+  private Label emoji4;
+  @FXML
+  private Label emoji5;
+  private Label[] emojis;
+
+  private final Random notificationRandomiser = new Random();
 
   @Inject
   public QuestionCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -37,7 +77,7 @@ public abstract class QuestionCtrl {
   public void startTimer() {
     timer.setVisible(true);
     timer.setEndX(800);
-    Timeline timerAnimation = new Timeline(
+    this.timerAnimation = new Timeline(
       new KeyFrame(Duration.seconds(10), new KeyValue(timer.endXProperty(), 0))
     );
     timerAnimation.setOnFinished(e -> timer.setVisible(false));
@@ -52,6 +92,7 @@ public abstract class QuestionCtrl {
    */
   @FXML
   private void back(ActionEvent actionEvent) {
+    System.out.println("Exited question!");
     mainCtrl.playerExited = true;
     mainCtrl.openExitOverlay(false);
   }
@@ -139,6 +180,67 @@ public abstract class QuestionCtrl {
   }
 
   /**
+   * Returns which label element corresponds to a given emoji value
+   *
+   * @param emoji value type
+   * @return label corresponding to emoji
+   */
+  public Label getEmojiElement(Emoji emoji) {
+    switch (emoji) {
+      case HAPPY:
+        return emoji1;
+      case ANGRY:
+        return emoji2;
+      case SAD:
+        return emoji3;
+      case DEAD:
+        return emoji4;
+      case STARE:
+      default:
+        return emoji5; // STARE is the default emoji
+    }
+  }
+
+  /**
+   * Initializes what emoji value should be sent via websockets for every emoji label clicked
+   */
+  public void initializeEmojiEvents() {
+    for (Emoji emojiValue : Emoji.values()) {
+      Label emojiElement = getEmojiElement(emojiValue);
+
+      emojiElement.setOnMouseClicked((e) -> {
+          mainCtrl.emojiWebSocket.sendMessage(emojiValue);
+        }
+      );
+    }
+  }
+
+  public void showEmoji(Emoji emoji) {
+    System.out.println("SHOWN EMOJIL ");
+    // create emoji label
+    String emojiText = getEmojiElement(emoji).getText();
+    Label movingEmoji = new Label(emojiText);
+    movingEmoji.getStyleClass().addAll("icon", "emoji");
+
+
+    // set initial position
+    movingEmoji.setTranslateX(1920 / 2.0);
+    movingEmoji.setTranslateY(-350 + 100 * notificationRandomiser.nextDouble()); // vary height slightly
+
+    // add emoji to scene (in line with the timer)
+    root.getChildren().add(movingEmoji);
+
+    Timeline emojiAnimation = new Timeline(
+      new KeyFrame(Duration.seconds(6), new KeyValue(movingEmoji.translateXProperty(), 0)), // move
+      new KeyFrame(Duration.seconds(6), new KeyValue(movingEmoji.opacityProperty(), 0)) // disappear
+    );
+
+    emojiAnimation.setOnFinished(e -> root.getChildren().remove(movingEmoji)); // remove emoji when finished
+    emojiAnimation.setCycleCount(1);
+    emojiAnimation.play();
+  }
+
+  /**
    * Hides emojis on the screen
    *
    * @param circle    of emojis
@@ -170,6 +272,7 @@ public abstract class QuestionCtrl {
     buttons[guess].setDisable(true);
     useJoker(hint);
     mainCtrl.usedJokers[2] = true;
+    mainCtrl.jokerWebSocket.sendMessage(Joker.HINT);
   }
 
   /**
@@ -184,6 +287,52 @@ public abstract class QuestionCtrl {
     }
     useJoker(doublePts);
     mainCtrl.usedJokers[0] = true;
+    mainCtrl.jokerWebSocket.sendMessage(Joker.DOUBLE);
     return true;
+  }
+
+  /**
+   * Sends message to other users to reduce time
+   *
+   * @param minusTime button
+   */
+  public void decreaseTimeQ(Button minusTime) {
+    if (mainCtrl.usedJokers[1]) {
+      return;
+    }
+    useJoker(minusTime);
+    mainCtrl.usedJokers[1] = true;
+    mainCtrl.jokerWebSocket.sendMessage(Joker.TIME);
+  }
+
+  /**
+   * Reduces time on the screen
+   */
+  public void reduceTime() {
+    double position = timer.getEndX() / 2.0;
+    double time = 10.0 * position / 800.0;
+    timer.setVisible(true);
+    timer.setEndX(position);
+    this.timerAnimation = new Timeline(
+      new KeyFrame(Duration.seconds(time), new KeyValue(timer.endXProperty(), 0))
+    );
+    timerAnimation.setOnFinished(e -> timer.setVisible(false));
+    timerAnimation.setCycleCount(1);
+    timerAnimation.play();
+    Thread thread = new Thread(() -> {
+      try {
+        Thread.sleep((long) (time * 1000));
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+      disableButtons();
+    });
+    thread.start();
+  }
+
+  public void initialize(URL location, ResourceBundle resources) {
+    emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
+    initializeEmojiEvents();
+    hoverEffect(circle, emojiGrid, emojiButton, pane);
   }
 }

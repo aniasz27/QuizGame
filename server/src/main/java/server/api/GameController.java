@@ -131,7 +131,7 @@ public class GameController {
     }
 
     System.out.println(gameID);
-    System.out.println(games);
+    //System.out.println(games);
 
     notifyAll();
 
@@ -189,7 +189,7 @@ public class GameController {
     @RequestParam("q") int questionNumber
   ) {
     System.out.println(id);
-    System.out.println(games);
+    //System.out.println(games);
 
     Game game = games.stream().filter(g -> g.id.equals(id)).findFirst()
       .orElseThrow(StringIndexOutOfBoundsException::new);

@@ -8,7 +8,6 @@ import commons.EstimateQuestion;
 import commons.Question;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
-import java.util.Random;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -40,19 +39,7 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   @FXML
   private Circle circle;
   @FXML
-  private Label emoji1;
-  @FXML
-  private Label emoji2;
-  @FXML
-  private Label emoji3;
-  @FXML
-  private Label emoji4;
-  @FXML
-  private Label emoji5;
-  @FXML
   private GridPane emojiGrid;
-  @FXML
-  private Button emojiButton;
   @FXML
   private StackPane pane;
   @FXML
@@ -62,7 +49,6 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   @FXML
   private Button minusTime;
 
-  private Label[] emojis;
   private boolean dbPoint;
   private Button[] jokers;
   private int point;
@@ -76,9 +62,8 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
+    super.initialize(location, resources);
     jokers = new Button[] {doublePts, minusTime, hint};
-    hoverEffect(circle, emojiGrid, emojiButton, pane);
   }
 
   /**
@@ -115,11 +100,13 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
    * On clicking the submit button on the screen, the answer gets evaluated
    */
   public void checkCorrect() {
-    if (answer.getText() == "") {
+    mainCtrl.stopPointsTimer();
+    if (answer.getText().equals("")) {
       return;
     }
+
     long value = Long.parseLong(answer.getText());
-    point = (int) (question.calculateHowClose(value) * 100);
+    point = (int) (question.calculateHowClose(value) * mainCtrl.getPointsOffset() / 100);
     submit.setDisable(true);
   }
 
@@ -151,5 +138,9 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
 
   public void doublePoints() {
     dbPoint = doublePoints(doublePts);
+  }
+
+  public void decreaseTime() {
+    decreaseTimeQ(minusTime);
   }
 }

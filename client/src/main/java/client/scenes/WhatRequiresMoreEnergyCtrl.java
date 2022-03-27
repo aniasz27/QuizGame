@@ -35,19 +35,7 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
   @FXML
   private Circle circle;
   @FXML
-  private Label emoji1;
-  @FXML
-  private Label emoji2;
-  @FXML
-  private Label emoji3;
-  @FXML
-  private Label emoji4;
-  @FXML
-  private Label emoji5;
-  @FXML
   private GridPane emojiGrid;
-  @FXML
-  private Button emojiButton;
   @FXML
   private StackPane pane;
   @FXML
@@ -58,7 +46,6 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
   private Button minusTime;
 
   private Button[] buttons;
-  private Label[] emojis;
   private Button[] jokers;
 
   private Button clickedButton;
@@ -72,10 +59,9 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+    super.initialize(location, resources);
     buttons = new Button[] {button0, button1, button2};
-    emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
     jokers = new Button[] {doublePts, minusTime, hint};
-    hoverEffect(circle, emojiGrid, emojiButton, pane);
   }
 
   @Override
@@ -178,5 +164,9 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
 
   public void doublePoints() {
     dbPoint = doublePoints(doublePts);
+  }
+
+  public void decreaseTime() {
+    decreaseTimeQ(minusTime);
   }
 }
