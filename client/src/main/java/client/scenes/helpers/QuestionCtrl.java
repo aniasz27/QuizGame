@@ -3,9 +3,8 @@ package client.scenes.helpers;
 import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
-import commons.Joker;
 import commons.Emoji;
-import commons.EmojiMessage;
+import commons.Joker;
 import commons.Question;
 import java.net.URL;
 import java.util.Optional;
@@ -292,7 +291,6 @@ public abstract class QuestionCtrl {
     return true;
   }
 
-<<<<<<< client/src/main/java/client/scenes/helpers/QuestionCtrl.java
   /**
    * Sends message to other users to reduce time
    *
@@ -330,11 +328,11 @@ public abstract class QuestionCtrl {
       disableButtons();
     });
     thread.start();
-=======
+  }
+
   public void initialize(URL location, ResourceBundle resources) {
     emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
     initializeEmojiEvents();
     hoverEffect(circle, emojiGrid, emojiButton, pane);
->>>>>>> client/src/main/java/client/scenes/helpers/QuestionCtrl.java
   }
 }

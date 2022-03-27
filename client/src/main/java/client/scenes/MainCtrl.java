@@ -16,9 +16,9 @@
 
 package client.scenes;
 
-import client.utils.JokerWebSocket;
 import client.scenes.helpers.QuestionCtrl;
 import client.utils.EmojiWebSocket;
+import client.utils.JokerWebSocket;
 import client.utils.ServerUtils;
 import commons.Activity;
 import commons.Emoji;
@@ -600,7 +600,6 @@ public class MainCtrl {
     leaderboardDisplay.getChildren().add(gridpane);
   }
 
-<<<<<<< client/src/main/java/client/scenes/MainCtrl.java
   /**
    * Shows joker on the screen
    */
@@ -626,12 +625,12 @@ public class MainCtrl {
           break;
       }
     }
-=======
+  }
+
   public void showEmoji(Emoji emoji) {
     // TODO: show emojis per screen
     System.out.println("Shown emoji: " + emoji + " in controller: " + currentQuestionCtrl);
     currentQuestionCtrl.showEmoji(emoji);
->>>>>>> client/src/main/java/client/scenes/MainCtrl.java
   }
 
   public void reset() {
