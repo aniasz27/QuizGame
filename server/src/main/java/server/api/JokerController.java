@@ -16,8 +16,6 @@ public class JokerController {
   @MessageMapping("/joker")
   public void sendJoker(@Payload JokerMessage jokerMessage) {
     System.out.println("Sent joker");
-    Joker joker = jokerMessage.joker;
-    String gameSession = jokerMessage.gameSession;
-    this.messagingTemplate.convertAndSend("/queue/jokerChat/" + gameSession, joker);
+    this.messagingTemplate.convertAndSend("/queue/jokerChat/" + jokerMessage.gameSession, jokerMessage);
   }
 }

@@ -62,6 +62,6 @@ public class JokerWebSocket {
    */
   public void sendMessage(Joker joker) {
     System.out.println(joker);
-    this.session.send("/app/joker", new JokerMessage(joker, gameSession));
+    this.session.send("/app/joker", new JokerMessage(joker, gameSession, mainCtrl.clientId));
   }
 }

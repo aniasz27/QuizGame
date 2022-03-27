@@ -612,18 +612,28 @@ public class MainCtrl {
   /**
    * Shows joker on the screen
    */
-  public void showJoker(Joker joker) {
+  public void showJoker(Joker joker, String playerId) {
     System.out.println("Shown joker: " + joker + " in controller: " + currentQuestionCtrl);
     currentQuestionCtrl.showJoker(joker);
-    currentQuestionCtrl.reduceTime();
+    if (!clientId.equals(playerId)) {
+      currentQuestionCtrl.reduceTime();
+    }
   }
 
+  /**
+   * Shows emoji on the screen
+   *
+   * @param emoji to show
+   */
   public void showEmoji(Emoji emoji) {
     // TODO: show emojis per screen
     System.out.println("Shown emoji: " + emoji + " in controller: " + currentQuestionCtrl);
     currentQuestionCtrl.showEmoji(emoji);
   }
 
+  /**
+   * Resets the game session
+   */
   public void reset() {
     serverIp = null;
     clientId = null;

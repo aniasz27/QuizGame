@@ -2,6 +2,7 @@ package client.utils;
 
 import client.scenes.MainCtrl;
 import commons.Joker;
+import commons.JokerMessage;
 import java.lang.reflect.Type;
 import javafx.application.Platform;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -28,13 +29,13 @@ public class JokerStompSessionHandler implements StompSessionHandler {
   @Override
   public void handleFrame(StompHeaders headers, Object payload) {
     System.out.println("Handled framed!");
-    Joker joker = (Joker) payload;
-    Platform.runLater(() -> mainCtrl.showJoker(joker));
+    JokerMessage message = (JokerMessage) payload;
+    Platform.runLater(() -> mainCtrl.showJoker(message.joker, message.clientId));
   }
 
   @Override
   public Type getPayloadType(StompHeaders headers) {
-    return Joker.class;
+    return JokerMessage.class;
   }
 
   @Override
