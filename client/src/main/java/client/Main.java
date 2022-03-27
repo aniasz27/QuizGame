@@ -26,6 +26,7 @@ import client.scenes.ExitOverlayCtrl;
 import client.scenes.GuessCtrl;
 import client.scenes.HelpOverlayCtrl;
 import client.scenes.HowMuchCtrl;
+import client.scenes.InsteadOfCtrl;
 import client.scenes.IntermediateLeaderboardCtrl;
 import client.scenes.MainCtrl;
 import client.scenes.SpWaitingRoomCtrl;
@@ -36,6 +37,7 @@ import com.google.inject.Injector;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -88,7 +90,11 @@ public class Main extends Application {
       "client/scenes/Guess.fxml",
       "client/css/Guess.css"
     );
-
+    var instead = FXML.load(
+      InsteadOfCtrl.class,
+      "client/scenes/InsteadOfScreen.fxml",
+      "client/css/HowMuch.css"
+    );
     var intermediateLeaderboard = FXML.load(
       IntermediateLeaderboardCtrl.class,
       "client/scenes/IntermediateLeaderboard.fxml",
@@ -123,13 +129,14 @@ public class Main extends Application {
     );
 
     var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-    mainCtrl.initialize(primaryStage, splash, connectScreen, waitingRoom, spWaitingRoom, howMuch,
+    mainCtrl.initialize(primaryStage, splash, connectScreen, waitingRoom, spWaitingRoom, howMuch, instead,
       whatRequiresMoreEnergy, guess, intermediateLeaderboard, activityList, editActivity, helpOverlay, exitOverlay,
       endScreen);
 
     //stops the thread when user closes the window
     primaryStage.setOnCloseRequest(e -> {
-      waitingRoom.getKey().stop();
+      Platform.exit();
+      System.exit(0);
     });
   }
 }

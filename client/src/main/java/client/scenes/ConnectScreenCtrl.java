@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import jakarta.ws.rs.WebApplicationException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -63,6 +64,8 @@ public class ConnectScreenCtrl {
             server.keepAlive(mainCtrl.serverIp, mainCtrl.clientId, mainCtrl.waitingForGame);
           } catch (Exception e) {
             e.printStackTrace();
+            Platform.runLater(mainCtrl::showConnect);
+            mainCtrl.reset();
           }
         },
         0,

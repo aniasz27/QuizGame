@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 @Entity
 @JsonTypeInfo(
@@ -19,7 +18,8 @@ import javax.persistence.Table;
   @JsonSubTypes.Type(value = EstimateQuestion.class, name = "ESTIMATE"),
   @JsonSubTypes.Type(value = HowMuchQuestion.class, name = "HOWMUCH"),
   @JsonSubTypes.Type(value = IntermediateLeaderboardQuestion.class, name = "INTERLEADERBOARD"),
-  @JsonSubTypes.Type(value = EndScreen.class, name = "ENDSCREEN")
+  @JsonSubTypes.Type(value = EndScreen.class, name = "ENDSCREEN"),
+  @JsonSubTypes.Type(value = InsteadOfQuestion.class, name = "INSTEAD")
 })
 @SuppressWarnings("all")
 public abstract class Question {
@@ -28,15 +28,17 @@ public abstract class Question {
   @GeneratedValue(strategy = GenerationType.AUTO)
   public long id;
 
-  public Type type;
+  public int number;
 
+  public Type type;
 
   public enum Type {
     MULTICHOICE(0),
     ESTIMATE(1),
     HOWMUCH(2),
     INTERLEADERBOARD(3),
-    ENDSCREEN(4);
+    ENDSCREEN(4),
+    INSTEAD(5);
 
     private final int type;
 
@@ -60,5 +62,4 @@ public abstract class Question {
   public Question(Type type) {
     this.type = type;
   }
-
 }

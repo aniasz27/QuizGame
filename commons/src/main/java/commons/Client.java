@@ -12,24 +12,6 @@ public class Client {
   public LocalDateTime lastSeen = LocalDateTime.now();
   public boolean waitingForGame;
 
-  // bad hack because LocalDateTime can't be serialized (or rather I don't know how to make it serializable)
-  //public static class SerializableClient extends Client {
-  //  public String id;
-  //  public String username;
-  //  public boolean waiting;
-  //
-  //  public SerializableClient(String id, String username, boolean waiting) {
-  //    this.id = id;
-  //    this.username = username;
-  //    this.waiting = waiting;
-  //  }
-  //
-  //  @Override
-  //  public Client observe() {
-  //    throw new UnsupportedOperationException("no date for u");
-  //  }
-  //}
-
   public Client() {
   }
 

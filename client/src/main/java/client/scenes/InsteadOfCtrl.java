@@ -4,7 +4,7 @@ import client.scenes.helpers.QuestionCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Activity;
-import commons.MultipleChoiceQuestion;
+import commons.InsteadOfQuestion;
 import commons.Question;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
@@ -22,7 +22,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
-public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initializable {
+public class InsteadOfCtrl extends QuestionCtrl implements Initializable {
 
   @FXML
   private Button button0;
@@ -35,7 +35,19 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
   @FXML
   private Circle circle;
   @FXML
+  private Label emoji1;
+  @FXML
+  private Label emoji2;
+  @FXML
+  private Label emoji3;
+  @FXML
+  private Label emoji4;
+  @FXML
+  private Label emoji5;
+  @FXML
   private GridPane emojiGrid;
+  @FXML
+  private Button emojiButton;
   @FXML
   private StackPane pane;
   @FXML
@@ -44,30 +56,35 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
   private Button hint;
   @FXML
   private Button minusTime;
+  @FXML
+  private Text title;
 
   private Button[] buttons;
+  private Label[] emojis;
   private Button[] jokers;
 
   private Button clickedButton;
-  private MultipleChoiceQuestion question;
+  private InsteadOfQuestion question;
   private boolean dbPoint;
 
   @Inject
-  WhatRequiresMoreEnergyCtrl(ServerUtils server, MainCtrl mainCtrl) {
+  InsteadOfCtrl(ServerUtils server, MainCtrl mainCtrl) {
     super(server, mainCtrl);
   }
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    super.initialize(location, resources);
     buttons = new Button[] {button0, button1, button2};
+    emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
     jokers = new Button[] {doublePts, minusTime, hint};
+    hoverEffect(circle, emojiGrid, emojiButton, pane);
   }
 
   @Override
   public void displayQuestion(Question question) {
     displayEmojis(circle, emojiGrid, pane);
-    this.question = (MultipleChoiceQuestion) question;
+    this.question = (InsteadOfQuestion) question;
+    this.title.setText(((InsteadOfQuestion) question).getQuestion());
     this.clickedButton = null;
 
     // reset correct button colors
@@ -165,8 +182,5 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
   public void doublePoints() {
     dbPoint = doublePoints(doublePts);
   }
-
-  public void decreaseTime() {
-    decreaseTimeQ(minusTime);
-  }
 }
+

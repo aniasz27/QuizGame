@@ -24,9 +24,6 @@ import javafx.scene.text.Text;
 
 
 public class GuessCtrl extends QuestionCtrl implements Initializable {
-  private EstimateQuestion question;
-  private Activity activity;
-
   @FXML
   public StackPane imgContainer;
   @FXML
@@ -42,24 +39,21 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   @FXML
   private Circle circle;
   @FXML
-  private Label emoji1;
-  @FXML
-  private Label emoji2;
-  @FXML
-  private Label emoji3;
-  @FXML
-  private Label emoji4;
-  @FXML
-  private Label emoji5;
-  @FXML
   private GridPane emojiGrid;
   @FXML
-  private Button emojiButton;
-  @FXML
   private StackPane pane;
+  @FXML
+  private Button doublePts;
+  @FXML
+  private Button hint;
+  @FXML
+  private Button minusTime;
 
-  private Label[] emojis;
-  private boolean correct;
+  private boolean dbPoint;
+  private Button[] jokers;
+  private int point;
+  private EstimateQuestion question;
+  private Activity activity;
 
   @Inject
   GuessCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -68,30 +62,26 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
-    emojiButton.setOnMouseEntered(event -> {
-      pane.setVisible(true);
-      circle.setVisible(true);
-      emojiGrid.setVisible(true);
-    });
-    pane.setOnMouseExited(event -> {
-      pane.setVisible(false);
-      circle.setVisible(false);
-      emojiGrid.setVisible(false);
-    });
+    super.initialize(location, resources);
+    jokers = new Button[] {doublePts, minusTime, hint};
   }
 
+  /**
+   * Displays question on the screen
+   *
+   * @param question to display
+   */
   @Override
   public void displayQuestion(Question question) {
-    pane.setVisible(false);
-    circle.setVisible(false);
-    emojiGrid.setVisible(false);
-    this.correct = false;
+    displayEmojis(circle, emojiGrid, pane);
+    this.dbPoint = false;
     this.question = (EstimateQuestion) question;
     this.activity = this.question.getActivity();
     this.submit.setDisable(false);
     this.answer.getStyleClass().remove("good");
     this.answer.getStyleClass().remove("bad");
+    displayJokers(jokers);
+    this.hint.setDisable(true);
 
     Rectangle clip = new Rectangle(
       imgContainer.getWidth(), imgContainer.getHeight()
@@ -102,24 +92,22 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     imageView.setImage(new Image(new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity.id))));
 
     description.setText(activity.getTitle());
-    points.setText("Points: " + mainCtrl.getPoints());
+    showPoints(points);
     answer.setText("Type in your answer");
   }
 
   /**
-   * On clicking the submit button on the screen, the answer gets evaluated and the correct score is shown
+   * On clicking the submit button on the screen, the answer gets evaluated
    */
   public void checkCorrect() {
-    if (answer.getText() == "") {
+    mainCtrl.stopPointsTimer();
+    if (answer.getText().equals("")) {
       return;
     }
-    int value = Integer.parseInt(answer.getText());
-    int point = (int) (question.calculateHowClose(value) * 100);
+
+    long value = Long.parseLong(answer.getText());
+    point = (int) (question.calculateHowClose(value) * mainCtrl.getPointsOffset() / 100);
     submit.setDisable(true);
-    if (point != 0) {
-      correct = true;
-      mainCtrl.addPoints(point);
-    }
   }
 
   /**
@@ -129,25 +117,30 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     answer.setText("");
   }
 
-  /**
-   * Sets the color to green/red, shows the right answer and updates the points on the screen
-   */
-  public void showPoints() {
-    int userPoints = mainCtrl.getPoints();
-    points.setText("Points: " + userPoints);
-  }
-
+  @Override
   public void showCorrect() {
-    answer.getStyleClass().add(correct ? "good" : "bad");
-    showPoints();
+    answer.getStyleClass().add(point != 0 ? "good" : "bad");
+    if (dbPoint) {
+      point *= 2;
+    }
+    mainCtrl.addPoints(point);
+    showPoints(points);
     answer.setText("Correct answer is: " + question.getAnswer());
   }
 
-  /**
-   * Disable button in case when user does not pick an answer
-   */
   @Override
   public void disableButtons() {
     submit.setDisable(true);
+    for (Button joker : jokers) {
+      joker.setDisable(true);
+    }
+  }
+
+  public void doublePoints() {
+    dbPoint = doublePoints(doublePts);
+  }
+
+  public void decreaseTime() {
+    decreaseTimeQ(minusTime);
   }
 }
