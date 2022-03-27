@@ -101,6 +101,7 @@ public class MainCtrl {
   public String serverIp;
   public String clientId;
   public String gameId;
+  public String previousGameId;
   public ScheduledExecutorService keepAliveExec;
   public boolean waitingForGame;
   public boolean[] usedJokers;
@@ -271,6 +272,7 @@ public class MainCtrl {
    * Shows the next question, starts a timer from the server and uses long polling to determine when to change state
    */
   public void nextRound() {
+    System.out.println(playerExited);
     if (playerExited) {
       return;
     }
@@ -295,8 +297,14 @@ public class MainCtrl {
   }
 
   public void startQuestionTimer() {
+    String lastGameId = gameId;
     // set a timer for 10s (question duration)
     boolean finished = server.startServerTimer(serverIp, clientId, 10000);
+
+    // game has changed, ie player has exited and gone into new game
+    if (!lastGameId.equals(gameId) || playerExited) {
+      return;
+    }
 
     if (finished) {
       switch (question.type) {
@@ -323,7 +331,14 @@ public class MainCtrl {
   }
 
   public void startBreakTimer() {
+    String lastGameId = gameId;
+
     boolean finished = server.startServerTimer(serverIp, clientId, 2000); // 2s time given for break
+
+    // game has changed, ie player has exited and gone into new game
+    if (!lastGameId.equals(gameId) || playerExited) {
+      return;
+    }
 
     if (finished) {
       nextRound();
