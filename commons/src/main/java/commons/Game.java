@@ -158,12 +158,12 @@ public class Game {
    */
   public Question next() {
     Question question;
-    if (questionCounter >= 2) {
+    if (questionCounter >= 20) {
       question = new EndScreen();
       question.number = questionCounter;
       return question;
     }
-    if (questionCounter == 1 && multiplayer) {
+    if (questionCounter == 10 && multiplayer) {
       showedLeaderboard = true;
       question = new IntermediateLeaderboardQuestion();
       question.number = questionCounter;
@@ -179,12 +179,12 @@ public class Game {
    */
   public Question current() {
     Question question;
-    if (questionCounter >= 2) {
+    if (questionCounter >= 20) {
       question = new EndScreen();
       question.number = questionCounter;
       return question;
     }
-    if (questionCounter == 1 && multiplayer) {
+    if (questionCounter == 10 && multiplayer) {
       showedLeaderboard = true;
       question = new IntermediateLeaderboardQuestion();
       question.number = questionCounter;
