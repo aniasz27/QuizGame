@@ -31,7 +31,6 @@ import java.util.Date;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -104,7 +103,7 @@ public class MainCtrl {
   public ScheduledExecutorService keepAliveExec;
   public boolean waitingForGame;
   public boolean[] usedJokers;
-  public int questionNumber = -1;
+  public int questionNumber = 0;
 
   private int points;
 
@@ -249,15 +248,17 @@ public class MainCtrl {
    * Starts the game, assigns the points from the game controller
    */
   public void start() {
-    this.usedJokers = new boolean[3];
-    gameId = server.startGame(serverIp);
-    points = 0;
+    gameId = server.startGame(serverIp, this.multiplayer);
     play();
   }
 
   public void play() {
     playerExited = false;
-    nextRound();
+    this.usedJokers = new boolean[3];
+    points = 0;
+    questionNumber = 0;
+
+    nextQuestion();
   }
 
   /**
@@ -267,99 +268,66 @@ public class MainCtrl {
     return points;
   }
 
-  /**
-   * Shows the next question, starts a timer from the server and uses long polling to determine when to change state
-   */
-  public void nextRound() {
-    if (playerExited) {
-      return;
-    }
 
-    nextQuestion();
-
-    Task<Void> task = new Task<>() {
-      @Override
-      protected Void call() {
-        // do not start timer for next question if on end screen
-        if (!question.type.equals(Question.Type.ENDSCREEN)) {
-          startQuestionTimer();
-        }
-
-        return null;
-      }
-    };
-
-    timerThread = new Thread(task);
-    timerThread.setDaemon(true);
-    timerThread.start();
-  }
-
-  public void startQuestionTimer() {
-    // set a timer for 10s (question duration)
-    boolean finished = server.startServerTimer(serverIp, clientId, 10000);
-
-    if (finished) {
-      switch (question.type) {
-        case MULTICHOICE:
-          Platform.runLater(() -> whatRequiresMoreEnergyCtrl.disableButtons());
-          Platform.runLater(() -> whatRequiresMoreEnergyCtrl.showCorrect());
-          break;
-        case ESTIMATE:
-          Platform.runLater(() -> guessCtrl.disableButtons());
-          Platform.runLater(() -> guessCtrl.showCorrect());
-          break;
-        case HOWMUCH:
-          Platform.runLater(() -> howMuchCtrl.disableButtons());
-          Platform.runLater(() -> howMuchCtrl.showCorrect());
-          break;
-        default:
-          System.out.println("Not a question");
-          break;
-      }
-      startBreakTimer();
-    } else {
-      System.err.println("Error in question timer.");
-    }
-  }
-
-  public void startBreakTimer() {
-    boolean finished = server.startServerTimer(serverIp, clientId, 2000); // 2s time given for break
-
-    if (finished) {
-      nextRound();
-    } else {
-      System.err.println("Error in break timer.");
+  public void showAnswer() {
+    switch (question.type) {
+      case MULTICHOICE:
+        Platform.runLater(() -> whatRequiresMoreEnergyCtrl.disableButtons());
+        Platform.runLater(() -> whatRequiresMoreEnergyCtrl.showCorrect());
+        break;
+      case ESTIMATE:
+        Platform.runLater(() -> guessCtrl.disableButtons());
+        Platform.runLater(() -> guessCtrl.showCorrect());
+        break;
+      case HOWMUCH:
+        Platform.runLater(() -> howMuchCtrl.disableButtons());
+        Platform.runLater(() -> howMuchCtrl.showCorrect());
+        break;
+      case INTERLEADERBOARD:
+        break;
+      default:
+        System.out.println("Not a question");
+        break;
     }
   }
 
   private void nextQuestion() {
-    question = server.nextQuestion(serverIp, gameId, questionNumber);
-    questionNumber = question.number;
-    switch (question.type) {
-      case MULTICHOICE:
-        System.out.println("Showed multiple choice");
-        Platform.runLater(() -> showWhatRequiresMoreEnergy((MultipleChoiceQuestion) question));
-        break;
-      case ESTIMATE:
-        System.out.println("Showed guess");
-        Platform.runLater(() -> showGuess((EstimateQuestion) question));
-        break;
-      case HOWMUCH:
-        System.out.println("Showed how much");
-        Platform.runLater(() -> showHowMuch((HowMuchQuestion) question));
-        break;
-      case INTERLEADERBOARD:
-        System.out.println("Showed Intermediate Leaderboard");
-        Platform.runLater(this::showIntermediateLeaderboard);
-        break;
-      case ENDSCREEN:
-        System.out.println("Showed end screen");
-        server.addScore(serverIp, new Score(clientId, name, points));
-        Platform.runLater(this::showEndScreen);
-        break;
-      default:
-        System.out.println("Wrong question type");
-        break;
+    server.nextQuestion(serverIp, gameId, question -> {
+      this.question = question;
+      showCurrentQuestion();
+    });
+  }
+
+  public void showCurrentQuestion() {
+    if (question.showCorrect) {
+      showAnswer();
+    } else {
+      switch (this.question.type) {
+        case MULTICHOICE:
+          System.out.println("Showed multiple choice");
+          Platform.runLater(() -> showWhatRequiresMoreEnergy((MultipleChoiceQuestion) this.question));
+          break;
+        case ESTIMATE:
+          System.out.println("Showed guess");
+          Platform.runLater(() -> showGuess((EstimateQuestion) this.question));
+          break;
+        case HOWMUCH:
+          System.out.println("Showed how much");
+          Platform.runLater(() -> showHowMuch((HowMuchQuestion) this.question));
+          break;
+        case INTERLEADERBOARD:
+          System.out.println("Showed Intermediate Leaderboard");
+          Platform.runLater(this::showIntermediateLeaderboard);
+          break;
+        case ENDSCREEN:
+          System.out.println("Showed end screen");
+          server.addScore(serverIp, new Score(clientId, name, points));
+          Platform.runLater(this::showEndScreen);
+          break;
+        default:
+          System.out.println("Wrong question type");
+          break;
+      }
     }
   }
 
@@ -424,6 +392,7 @@ public class MainCtrl {
    * Shows the end screen to the user, updates the user points in the game controller
    */
   public void showEndScreen() {
+    server.stopQuestionThread();
     primaryStage.getScene().setRoot(endScreenParent);
     endScreenCtrl.refresh();
     Score check = server.updateScore(serverIp, clientId, points);
@@ -490,6 +459,9 @@ public class MainCtrl {
    * @param scores             Information
    */
   public static void refreshLeaderboard(VBox leaderboardDisplay, Iterable<Score> scores) {
+    if (!scores.iterator().hasNext()) {
+      return;
+    }
     leaderboardDisplay.getChildren().removeAll(leaderboardDisplay.getChildren());
 
     final boolean[] first = {true};
@@ -541,7 +513,11 @@ public class MainCtrl {
         maxScore.set(s.getPoints());
 
       } else {
-        line.setEndX(200 * s.getPoints() / maxScore.get());
+        if (maxScore.get() != 0) {
+          line.setEndX(200 * s.getPoints() / maxScore.get());
+        } else {
+          line.setEndX(200);
+        }
       }
       line.getStyleClass().add("timer-bar");
 
@@ -570,7 +546,7 @@ public class MainCtrl {
     clientId = null;
     gameId = null;
     waitingForGame = false;
-    questionNumber = -1;
+    questionNumber = 0;
     points = 0;
     question = null;
     keepAliveExec.shutdownNow();

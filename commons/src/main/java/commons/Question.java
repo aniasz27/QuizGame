@@ -29,6 +29,9 @@ public abstract class Question {
 
   public int number;
 
+  // used for displaying the question during the game
+  public boolean showCorrect;
+
   public Type type;
 
   public enum Type {

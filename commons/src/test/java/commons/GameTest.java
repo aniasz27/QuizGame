@@ -24,7 +24,7 @@ public class GameTest {
   @Test
   public void gameIdConstructorTest() {
     String id = "ID";
-    Game gameWithId = new Game(id);
+    Game gameWithId = new Game(id, true);
     assertNotNull(gameWithId);
   }
 
@@ -45,7 +45,7 @@ public class GameTest {
     collectionQuestions.add(q2);
     collectionQuestions.add(q3);
     String id = "ID";
-    Game game = new Game(id, collection, collectionQuestions);
+    Game game = new Game(id, collection, collectionQuestions, true);
     assertNotNull(game);
   }
 
@@ -66,7 +66,7 @@ public class GameTest {
     questions[1] = q2;
     questions[2] = q3;
     String id = "ID";
-    Game game = new Game(id, collection, questions);
+    Game game = new Game(id, collection, questions, true);
     assertNotNull(game);
   }
 
@@ -87,7 +87,7 @@ public class GameTest {
     collectionQuestions.add(q2);
     collectionQuestions.add(q3);
     String id = "ID";
-    Game game = new Game(id, collection, collectionQuestions);
+    Game game = new Game(id, collection, collectionQuestions, true);
     assertNotNull(game);
   }
 
@@ -108,7 +108,7 @@ public class GameTest {
     questions[1] = q2;
     questions[2] = q3;
     String id = "ID";
-    Game game = new Game(id, collection, questions);
+    Game game = new Game(id, collection, questions, true);
     assertNotNull(game);
   }
 
@@ -118,7 +118,7 @@ public class GameTest {
     Client c1 = new Client("ID1", "US1", true);
     Map<Client, Integer> map = new HashMap<>();
     Question[] questions = new Question[3];
-    Game game = new Game(id, map, questions);
+    Game game = new Game(id, map, questions, true);
     game.addPlayer(c1);
     assertTrue(game.players.size() > 0);
   }
@@ -129,7 +129,7 @@ public class GameTest {
     Client c1 = new Client("ID1", "US1", true);
     Map<Client, Integer> map = new HashMap<>();
     Question[] questions = new Question[3];
-    Game game = new Game(id, map, questions);
+    Game game = new Game(id, map, questions, true);
     game.addPlayer(c1);
     game.changeScore(c1, 100);
     assertTrue(game.players.get(c1) == 100);
@@ -141,7 +141,7 @@ public class GameTest {
     Client c1 = new Client("ID1", "US1", true);
     Map<Client, Integer> map = new HashMap<>();
     Question[] questions = new Question[3];
-    Game game = new Game(id, map, questions);
+    Game game = new Game(id, map, questions, true);
     game.addPlayer(c1);
     game.increaseScore(c1, 50);
     assertTrue(game.players.get(c1) == 50);
@@ -153,7 +153,7 @@ public class GameTest {
     Client c1 = new Client("ID1", "US1", true);
     Map<Client, Integer> map = new HashMap<>();
     Question[] questions = new Question[3];
-    Game game = new Game(id, map, questions);
+    Game game = new Game(id, map, questions, true);
     game.addPlayer(c1);
     assertTrue(c1.equals(game.getPlayerById("ID1")));
   }
@@ -163,7 +163,7 @@ public class GameTest {
     String id = "GameID";
     Map<Client, Integer> map = new HashMap<>();
     Question[] questions = new Question[3];
-    Game game = new Game(id, map, questions);
+    Game game = new Game(id, map, questions, true);
     assertNull(game.getPlayerById("ID1"));
   }
 
@@ -173,7 +173,7 @@ public class GameTest {
     Client c1 = new Client("ID1", "US1", true);
     Map<Client, Integer> map = new HashMap<>();
     Question[] questions = new Question[3];
-    Game game = new Game(id, map, questions);
+    Game game = new Game(id, map, questions, true);
     game.addPlayer(c1);
     assertTrue(game.containsPlayer("ID1"));
   }
@@ -195,8 +195,8 @@ public class GameTest {
     questions[1] = q2;
     questions[2] = q3;
     String id = "ID";
-    Game game = new Game(id, collection, questions);
-    assertEquals(q1, game.next());
+    Game game = new Game(id, collection, questions, true);
+    assertEquals(q1, game.current(true));
   }
 
   @Test
@@ -208,16 +208,30 @@ public class GameTest {
     Map<Client, Integer> collection = new HashMap<>();
     collection.put(c1, 0);
     Question q1 = new EstimateQuestion();
-    Question[] questions = new Question[20];
-    for (int i = 0; i < 20; i++) {
-      questions[i] = q1;
-    }
-    Game game = new Game(id, collection, questions);
-    Question finalQuestion;
+    Question[] questions = new Question[22];
+
     for (int i = 0; i < 21; i++) {
-      finalQuestion = game.next();
+      questions[i] = q1;
+      questions[i].number = i;
     }
-    assertTrue(game.next().getType().equals(Question.Type.ENDSCREEN));
+    questions[10] = new IntermediateLeaderboardQuestion();
+    questions[10].number = 10;
+    questions[21] = new EndScreen();
+    questions[21].number = 21;
+    Game game = new Game(id, collection, questions, false);
+    Game game2 = new Game(id, collection, questions, true);
+
+
+    Question finalQuestion = null;
+    for (int i = 0; i < 21; i++) {
+      finalQuestion = game.current(true);
+      game.increaseQuestionCounter();
+      game2.increaseQuestionCounter();
+    }
+    game.increaseQuestionCounter();
+    assertTrue(finalQuestion.getType().equals(Question.Type.ENDSCREEN));
+    finalQuestion = game2.current(true);
+    assertTrue(finalQuestion.getType().equals(Question.Type.ENDSCREEN));
   }
 
   @Test
@@ -229,20 +243,20 @@ public class GameTest {
     collection.put(c1, 0);
     Question q1 = new EstimateQuestion();
     Question q2 = new HowMuchQuestion();
-    Question[] questions = new Question[20];
+    Question[] questions = new Question[22];
     questions[0] = q1;
-    for (int i = 1; i < 20; i++) {
+    for (int i = 1; i < 22; i++) {
       questions[i] = q2;
     }
     String id = "ID";
-    Game game = new Game(id, collection, questions);
-    assertEquals(q1, game.current());
+    Game game = new Game(id, collection, questions, true);
+    assertEquals(q1, game.current(false));
   }
 
   @Test
   public void toStringTest() {
     Game game = new Game();
-    String result = "Game{id='null', players={}, questionCounter=0, showedLeaderboard=false, questions=null}";
+    String result = "Game{id='null', players={}, questionCounter=0, questions=null}";
     assertEquals(result, game.toString());
   }
 
@@ -269,8 +283,8 @@ public class GameTest {
     questions[1] = q2;
     questions[2] = q3;
     String id = "ID";
-    Game game = new Game(id, collection, questions);
-    Game gameNew = new Game(id, collection, questions);
+    Game game = new Game(id, collection, questions, true);
+    Game gameNew = new Game(id, collection, questions, true);
     assertEquals(game, gameNew);
   }
 
@@ -292,8 +306,8 @@ public class GameTest {
     questions[2] = q3;
     String id = "ID";
     Map<Client, Integer> collection1 = new HashMap<>();
-    Game game = new Game(id, collection, questions);
-    Game gameNew = new Game(id, collection1, questions);
+    Game game = new Game(id, collection, questions, true);
+    Game gameNew = new Game(id, collection1, questions, true);
     assertFalse(game.equals(gameNew));
   }
 
@@ -306,13 +320,34 @@ public class GameTest {
     Map<Client, Integer> collection = new HashMap<>();
     collection.put(c1, 0);
     Question q1 = new EstimateQuestion();
-    Question[] questions = new Question[20];
-    for (int i = 0; i < 20; i++) {
+    Question[] questions = new Question[22];
+    for (int i = 0; i < 22; i++) {
       questions[i] = q1;
     }
-    Game game = new Game(id, collection, questions);
+    Game game = new Game(id, collection, questions, true);
     assertTrue(game.hashCode() == Math.floor(game.hashCode()));
   }
 
-
+  @Test
+  void multiplayerBooleanTest() {
+    Client c1 = new Client("ID1", "US1", true);
+    Client c2 = new Client("ID2", "US2", true);
+    Client c3 = new Client("ID3", "US3", true);
+    List collection = new LinkedList();
+    collection.add(c1);
+    collection.add(c2);
+    collection.add(c3);
+    Question q1 = new EstimateQuestion();
+    Question q2 = new HowMuchQuestion();
+    Question q3 = new MultipleChoiceQuestion();
+    Question[] questions = new Question[3];
+    questions[0] = q1;
+    questions[1] = q2;
+    questions[2] = q3;
+    String id = "ID";
+    Game game = new Game(id, collection, questions, true);
+    assertTrue(game.isMultiplayer());
+    game.setMultiplayer(false);
+    assertFalse(game.isMultiplayer());
+  }
 }

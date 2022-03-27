@@ -1,12 +1,13 @@
 package server.api;
 
 import commons.Client;
+import commons.EndScreen;
 import commons.EstimateQuestion;
 import commons.Game;
 import commons.HowMuchQuestion;
+import commons.IntermediateLeaderboardQuestion;
 import commons.MultipleChoiceQuestion;
 import commons.Question;
-import commons.Score;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -36,7 +37,7 @@ public class GameController {
 
   private final ExecutorService timerThreads = Executors.newFixedThreadPool(10);
 
-  private final List<Game> games = new ArrayList<>();
+  public List<Game> games = new ArrayList<>();
 
   public GameController(
     ActivityController activityController,
@@ -51,9 +52,9 @@ public class GameController {
   }
 
   private Question[] generateQuestions() {
-    Question[] questions = new Question[20];
+    Question[] questions = new Question[22];
 
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 21; i++) {
       switch (random.nextInt(3)) {
         case 0:
           questions[i] = new MultipleChoiceQuestion(
@@ -73,6 +74,10 @@ public class GameController {
       }
       questions[i].number = i;
     }
+    questions[10] = new IntermediateLeaderboardQuestion();
+    questions[10].number = 10;
+    questions[21] = new EndScreen();
+    questions[21].number = 21;
 
     return questions;
   }
@@ -83,15 +88,16 @@ public class GameController {
    *
    * @return generated game id
    */
-  @PostMapping("/play")
-  public synchronized String play() {
+  @PutMapping("/play")
+  public synchronized String play(@RequestParam("m") boolean multiplayer) {
     String gameID = UUID.randomUUID().toString();
     List<Client> waiting = playerController.getPlayers().stream()
       .filter(client -> client.waitingForGame).collect(Collectors.toList());
     games.add(new Game(
       gameID,
       waiting,
-      generateQuestions()
+      generateQuestions(),
+      multiplayer
     ));
 
     for (Client client : waiting) {
@@ -99,9 +105,13 @@ public class GameController {
     }
 
     System.out.println(gameID);
-    System.out.println(games);
-
     notifyAll();
+    try {
+      Thread.sleep(50);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    initiateGame(gameID);
 
     return gameID;
   }
@@ -117,9 +127,42 @@ public class GameController {
     games.add(new Game(
       gameID,
       playerController.getPlayers().stream().filter(client -> client.id.equals(uid)).collect(Collectors.toList()),
-      generateQuestions()
-    ));
+      generateQuestions(),
+      false));
+    initiateGame(gameID);
     return gameID;
+  }
+
+  private void initiateGame(String id) {
+    timerThreads.execute(() -> {
+      try {
+        Thread.sleep(500);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+      Game game = games.stream().filter(g -> g.id.equals(id)).findFirst()
+        .orElseThrow(StringIndexOutOfBoundsException::new);
+
+      for (int i = 0; i <= 21; i++) {
+        game.playerListeners.forEach((k, l) -> l.accept(game.current(false)));
+        // Question timer
+        try {
+          Thread.sleep(10000);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+        game.playerListeners.forEach((k, l) -> l.accept(game.current(true)));
+
+        // Timer for break
+        try {
+          Thread.sleep(2000);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+
+        game.increaseQuestionCounter();
+      }
+    });
   }
 
   /**
@@ -144,41 +187,6 @@ public class GameController {
       .filter(game -> game.players.keySet().stream().anyMatch(client -> client.id.equals(uid))).findFirst().get().id;
   }
 
-  /**
-   * Gets the next question or screen in a game
-   *
-   * @param id             ID of the game
-   * @param questionNumber the number of the question the client is currently on
-   * @return the next screen, with status 410 if the game ended
-   */
-  @GetMapping("/next/{id}")
-  public ResponseEntity<Question> next(
-    @PathVariable String id,
-    @RequestParam("q") int questionNumber
-  ) {
-    System.out.println(id);
-    System.out.println(games);
-
-    Game game = games.stream().filter(g -> g.id.equals(id)).findFirst()
-      .orElseThrow(StringIndexOutOfBoundsException::new);
-
-    Question question;
-    if (questionNumber < game.questionCounter) {
-      question = game.current();
-    } else {
-      question = game.next();
-    }
-    System.out.println(question.type);
-    if (question.type.equals(Question.Type.ENDSCREEN)) {
-      if (game.players.size() == 1) {
-        Client player = (Client) game.players.keySet().toArray()[0];
-        scoreController.addScore(new Score(player.id, player.username, game.players.get(player)));
-      }
-      return ResponseEntity.status(HttpStatus.GONE).body(question);
-    }
-
-    return ResponseEntity.ok(question);
-  }
 
   @GetMapping("/startTimer/{id}")
   public DeferredResult<Boolean> serverTimerStart(@PathVariable String id, @RequestParam long duration) {
@@ -192,7 +200,6 @@ public class GameController {
         result.setErrorResult(false);
       }
     });
-
     return result;
   }
 
@@ -240,5 +247,31 @@ public class GameController {
       .orElseThrow(StringIndexOutOfBoundsException::new);
     return game.questionCounter;
   }
+
+
+  /**
+   * Gets the next question or screen in a game
+   *
+   * @param id ID of the game
+   * @return a Result containing the Question or a NO_CONTENT http status if expired
+   */
+  @GetMapping("/next/{id}")
+  public DeferredResult<ResponseEntity<Question>> next(
+    @PathVariable String id) {
+    var noContent = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    var res =
+      new DeferredResult<ResponseEntity<Question>>(15000L, noContent);  //timeout after 15 seconds
+
+    Game game = games.stream().filter(g -> g.id.equals(id)).findFirst()
+      .orElseThrow(StringIndexOutOfBoundsException::new);
+
+    var key = new Object();
+    game.playerListeners.put(key, u -> res.setResult(ResponseEntity.ok(u)));
+
+    res.onCompletion(() -> game.playerListeners.remove(key));
+
+    return res;
+  }
+
 }
 

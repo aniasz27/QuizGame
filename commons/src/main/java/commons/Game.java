@@ -5,14 +5,16 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class Game {
   public String id;
   public Map<Client, Integer> players = new HashMap<>();
   public int questionCounter = 0;
-  public boolean showedLeaderboard = false;
   public Question[] questions;
+  public boolean multiplayer = false;
+  public Map<Object, Consumer<Question>> playerListeners = new HashMap<>();
 
   @SuppressWarnings("unused")
   public Game() {
@@ -21,62 +23,73 @@ public class Game {
   /**
    * Creates a new game without players
    *
-   * @param id the game's ID
+   * @param id          the game's ID
+   * @param multiplayer the game type
    */
-  public Game(String id) {
+  public Game(String id, boolean multiplayer) {
     this.id = id;
+    this.multiplayer = multiplayer;
   }
 
   /**
    * Creates a new game with players from a collection with scores set to 0
    *
-   * @param id        the game's ID
-   * @param players   the players in the game
-   * @param questions the questions in this game
+   * @param id          the game's ID
+   * @param players     the players in the game
+   * @param questions   the questions in this game
+   * @param multiplayer the game type
    */
-  public Game(String id, Collection<Client> players, Collection<Question> questions) {
+  public Game(String id, Collection<Client> players, Collection<Question> questions, boolean multiplayer) {
     this.id = id;
     this.players = players.stream().collect(Collectors.toMap(client -> client, client -> 0));
-    this.questions = questions.toArray(new Question[20]);
+    this.questions = questions.toArray(new Question[22]);
+    this.multiplayer = multiplayer;
   }
 
   /**
    * Creates a new game with players from a collection with scores set to 0
    *
-   * @param id        the game's ID
-   * @param players   the players in the game
-   * @param questions the questions in this game
+   * @param id          the game's ID
+   * @param players     the players in the game
+   * @param questions   the questions in this game
+   * @param multiplayer the game type
+   * @param multiplayer the game type
    */
-  public Game(String id, Collection<Client> players, Question[] questions) {
+  public Game(String id, Collection<Client> players, Question[] questions, boolean multiplayer) {
     this.id = id;
     this.players = players.stream().collect(Collectors.toMap(client -> client, client -> 0));
     this.questions = questions;
+    this.multiplayer = multiplayer;
   }
 
   /**
    * Creates a new game with players from a map
    *
-   * @param id        the game's ID
-   * @param players   map of players and their scores
-   * @param questions the questions in this game
+   * @param id          the game's ID
+   * @param players     map of players and their scores
+   * @param questions   the questions in this game
+   * @param multiplayer the game type
    */
-  public Game(String id, Map<Client, Integer> players, Collection<Question> questions) {
+  public Game(String id, Map<Client, Integer> players, Collection<Question> questions, boolean multiplayer) {
     this.id = id;
     this.players = players;
-    this.questions = questions.toArray(new Question[20]);
+    this.questions = questions.toArray(new Question[22]);
+    this.multiplayer = multiplayer;
   }
 
   /**
    * Creates a new game with players from a map
    *
-   * @param id        the game's ID
-   * @param players   map of players and their scores
-   * @param questions the questions in this game
+   * @param id          the game's ID
+   * @param players     map of players and their scores
+   * @param questions   the questions in this game
+   * @param multiplayer the game type
    */
-  public Game(String id, Map<Client, Integer> players, Question[] questions) {
+  public Game(String id, Map<Client, Integer> players, Question[] questions, boolean multiplayer) {
     this.id = id;
     this.players = players;
     this.questions = questions;
+    this.multiplayer = multiplayer;
   }
 
   /**
@@ -135,20 +148,8 @@ public class Game {
    *
    * @return the next question
    */
-  public Question next() {
-    Question question;
-    if (questionCounter >= 20) {
-      question = new EndScreen();
-      question.number = questionCounter;
-      return question;
-    }
-    if (questionCounter == 10 && !showedLeaderboard) {
-      showedLeaderboard = true;
-      question = new EndScreen();
-      question.number = questionCounter;
-      return question;
-    }
-    return questions[questionCounter++];
+  public void increaseQuestionCounter() {
+    questionCounter++;
   }
 
   /**
@@ -156,19 +157,23 @@ public class Game {
    *
    * @return the next question
    */
-  public Question current() {
+  public Question current(Boolean showCorrect) {
     Question question;
-    if (questionCounter >= 20) {
-      question = new EndScreen();
-      question.number = questionCounter;
-      return question;
+    question = questions[questionCounter];
+    question.showCorrect = showCorrect;
+    if (question.type.equals(Question.Type.INTERLEADERBOARD) && !isMultiplayer()) {
+      questionCounter++;
+      return current(showCorrect);
     }
-    if (questionCounter == 10 && !showedLeaderboard) {
-      question = new EndScreen();
-      question.number = questionCounter;
-      return question;
-    }
-    return questions[questionCounter];
+    return question;
+  }
+
+  public boolean isMultiplayer() {
+    return multiplayer;
+  }
+
+  public void setMultiplayer(boolean multiplayer) {
+    this.multiplayer = multiplayer;
   }
 
   @Override
@@ -177,7 +182,6 @@ public class Game {
       + "id='" + id + '\''
       + ", players=" + players
       + ", questionCounter=" + questionCounter
-      + ", showedLeaderboard=" + showedLeaderboard
       + ", questions=" + Arrays.toString(questions)
       + '}';
   }
@@ -190,15 +194,16 @@ public class Game {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-
-    return Objects.equals(id, ((Game) o).id) && Objects.equals(players, ((Game) o).players)
-      && questionCounter == ((Game) o).questionCounter && showedLeaderboard == ((Game) o).showedLeaderboard
-      && Objects.equals(questions, ((Game) o).questions);
+    Game game = (Game) o;
+    return questionCounter == game.questionCounter && multiplayer == game.multiplayer &&
+      Objects.equals(id, game.id) && Objects.equals(players, game.players) &&
+      Arrays.equals(questions, game.questions) &&
+      Objects.equals(playerListeners, game.playerListeners);
   }
 
   @Override
   public int hashCode() {
-    int result = Objects.hash(id, players, questionCounter, showedLeaderboard);
+    int result = Objects.hash(id, players, questionCounter, multiplayer, playerListeners);
     result = 31 * result + Arrays.hashCode(questions);
     return result;
   }

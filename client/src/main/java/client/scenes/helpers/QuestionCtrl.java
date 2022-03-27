@@ -54,6 +54,7 @@ public abstract class QuestionCtrl {
   private void back(ActionEvent actionEvent) {
     mainCtrl.playerExited = true;
     mainCtrl.openExitOverlay(false);
+    server.stopQuestionThread();
   }
 
   /**
