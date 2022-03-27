@@ -126,8 +126,8 @@ public class MainCtrl {
   private int pointsOffset;
   public JokerWebSocket jokerWebSocket;
   public EmojiWebSocket emojiWebSocket;
+  //The controller of the question that was last shown (ie currently being shown)
   public QuestionCtrl currentQuestionCtrl;
-    //The controller of the question that was last shown (ie currently being shown)
 
   @Inject
   public MainCtrl(ServerUtils server) {
