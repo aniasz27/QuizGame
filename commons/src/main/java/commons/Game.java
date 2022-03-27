@@ -220,10 +220,10 @@ public class Game {
       return false;
     }
     Game game = (Game) o;
-    return questionCounter == game.questionCounter && multiplayer == game.multiplayer
-      && Objects.equals(id, game.id) && Objects.equals(players, game.players)
-      && Arrays.equals(questions, game.questions)
-      && Objects.equals(playerListeners, game.playerListeners);
+    return questionCounter == game.questionCounter && multiplayer == game.multiplayer &&
+      Objects.equals(id, game.id) && Objects.equals(players, game.players) &&
+      Arrays.equals(questions, game.questions) &&
+      Objects.equals(playerListeners, game.playerListeners);
   }
 
   @Override
