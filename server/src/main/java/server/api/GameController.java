@@ -1,5 +1,6 @@
 package server.api;
 
+import commons.Activity;
 import commons.Client;
 import commons.EstimateQuestion;
 import commons.Game;
@@ -8,6 +9,8 @@ import commons.MultipleChoiceQuestion;
 import commons.Question;
 import commons.Score;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -56,10 +59,14 @@ public class GameController {
     for (int i = 0; i < 20; i++) {
       switch (random.nextInt(3)) {
         case 0:
+          Activity[] activities = activityController.getRandomActivityMultiple();
+          List<Activity> list = Arrays.asList(activities);
+          Collections.shuffle(list);
+          list.toArray(activities);
           questions[i] = new MultipleChoiceQuestion(
-            activityController.getRandomActivity().getBody(),
-            activityController.getRandomActivity().getBody(),
-            activityController.getRandomActivity().getBody()
+            activities[0],
+            activities[1],
+            activities[2]
           );
           break;
         case 1:
