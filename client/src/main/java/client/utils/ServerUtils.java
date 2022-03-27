@@ -110,6 +110,15 @@ public class ServerUtils {
       .post(Entity.json("START GAME"), String.class);
   }
 
+  public String startSingleGame(String ip, String uid) {
+    return ClientBuilder.newClient(new ClientConfig())
+      .target(ip)
+      .path("api/game/playSingle")
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
+      .post(Entity.json(uid), String.class);
+  }
+
   /**
    * Request to get a new question from the server
    *
@@ -269,5 +278,20 @@ public class ServerUtils {
       .request(APPLICATION_JSON)
       .accept(APPLICATION_JSON)
       .get(Score.class);
+  }
+
+  /**
+   * Sends the score to the server
+   *
+   * @param ip    of the server
+   * @param score to be sent
+   * @return Score score
+   */
+  public Score sendScore(String ip, Score score, String gameId) {
+    return ClientBuilder.newClient(new ClientConfig())
+      .target(ip).path("api/game/score/send/" + gameId)
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
+      .post(Entity.json(score), Score.class);
   }
 }

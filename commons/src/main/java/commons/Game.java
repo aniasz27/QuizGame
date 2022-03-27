@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import javax.persistence.criteria.CriteriaBuilder;
 
 public class Game {
   public String id;
@@ -13,6 +14,7 @@ public class Game {
   public int questionCounter = 0;
   public boolean showedLeaderboard = false;
   public Question[] questions;
+  public boolean multiplayer;
 
   @SuppressWarnings("unused")
   public Game() {
@@ -121,6 +123,25 @@ public class Game {
   }
 
   /**
+   * Sets the multiplayer field
+   *
+   * @param state - true if singleplayer, false if multiplayer
+   */
+  public void setMultiplayer(boolean state) {
+    this.multiplayer = state;
+  }
+
+  /**
+   * A getter for the multiplayer field
+   *
+   * @return true if player is in multiplayer game, false otherwise
+   */
+  public boolean getMultiplayer() {
+    return this.multiplayer;
+  }
+
+
+  /**
    * Checks if a player with a given ID is in this game
    *
    * @param userId the ID of the player
@@ -142,9 +163,9 @@ public class Game {
       question.number = questionCounter;
       return question;
     }
-    if (questionCounter == 10 && !showedLeaderboard) {
+    if (questionCounter == 10 && multiplayer) {
       showedLeaderboard = true;
-      question = new EndScreen();
+      question = new IntermediateLeaderboardQuestion();
       question.number = questionCounter;
       return question;
     }
@@ -163,12 +184,17 @@ public class Game {
       question.number = questionCounter;
       return question;
     }
-    if (questionCounter == 10 && !showedLeaderboard) {
-      question = new EndScreen();
+    if (questionCounter == 10 && multiplayer) {
+      showedLeaderboard = true;
+      question = new IntermediateLeaderboardQuestion();
       question.number = questionCounter;
       return question;
     }
     return questions[questionCounter];
+  }
+
+  public Map<Client, Integer> getPlayers() {
+    return this.players;
   }
 
   @Override

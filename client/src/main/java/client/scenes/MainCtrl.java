@@ -359,6 +359,9 @@ public class MainCtrl {
     }
 
     if (finished) {
+      if (multiplayer) {
+        server.sendScore(serverIp, new Score(clientId, name, points), gameId);
+      }
       nextRound();
     } else {
       System.err.println("Error in break timer.");
@@ -387,7 +390,9 @@ public class MainCtrl {
         break;
       case ENDSCREEN:
         System.out.println("Showed end screen");
-        server.addScore(serverIp, new Score(clientId, name, points));
+        if (!multiplayer) {
+          server.addScore(serverIp, new Score(clientId, name, points));
+        }
         Platform.runLater(this::showEndScreen);
         break;
       default:
@@ -462,10 +467,10 @@ public class MainCtrl {
   public void showEndScreen() {
     primaryStage.getScene().setRoot(endScreenParent);
     endScreenCtrl.refresh();
-    Score check = server.updateScore(serverIp, clientId, points);
-    if (check == null) {
-      System.out.println("Error updating the score");
-    }
+    //    Score check = server.updateScore(serverIp, clientId, points);
+    //    if (check == null) {
+    //      System.out.println("Error updating the score");
+    //}
   }
 
   public void addPoints(int toAdd) {

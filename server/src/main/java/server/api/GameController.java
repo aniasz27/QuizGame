@@ -11,6 +11,7 @@ import commons.Score;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -93,6 +95,7 @@ public class GameController {
   @PostMapping("/play")
   public synchronized String play() {
     String gameID = UUID.randomUUID().toString();
+    System.out.println(gameID + "GAMEMULTI");
     List<Client> waiting = playerController.getPlayers().stream()
       .filter(client -> client.waitingForGame).collect(Collectors.toList());
     games.add(new Game(
@@ -100,6 +103,7 @@ public class GameController {
       waiting,
       generateQuestions()
     ));
+    games.get(games.size() - 1).setMultiplayer(true);
 
     for (Client client : waiting) {
       client.waitingForGame = false;
@@ -119,13 +123,15 @@ public class GameController {
    * @return generated game id
    */
   @PostMapping("/playSingle")
-  public String playSingle(@RequestParam String uid) {
+  public String playSingle(@RequestBody String uid) {
     String gameID = UUID.randomUUID().toString();
+    System.out.println(gameID + "GAMEIDSINGLE");
     games.add(new Game(
       gameID,
       playerController.getPlayers().stream().filter(client -> client.id.equals(uid)).collect(Collectors.toList()),
       generateQuestions()
     ));
+    games.get(games.size() - 1).setMultiplayer(false);
     return gameID;
   }
 
@@ -163,8 +169,10 @@ public class GameController {
     @PathVariable String id,
     @RequestParam("q") int questionNumber
   ) {
+
     System.out.println(id);
     //System.out.println(games);
+
 
     Game game = games.stream().filter(g -> g.id.equals(id)).findFirst()
       .orElseThrow(StringIndexOutOfBoundsException::new);
@@ -175,7 +183,6 @@ public class GameController {
     } else {
       question = game.next();
     }
-    System.out.println(question.type);
     if (question.type.equals(Question.Type.ENDSCREEN)) {
       if (game.players.size() == 1) {
         Client player = (Client) game.players.keySet().toArray()[0];
@@ -246,6 +253,51 @@ public class GameController {
     Game game = games.stream().filter(g -> g.id.equals(id)).findFirst()
       .orElseThrow(StringIndexOutOfBoundsException::new);
     return game.questionCounter;
+  }
+
+  @PostMapping("/score/send/{gameId}")
+  public void playerScoreSend(@PathVariable("gameId") String gameId, @RequestBody Score score) {
+    Game thisGame = null;
+    for (Game game : games) {
+      if (game.id.equals(gameId)) {
+        thisGame = game;
+      }
+    }
+    if (thisGame == null) {
+      System.out.println("Didnt find the game");
+    }
+    Client player = new Client(score.getPlayer(), score.getName(), false);
+    for (Client client : thisGame.getPlayers().keySet()) {
+      if (player.equals(client)) {
+        player = client;
+      }
+    }
+    thisGame.getPlayers().put(player, score.points);
+    if (thisGame.getMultiplayer() == false && thisGame.questionCounter >= 20) {
+      scoreController.addScore(score);
+    }
+
+  }
+
+  @GetMapping("/multiLeaderboard/{gameId}")
+  public Iterable<Score> getMultiLeaderboard(@PathVariable("gameId") String gameId) {
+    Game currentGame = null;
+    for (Game game : games) {
+      if (game.id.equals(gameId)) {
+        currentGame = game;
+      }
+    }
+    if (currentGame == null) {
+      System.out.println("GameId not found for the multiplayer leaderboard");
+      return null;
+    }
+    List<Score> scores = new LinkedList<>();
+    Score toBeAdded;
+    for (Client player : currentGame.getPlayers().keySet()) {
+      toBeAdded = new Score(player.id, player.username, currentGame.getPlayers().get(player));
+      scores.add(toBeAdded);
+    }
+    return scores;
   }
 }
 

@@ -48,8 +48,15 @@ public class EndScreenCtrl implements Initializable {
   }
 
   public void refresh() {
-    Iterable<Score> scores = server.getSingleLeaderboard(mainCtrl.serverIp);
-    Platform.runLater(() -> MainCtrl.refreshLeaderboard(leaderboardDisplay, scores));
+    Iterable<Score> scores;
+    if (!mainCtrl.multiplayer) {
+      scores = server.getSingleLeaderboard(mainCtrl.serverIp);
+    } else {
+      scores = server.getMultiLeaderboard(mainCtrl.serverIp, mainCtrl.gameId);
+    }
+    Platform.runLater(() -> {
+      MainCtrl.refreshLeaderboard(leaderboardDisplay, scores);
+    });
 
   }
 }
