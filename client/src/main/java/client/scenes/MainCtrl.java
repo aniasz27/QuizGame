@@ -25,6 +25,7 @@ import commons.Emoji;
 import commons.EmojiMessage;
 import commons.EstimateQuestion;
 import commons.HowMuchQuestion;
+import commons.InsteadOfQuestion;
 import commons.Joker;
 import commons.MultipleChoiceQuestion;
 import commons.Question;
@@ -82,6 +83,9 @@ public class MainCtrl {
 
   private GuessCtrl guessCtrl;
   private Parent guessParent;
+
+  private InsteadOfCtrl insteadOfCtrl;
+  private Parent insteadOfParent;
 
   private IntermediateLeaderboardCtrl intermediateLeaderboardCtrl;
   private Parent intermediateLeaderboardParent;
@@ -163,6 +167,7 @@ public class MainCtrl {
     Pair<WaitingRoomCtrl, Parent> waitingRoom,
     Pair<SpWaitingRoomCtrl, Parent> spWaitingRoom,
     Pair<HowMuchCtrl, Parent> howMuch,
+    Pair<InsteadOfCtrl, Parent> insteadOf,
     Pair<WhatRequiresMoreEnergyCtrl, Parent> whatRequiresMoreEnergy,
     Pair<GuessCtrl, Parent> guess,
     Pair<IntermediateLeaderboardCtrl, Parent> intermediateLeaderboard,
@@ -187,6 +192,9 @@ public class MainCtrl {
 
     this.howMuchCtrl = howMuch.getKey();
     this.howMuchParent = howMuch.getValue();
+
+    this.insteadOfCtrl = insteadOf.getKey();
+    this.insteadOfParent = insteadOf.getValue();
 
     this.whatRequiresMoreEnergyCtrl = whatRequiresMoreEnergy.getKey();
     this.whatRequiresMoreEnergyParent = whatRequiresMoreEnergy.getValue();
@@ -338,6 +346,10 @@ public class MainCtrl {
           Platform.runLater(() -> howMuchCtrl.disableButtons());
           Platform.runLater(() -> howMuchCtrl.showCorrect());
           break;
+        case INSTEAD:
+          Platform.runLater(() -> insteadOfCtrl.disableButtons());
+          Platform.runLater(() -> insteadOfCtrl.showCorrect());
+          break;
         default:
           System.out.println("Not a question");
           break;
@@ -384,6 +396,10 @@ public class MainCtrl {
         System.out.println("Showed how much");
         Platform.runLater(() -> showHowMuch((HowMuchQuestion) question));
         break;
+      case INSTEAD:
+        System.out.println("Showed instead");
+        Platform.runLater(() -> showInstead((InsteadOfQuestion) question));
+        break;
       case INTERLEADERBOARD:
         System.out.println("Showed Intermediate Leaderboard");
         Platform.runLater(this::showIntermediateLeaderboard);
@@ -422,6 +438,13 @@ public class MainCtrl {
     primaryStage.getScene().setRoot(howMuchParent);
     howMuchCtrl.displayQuestion(question);
     howMuchCtrl.startTimer();
+    this.startPointsTimer();
+  }
+
+  public void showInstead(InsteadOfQuestion question) {
+    primaryStage.getScene().setRoot(insteadOfParent);
+    insteadOfCtrl.displayQuestion(question);
+    insteadOfCtrl.startTimer();
     this.startPointsTimer();
   }
 
