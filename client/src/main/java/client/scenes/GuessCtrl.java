@@ -101,7 +101,7 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
    */
   public void checkCorrect() {
     mainCtrl.stopPointsTimer();
-    if (answer.getText() == "") {
+    if (answer.getText().equals("")) {
       return;
     }
 
@@ -138,5 +138,9 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
 
   public void doublePoints() {
     dbPoint = doublePoints(doublePts);
+  }
+
+  public void decreaseTime() {
+    decreaseTimeQ(minusTime);
   }
 }

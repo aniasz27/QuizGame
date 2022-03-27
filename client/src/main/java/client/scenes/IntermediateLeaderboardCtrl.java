@@ -48,9 +48,7 @@ public class IntermediateLeaderboardCtrl extends QuestionCtrl implements Initial
   public void refresh() {
     var leaderboard = server.getMultiLeaderboard(mainCtrl.serverIp, mainCtrl.gameId);
 
-    Platform.runLater(() -> {
-      MainCtrl.refreshLeaderboard(leaderboardDisplay, leaderboard);
-    });
+    Platform.runLater(() -> MainCtrl.refreshLeaderboard(leaderboardDisplay, leaderboard));
   }
 
   @FXML

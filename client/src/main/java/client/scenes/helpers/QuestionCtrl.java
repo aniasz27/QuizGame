@@ -4,7 +4,7 @@ import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Emoji;
-import commons.EmojiMessage;
+import commons.Joker;
 import commons.Question;
 import java.net.URL;
 import java.util.Optional;
@@ -42,6 +42,7 @@ public abstract class QuestionCtrl {
   @FXML
   public Line timer;
 
+  public Timeline timerAnimation;
   @FXML
   private Circle circle;
   @FXML
@@ -76,7 +77,7 @@ public abstract class QuestionCtrl {
   public void startTimer() {
     timer.setVisible(true);
     timer.setEndX(800);
-    Timeline timerAnimation = new Timeline(
+    this.timerAnimation = new Timeline(
       new KeyFrame(Duration.seconds(10), new KeyValue(timer.endXProperty(), 0))
     );
     timerAnimation.setOnFinished(e -> timer.setVisible(false));
@@ -271,6 +272,7 @@ public abstract class QuestionCtrl {
     buttons[guess].setDisable(true);
     useJoker(hint);
     mainCtrl.usedJokers[2] = true;
+    mainCtrl.jokerWebSocket.sendMessage(Joker.HINT);
   }
 
   /**
@@ -285,7 +287,47 @@ public abstract class QuestionCtrl {
     }
     useJoker(doublePts);
     mainCtrl.usedJokers[0] = true;
+    mainCtrl.jokerWebSocket.sendMessage(Joker.DOUBLE);
     return true;
+  }
+
+  /**
+   * Sends message to other users to reduce time
+   *
+   * @param minusTime button
+   */
+  public void decreaseTimeQ(Button minusTime) {
+    if (mainCtrl.usedJokers[1]) {
+      return;
+    }
+    useJoker(minusTime);
+    mainCtrl.usedJokers[1] = true;
+    mainCtrl.jokerWebSocket.sendMessage(Joker.TIME);
+  }
+
+  /**
+   * Reduces time on the screen
+   */
+  public void reduceTime() {
+    double position = timer.getEndX() / 2.0;
+    double time = 10.0 * position / 800.0;
+    timer.setVisible(true);
+    timer.setEndX(position);
+    this.timerAnimation = new Timeline(
+      new KeyFrame(Duration.seconds(time), new KeyValue(timer.endXProperty(), 0))
+    );
+    timerAnimation.setOnFinished(e -> timer.setVisible(false));
+    timerAnimation.setCycleCount(1);
+    timerAnimation.play();
+    Thread thread = new Thread(() -> {
+      try {
+        Thread.sleep((long) (time * 1000));
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+      disableButtons();
+    });
+    thread.start();
   }
 
   public void initialize(URL location, ResourceBundle resources) {
