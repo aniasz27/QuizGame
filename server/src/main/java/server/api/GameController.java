@@ -1,14 +1,19 @@
 package server.api;
 
+import commons.Activity;
 import commons.Client;
 import commons.EndScreen;
 import commons.EstimateQuestion;
 import commons.Game;
 import commons.HowMuchQuestion;
 import commons.IntermediateLeaderboardQuestion;
+import commons.InsteadOfQuestion;
 import commons.MultipleChoiceQuestion;
 import commons.Question;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -21,6 +26,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,12 +61,16 @@ public class GameController {
     Question[] questions = new Question[22];
 
     for (int i = 0; i < 21; i++) {
-      switch (random.nextInt(3)) {
+      switch (random.nextInt(4)) {
         case 0:
+          Activity[] activities = activityController.getRandomActivityMultiple();
+          List<Activity> list = Arrays.asList(activities);
+          Collections.shuffle(list);
+          list.toArray(activities);
           questions[i] = new MultipleChoiceQuestion(
-            activityController.getRandomActivity().getBody(),
-            activityController.getRandomActivity().getBody(),
-            activityController.getRandomActivity().getBody()
+            activities[0],
+            activities[1],
+            activities[2]
           );
           break;
         case 1:
@@ -68,6 +78,30 @@ public class GameController {
           break;
         case 2:
           questions[i] = new HowMuchQuestion(activityController.getRandomActivity().getBody());
+          break;
+        case 3:
+          Activity[] activities1 = activityController.getRandomActivityMultiple();
+          Activity activity = activityController.getRandomActivity().getBody();
+          boolean more = false;
+          while (!more) {
+            if (activities1[0].getConsumption_in_wh() < activity.getConsumption_in_wh()) {
+              if (activities1[1].getConsumption_in_wh() < activity.getConsumption_in_wh()) {
+                if (activities1[2].getConsumption_in_wh() < activity.getConsumption_in_wh()) {
+                  more = true;
+                }
+              }
+            } else {
+              activity = activityController.getRandomActivity().getBody();
+            }
+          }
+          System.out.println("Activity1:" + activities1[0].getConsumption_in_wh());
+          System.out.println("Activity2:" + activities1[1].getConsumption_in_wh());
+          System.out.println("Activity3:" + activities1[2].getConsumption_in_wh());
+          System.out.println("Activity4:" + activity.getConsumption_in_wh());
+          questions[i] = new InsteadOfQuestion(
+            activities1[0],
+            activities1[1],
+            activities1[2], activity);
           break;
         default:
           break;
@@ -91,6 +125,7 @@ public class GameController {
   @PutMapping("/play")
   public synchronized String play(@RequestParam("m") boolean multiplayer) {
     String gameID = UUID.randomUUID().toString();
+    System.out.println(gameID + "GAMEMULTI");
     List<Client> waiting = playerController.getPlayers().stream()
       .filter(client -> client.waitingForGame).collect(Collectors.toList());
     games.add(new Game(
@@ -99,12 +134,14 @@ public class GameController {
       generateQuestions(),
       multiplayer
     ));
+    games.get(games.size() - 1).setMultiplayer(true);
 
     for (Client client : waiting) {
       client.waitingForGame = false;
     }
 
     System.out.println(gameID);
+
     notifyAll();
     try {
       Thread.sleep(50);
@@ -122,8 +159,9 @@ public class GameController {
    * @return generated game id
    */
   @PostMapping("/playSingle")
-  public String playSingle(@RequestParam String uid) {
+  public String playSingle(@RequestBody String uid) {
     String gameID = UUID.randomUUID().toString();
+    System.out.println(gameID + "GAMEIDSINGLE");
     games.add(new Game(
       gameID,
       playerController.getPlayers().stream().filter(client -> client.id.equals(uid)).collect(Collectors.toList()),
@@ -187,7 +225,6 @@ public class GameController {
       .filter(game -> game.players.keySet().stream().anyMatch(client -> client.id.equals(uid))).findFirst().get().id;
   }
 
-
   @GetMapping("/startTimer/{id}")
   public DeferredResult<Boolean> serverTimerStart(@PathVariable String id, @RequestParam long duration) {
     DeferredResult<Boolean> result = new DeferredResult<>();
@@ -248,7 +285,6 @@ public class GameController {
     return game.questionCounter;
   }
 
-
   /**
    * Gets the next question or screen in a game
    *
@@ -273,5 +309,49 @@ public class GameController {
     return res;
   }
 
+  @PostMapping("/score/send/{gameId}")
+  public void playerScoreSend(@PathVariable("gameId") String gameId, @RequestBody Score score) {
+    Game thisGame = null;
+    for (Game game : games) {
+      if (game.id.equals(gameId)) {
+        thisGame = game;
+      }
+    }
+    if (thisGame == null) {
+      System.out.println("Didnt find the game");
+    }
+    Client player = new Client(score.getPlayer(), score.getName(), false);
+    for (Client client : thisGame.getPlayers().keySet()) {
+      if (player.equals(client)) {
+        player = client;
+      }
+    }
+    thisGame.getPlayers().put(player, score.points);
+    if (thisGame.getMultiplayer() == false && thisGame.questionCounter >= 20) {
+      scoreController.addScore(score);
+    }
+
+  }
+
+  @GetMapping("/multiLeaderboard/{gameId}")
+  public Iterable<Score> getMultiLeaderboard(@PathVariable("gameId") String gameId) {
+    Game currentGame = null;
+    for (Game game : games) {
+      if (game.id.equals(gameId)) {
+        currentGame = game;
+      }
+    }
+    if (currentGame == null) {
+      System.out.println("GameId not found for the multiplayer leaderboard");
+      return null;
+    }
+    List<Score> scores = new LinkedList<>();
+    Score toBeAdded;
+    for (Client player : currentGame.getPlayers().keySet()) {
+      toBeAdded = new Score(player.id, player.username, currentGame.getPlayers().get(player));
+      scores.add(toBeAdded);
+    }
+    return scores;
+  }
 }
 

@@ -16,6 +16,7 @@
 
 package client;
 
+import client.scenes.InsteadOfCtrl;
 import client.scenes.MainCtrl;
 import client.scenes.WaitingRoomCtrl;
 import client.scenes.WhatRequiresMoreEnergyCtrl;
@@ -32,5 +33,6 @@ public class MyModule implements Module {
     binder.bind(GameUtils.class).in(Scopes.SINGLETON);
     binder.bind(WaitingRoomCtrl.class).in(Scopes.SINGLETON);
     binder.bind(WhatRequiresMoreEnergyCtrl.class).in(Scopes.SINGLETON);
+    binder.bind(InsteadOfCtrl.class).in(Scopes.SINGLETON);
   }
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import javax.persistence.criteria.CriteriaBuilder;
 
 public class Game {
   public String id;
@@ -134,6 +135,25 @@ public class Game {
   }
 
   /**
+   * Sets the multiplayer field
+   *
+   * @param state - true if singleplayer, false if multiplayer
+   */
+  public void setMultiplayer(boolean state) {
+    this.multiplayer = state;
+  }
+
+  /**
+   * A getter for the multiplayer field
+   *
+   * @return true if player is in multiplayer game, false otherwise
+   */
+  public boolean getMultiplayer() {
+    return this.multiplayer;
+  }
+
+
+  /**
    * Checks if a player with a given ID is in this game
    *
    * @param userId the ID of the player
@@ -148,6 +168,7 @@ public class Game {
    *
    * @return the next question
    */
+<<<<<<< commons/src/main/java/commons/Game.java
   public void increaseQuestionCounter() {
     questionCounter++;
   }
@@ -174,6 +195,10 @@ public class Game {
 
   public void setMultiplayer(boolean multiplayer) {
     this.multiplayer = multiplayer;
+  }
+
+  public Map<Client, Integer> getPlayers() {
+    return this.players;
   }
 
   @Override

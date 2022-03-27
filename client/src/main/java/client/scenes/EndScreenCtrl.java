@@ -8,9 +8,6 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javax.inject.Inject;
 
@@ -51,7 +48,12 @@ public class EndScreenCtrl implements Initializable {
   }
 
   public void refresh() {
-    Iterable<Score> scores = server.getSingleLeaderboard(mainCtrl.serverIp);
+    Iterable<Score> scores;
+    if (!mainCtrl.multiplayer) {
+      scores = server.getSingleLeaderboard(mainCtrl.serverIp);
+    } else {
+      scores = server.getMultiLeaderboard(mainCtrl.serverIp, mainCtrl.gameId);
+    }
     Platform.runLater(() -> {
       MainCtrl.refreshLeaderboard(leaderboardDisplay, scores);
     });

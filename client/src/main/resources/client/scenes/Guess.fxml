@@ -16,6 +16,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Text?>
 <StackPane
+        fx:id="root"
         xmlns="http://javafx.com/javafx/17"
         xmlns:fx="http://javafx.com/fxml/1"
         fx:controller="client.scenes.GuessCtrl"
@@ -84,7 +85,8 @@
              StackPane.alignment="BOTTOM_RIGHT"/>
   <Circle fx:id="circle" fill="DODGERBLUE" radius="300.0" stroke="BLACK" strokeType="INSIDE" translateX="250.0"
           translateY="250.0" StackPane.alignment="BOTTOM_RIGHT"/>
-  <GridPane fx:id="emojiGrid" alignment="CENTER" maxHeight="350.0" maxWidth="350.0" StackPane.alignment="BOTTOM_RIGHT">
+  <GridPane fx:id="emojiGrid" alignment="CENTER" maxHeight="350.0" maxWidth="350.0"
+            StackPane.alignment="BOTTOM_RIGHT">
     <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
@@ -107,7 +109,8 @@
              GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2"/>
       <Label fx:id="emoji4" styleClass="icon, emoji" text="" translateX="-40.0" translateY="-45.0"
              GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1"/>
-      <Label fx:id="emoji5" styleClass="icon, emoji" text="" GridPane.columnIndex="4" GridPane.halignment="CENTER"/>
+      <Label fx:id="emoji5" styleClass="icon, emoji" text="" GridPane.columnIndex="4"
+             GridPane.halignment="CENTER"/>
     </children>
   </GridPane>
   <GridPane maxHeight="70.0" maxWidth="521.0" translateX="20.0" translateY="-20.0" StackPane.alignment="BOTTOM_LEFT">
@@ -124,7 +127,9 @@
     <children>
       <Button fx:id="doublePts" mnemonicParsing="false" onMouseClicked="#doublePoints"
               styleClass="border, rounded, drop-shadow, button" text="x2"/>
-      <Button fx:id="minusTime" mnemonicParsing="false" styleClass="border, rounded, drop-shadow, button" text="-50%"
+      <Button fx:id="minusTime" mnemonicParsing="false" onMouseClicked="#decreaseTime"
+              styleClass="border, rounded, drop-shadow, button"
+              text="-50%"
               GridPane.columnIndex="2"/>
       <Button fx:id="hint" mnemonicParsing="false" styleClass="border, rounded, drop-shadow, button" text="Hint"
               GridPane.columnIndex="4"/>

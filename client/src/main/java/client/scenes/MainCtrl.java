@@ -16,10 +16,17 @@
 
 package client.scenes;
 
+import client.scenes.helpers.QuestionCtrl;
+import client.utils.EmojiWebSocket;
+import client.utils.JokerWebSocket;
 import client.utils.ServerUtils;
 import commons.Activity;
+import commons.Emoji;
+import commons.EmojiMessage;
 import commons.EstimateQuestion;
 import commons.HowMuchQuestion;
+import commons.InsteadOfQuestion;
+import commons.Joker;
 import commons.MultipleChoiceQuestion;
 import commons.Question;
 import commons.Score;
@@ -76,6 +83,9 @@ public class MainCtrl {
   private GuessCtrl guessCtrl;
   private Parent guessParent;
 
+  private InsteadOfCtrl insteadOfCtrl;
+  private Parent insteadOfParent;
+
   private IntermediateLeaderboardCtrl intermediateLeaderboardCtrl;
   private Parent intermediateLeaderboardParent;
 
@@ -100,6 +110,7 @@ public class MainCtrl {
   public String serverIp;
   public String clientId;
   public String gameId;
+  public String previousGameId;
   public ScheduledExecutorService keepAliveExec;
   public boolean waitingForGame;
   public boolean[] usedJokers;
@@ -113,6 +124,15 @@ public class MainCtrl {
   private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSS");
   private Date pointsTimer;
   private int pointsOffset;
+  public JokerWebSocket jokerWebSocket;
+
+  /**
+   * The controller of the question that was last shown (ie currently being shown)
+   */
+  public QuestionCtrl currentQuestionCtrl;
+
+  // Emoji WebSockets
+  public EmojiWebSocket emojiWebSocket;
 
   @Inject
   public MainCtrl(ServerUtils server) {
@@ -146,6 +166,7 @@ public class MainCtrl {
     Pair<WaitingRoomCtrl, Parent> waitingRoom,
     Pair<SpWaitingRoomCtrl, Parent> spWaitingRoom,
     Pair<HowMuchCtrl, Parent> howMuch,
+    Pair<InsteadOfCtrl, Parent> insteadOf,
     Pair<WhatRequiresMoreEnergyCtrl, Parent> whatRequiresMoreEnergy,
     Pair<GuessCtrl, Parent> guess,
     Pair<IntermediateLeaderboardCtrl, Parent> intermediateLeaderboard,
@@ -170,6 +191,9 @@ public class MainCtrl {
 
     this.howMuchCtrl = howMuch.getKey();
     this.howMuchParent = howMuch.getValue();
+
+    this.insteadOfCtrl = insteadOf.getKey();
+    this.insteadOfParent = insteadOf.getValue();
 
     this.whatRequiresMoreEnergyCtrl = whatRequiresMoreEnergy.getKey();
     this.whatRequiresMoreEnergyParent = whatRequiresMoreEnergy.getValue();
@@ -249,10 +273,15 @@ public class MainCtrl {
    */
   public void start() {
     gameId = server.startGame(serverIp, this.multiplayer);
+    jokerWebSocket = new JokerWebSocket(this, serverIp, gameId);
+    points = 0;
     play();
   }
 
   public void play() {
+    this.usedJokers = new boolean[3];
+    System.out.println("session: " + gameId);
+    emojiWebSocket = new EmojiWebSocket(this, serverIp, gameId);
     playerExited = false;
     this.usedJokers = new boolean[3];
     points = 0;
@@ -268,7 +297,6 @@ public class MainCtrl {
     return points;
   }
 
-
   public void showAnswer() {
     switch (question.type) {
       case MULTICHOICE:
@@ -282,6 +310,10 @@ public class MainCtrl {
       case HOWMUCH:
         Platform.runLater(() -> howMuchCtrl.disableButtons());
         Platform.runLater(() -> howMuchCtrl.showCorrect());
+        break;
+      case INSTEAD:
+        Platform.runLater(() -> insteadOfCtrl.disableButtons());
+        Platform.runLater(() -> insteadOfCtrl.showCorrect());
         break;
       case INTERLEADERBOARD:
         break;
@@ -332,6 +364,7 @@ public class MainCtrl {
   }
 
   public void showGuess(EstimateQuestion question) {
+    currentQuestionCtrl = guessCtrl;
     primaryStage.getScene().setRoot(guessParent);
     guessCtrl.displayQuestion(question);
     guessCtrl.startTimer();
@@ -339,6 +372,7 @@ public class MainCtrl {
   }
 
   public void showWhatRequiresMoreEnergy(MultipleChoiceQuestion question) {
+    currentQuestionCtrl = whatRequiresMoreEnergyCtrl;
     primaryStage.getScene().setRoot(whatRequiresMoreEnergyParent);
     whatRequiresMoreEnergyCtrl.displayQuestion(question);
     whatRequiresMoreEnergyCtrl.startTimer();
@@ -346,9 +380,17 @@ public class MainCtrl {
   }
 
   public void showHowMuch(HowMuchQuestion question) {
+    currentQuestionCtrl = howMuchCtrl;
     primaryStage.getScene().setRoot(howMuchParent);
     howMuchCtrl.displayQuestion(question);
     howMuchCtrl.startTimer();
+    this.startPointsTimer();
+  }
+
+  public void showInstead(InsteadOfQuestion question) {
+    primaryStage.getScene().setRoot(insteadOfParent);
+    insteadOfCtrl.displayQuestion(question);
+    insteadOfCtrl.startTimer();
     this.startPointsTimer();
   }
 
@@ -395,10 +437,10 @@ public class MainCtrl {
     server.stopQuestionThread();
     primaryStage.getScene().setRoot(endScreenParent);
     endScreenCtrl.refresh();
-    Score check = server.updateScore(serverIp, clientId, points);
-    if (check == null) {
-      System.out.println("Error updating the score");
-    }
+    //    Score check = server.updateScore(serverIp, clientId, points);
+    //    if (check == null) {
+    //      System.out.println("Error updating the score");
+    //}
   }
 
   public void addPoints(int toAdd) {
@@ -540,6 +582,38 @@ public class MainCtrl {
     leaderboardDisplay.getChildren().add(gridpane);
   }
 
+  /**
+   * Shows joker on the screen
+   */
+  public void showJoker(Joker joker) {
+    //TODO: show jokers on the screen
+    System.out.println(joker);
+    if (joker.equals(Joker.TIME)) {
+      switch (question.type) {
+        case MULTICHOICE:
+          System.out.println("Showed multiple choice - joker");
+          Platform.runLater(() -> whatRequiresMoreEnergyCtrl.reduceTime());
+          break;
+        case ESTIMATE:
+          System.out.println("Showed guess - joker");
+          Platform.runLater(() -> guessCtrl.reduceTime());
+          break;
+        case HOWMUCH:
+          System.out.println("Showed how much - joker");
+          Platform.runLater(() -> howMuchCtrl.reduceTime());
+          break;
+        default:
+          System.out.println("Wrong question type - joker");
+          break;
+      }
+    }
+  }
+
+  public void showEmoji(Emoji emoji) {
+    // TODO: show emojis per screen
+    System.out.println("Shown emoji: " + emoji + " in controller: " + currentQuestionCtrl);
+    currentQuestionCtrl.showEmoji(emoji);
+  }
 
   public void reset() {
     serverIp = null;

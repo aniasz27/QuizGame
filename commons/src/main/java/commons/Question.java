@@ -18,7 +18,8 @@ import javax.persistence.Id;
   @JsonSubTypes.Type(value = EstimateQuestion.class, name = "ESTIMATE"),
   @JsonSubTypes.Type(value = HowMuchQuestion.class, name = "HOWMUCH"),
   @JsonSubTypes.Type(value = IntermediateLeaderboardQuestion.class, name = "INTERLEADERBOARD"),
-  @JsonSubTypes.Type(value = EndScreen.class, name = "ENDSCREEN")
+  @JsonSubTypes.Type(value = EndScreen.class, name = "ENDSCREEN"),
+  @JsonSubTypes.Type(value = InsteadOfQuestion.class, name = "INSTEAD")
 })
 @SuppressWarnings("all")
 public abstract class Question {
@@ -39,7 +40,8 @@ public abstract class Question {
     ESTIMATE(1),
     HOWMUCH(2),
     INTERLEADERBOARD(3),
-    ENDSCREEN(4);
+    ENDSCREEN(4),
+    INSTEAD(5);
 
     private final int type;
 
