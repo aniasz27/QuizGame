@@ -13,14 +13,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Circle;
-import javafx.scene.text.Text;
 
 public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initializable {
 
@@ -30,23 +26,8 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
   private Button button1;
   @FXML
   private Button button2;
-  @FXML
-  private Text points;
-  @FXML
-  private Circle circle;
-  @FXML
-  private GridPane emojiGrid;
-  @FXML
-  private StackPane pane;
-  @FXML
-  private Button doublePts;
-  @FXML
-  private Button hint;
-  @FXML
-  private Button minusTime;
 
   private Button[] buttons;
-  private Button[] jokers;
 
   private Button clickedButton;
   private MultipleChoiceQuestion question;
@@ -61,12 +42,11 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
   public void initialize(URL location, ResourceBundle resources) {
     super.initialize(location, resources);
     buttons = new Button[] {button0, button1, button2};
-    jokers = new Button[] {doublePts, minusTime, hint};
   }
 
   @Override
   public void displayQuestion(Question question) {
-    displayEmojis(circle, emojiGrid, pane);
+    displayEmojis();
     this.question = (MultipleChoiceQuestion) question;
     this.clickedButton = null;
 
@@ -116,8 +96,8 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
       buttons[i].setText(activity.getTitle());
       buttons[i].setUserData(correctAnswers[i]);
     }
-    displayJokers(jokers);
-    showPoints(points);
+    displayJokers();
+    showPoints();
   }
 
   @Override
@@ -132,11 +112,9 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
 
   @Override
   public void disableButtons() {
+    super.disableButtons();
     for (Button button : buttons) {
       button.setDisable(true);
-    }
-    for (Button joker : jokers) {
-      joker.setDisable(true);
     }
   }
 
@@ -155,18 +133,18 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
       toAdd *= 2;
     }
     mainCtrl.addPoints(toAdd);
-    showPoints(points);
+    showPoints();
   }
 
   public void hint() {
-    hintQ(question.getCorrect(), buttons, hint);
+    hintQ(question.getCorrect(), buttons);
   }
 
   public void doublePoints() {
-    dbPoint = doublePoints(doublePts);
+    dbPoint = doublePointsQ();
   }
 
   public void decreaseTime() {
-    decreaseTimeQ(minusTime);
+    decreaseTimeQ();
   }
 }

@@ -12,13 +12,10 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
@@ -34,23 +31,8 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   private TextField answer;
   @FXML
   private Button submit;
-  @FXML
-  private Text points;
-  @FXML
-  private Circle circle;
-  @FXML
-  private GridPane emojiGrid;
-  @FXML
-  private StackPane pane;
-  @FXML
-  private Button doublePts;
-  @FXML
-  private Button hint;
-  @FXML
-  private Button minusTime;
 
   private boolean dbPoint;
-  private Button[] jokers;
   private int point;
   private EstimateQuestion question;
   private Activity activity;
@@ -63,7 +45,6 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     super.initialize(location, resources);
-    jokers = new Button[] {doublePts, minusTime, hint};
   }
 
   /**
@@ -73,14 +54,14 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
    */
   @Override
   public void displayQuestion(Question question) {
-    displayEmojis(circle, emojiGrid, pane);
+    displayEmojis();
     this.dbPoint = false;
     this.question = (EstimateQuestion) question;
     this.activity = this.question.getActivity();
     this.submit.setDisable(false);
     this.answer.getStyleClass().remove("good");
     this.answer.getStyleClass().remove("bad");
-    displayJokers(jokers);
+    displayJokers();
     this.hint.setDisable(true);
 
     Rectangle clip = new Rectangle(
@@ -92,7 +73,7 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     imageView.setImage(new Image(new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity.id))));
 
     description.setText(activity.getTitle());
-    showPoints(points);
+    showPoints();
     answer.setText("Type in your answer");
   }
 
@@ -124,23 +105,21 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
       point *= 2;
     }
     mainCtrl.addPoints(point);
-    showPoints(points);
+    showPoints();
     answer.setText("Correct answer is: " + question.getAnswer());
   }
 
   @Override
   public void disableButtons() {
     submit.setDisable(true);
-    for (Button joker : jokers) {
-      joker.setDisable(true);
-    }
+    super.disableButtons();
   }
 
   public void doublePoints() {
-    dbPoint = doublePoints(doublePts);
+    dbPoint = doublePointsQ();
   }
 
   public void decreaseTime() {
-    decreaseTimeQ(minusTime);
+    decreaseTimeQ();
   }
 }

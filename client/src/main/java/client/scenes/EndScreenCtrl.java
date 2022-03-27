@@ -54,9 +54,7 @@ public class EndScreenCtrl implements Initializable {
     } else {
       scores = server.getMultiLeaderboard(mainCtrl.serverIp, mainCtrl.gameId);
     }
-    Platform.runLater(() -> {
-      MainCtrl.refreshLeaderboard(leaderboardDisplay, scores);
-    });
+    Platform.runLater(() -> MainCtrl.refreshLeaderboard(leaderboardDisplay, scores));
 
   }
 }

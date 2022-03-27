@@ -22,7 +22,6 @@ import client.utils.JokerWebSocket;
 import client.utils.ServerUtils;
 import commons.Activity;
 import commons.Emoji;
-import commons.EmojiMessage;
 import commons.EstimateQuestion;
 import commons.HowMuchQuestion;
 import commons.InsteadOfQuestion;
