@@ -162,6 +162,10 @@ public abstract class QuestionCtrl {
    * Set hover effect on emojis
    */
   public void hoverEffect() {
+    if (!mainCtrl.multiplayer) {
+      emojiButton.setVisible(false);
+      return;
+    }
     this.emojiButton.setOnMouseEntered(event -> {
       this.pane.setVisible(true);
       this.circle.setVisible(true);
@@ -196,6 +200,18 @@ public abstract class QuestionCtrl {
     }
   }
 
+  public Button getJokerElement(Joker joker) {
+    switch (joker) {
+      case DOUBLE:
+        return doublePts;
+      case TIME:
+        return minusTime;
+      case HINT:
+      default:
+        return hint;
+    }
+  }
+
   /**
    * Initializes what emoji value should be sent via websockets for every emoji label clicked
    */
@@ -207,8 +223,13 @@ public abstract class QuestionCtrl {
     }
   }
 
+  /**
+   * Shows emoji on the screen
+   *
+   * @param emoji to show
+   */
   public void showEmoji(Emoji emoji) {
-    System.out.println("SHOWN EMOJIL ");
+    System.out.println("SHOWN EMOJI ");
     // create emoji label
     String emojiText = getEmojiElement(emoji).getText();
     Label movingEmoji = new Label(emojiText);
@@ -230,6 +251,22 @@ public abstract class QuestionCtrl {
     emojiAnimation.setOnFinished(e -> root.getChildren().remove(movingEmoji)); // remove emoji when finished
     emojiAnimation.setCycleCount(1);
     emojiAnimation.play();
+  }
+
+  public void showJoker(Joker joker) {
+    System.out.println("SHOWN JOKER");
+    String jokerText = getJokerElement(joker).getText();
+    Label movingJoker = new Label(jokerText);
+    movingJoker.setTranslateX(-1920.0 / 2.0);
+    movingJoker.setTranslateY(-350 + 100 * notRandom.nextDouble());
+    root.getChildren().add(movingJoker);
+    Timeline jokerAnimation = new Timeline(
+      new KeyFrame(Duration.seconds(6), new KeyValue(movingJoker.translateXProperty(), 0)),
+      new KeyFrame(Duration.seconds(6), new KeyValue(movingJoker.opacityProperty(), 0))
+    );
+    jokerAnimation.setOnFinished(e -> root.getChildren().remove(movingJoker));
+    jokerAnimation.setCycleCount(1);
+    jokerAnimation.play();
   }
 
   /**
@@ -280,7 +317,7 @@ public abstract class QuestionCtrl {
   /**
    * Sends message to other users to reduce time
    */
-  public void decreaseTimeQ() {
+  public void decreaseTime() {
     if (mainCtrl.usedJokers[1]) {
       return;
     }

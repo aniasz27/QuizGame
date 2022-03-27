@@ -441,6 +441,7 @@ public class MainCtrl {
   }
 
   public void showInstead(InsteadOfQuestion question) {
+    currentQuestionCtrl = insteadOfCtrl;
     primaryStage.getScene().setRoot(insteadOfParent);
     insteadOfCtrl.displayQuestion(question);
     insteadOfCtrl.startTimer();
@@ -631,27 +632,9 @@ public class MainCtrl {
    * Shows joker on the screen
    */
   public void showJoker(Joker joker) {
-    //TODO: show jokers on the screen
-    System.out.println(joker);
-    if (joker.equals(Joker.TIME)) {
-      switch (question.type) {
-        case MULTICHOICE:
-          System.out.println("Showed multiple choice - joker");
-          Platform.runLater(() -> whatRequiresMoreEnergyCtrl.reduceTime());
-          break;
-        case ESTIMATE:
-          System.out.println("Showed guess - joker");
-          Platform.runLater(() -> guessCtrl.reduceTime());
-          break;
-        case HOWMUCH:
-          System.out.println("Showed how much - joker");
-          Platform.runLater(() -> howMuchCtrl.reduceTime());
-          break;
-        default:
-          System.out.println("Wrong question type - joker");
-          break;
-      }
-    }
+    System.out.println("Shown joker: " + joker + " in controller: " + currentQuestionCtrl);
+    currentQuestionCtrl.showJoker(joker);
+    currentQuestionCtrl.reduceTime();
   }
 
   public void showEmoji(Emoji emoji) {

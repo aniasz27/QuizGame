@@ -118,8 +118,4 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   public void doublePoints() {
     dbPoint = doublePointsQ();
   }
-
-  public void decreaseTime() {
-    decreaseTimeQ();
-  }
 }

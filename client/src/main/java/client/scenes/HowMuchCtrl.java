@@ -142,8 +142,4 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
   public void doublePoints() {
     dbPoint = doublePointsQ();
   }
-
-  public void decreaseTime() {
-    decreaseTimeQ();
-  }
 }

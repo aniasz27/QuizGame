@@ -143,8 +143,4 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
   public void doublePoints() {
     dbPoint = doublePointsQ();
   }
-
-  public void decreaseTime() {
-    decreaseTimeQ();
-  }
 }
