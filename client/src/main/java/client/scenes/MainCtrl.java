@@ -252,7 +252,7 @@ public class MainCtrl {
    * Starts the game, assigns the points from the game controller
    */
   public void start() {
-    gameId = server.startGame(serverIp);
+    gameId = server.startGame(serverIp, this.multiplayer);
     points = 0;
     play();
   }

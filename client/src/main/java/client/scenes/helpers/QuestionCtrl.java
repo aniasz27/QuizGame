@@ -61,7 +61,7 @@ public abstract class QuestionCtrl {
   private Label[] emojis;
   private Button[] jokers;
   public Timeline timerAnimation;
-  private final Random notRandom = new Random();
+  private final Random random = new Random();
 
   @Inject
   public QuestionCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -253,7 +253,7 @@ public abstract class QuestionCtrl {
    * @param movingElement element to animate
    */
   public void makeAnimation(Label movingElement) {
-    movingElement.setTranslateY(-350 + 100 * notRandom.nextDouble()); // vary height slightly
+    movingElement.setTranslateY(-350 + 100 * random.nextDouble()); // vary height slightly
 
     // add emoji to scene (in line with the timer)
     root.getChildren().add(movingElement);
