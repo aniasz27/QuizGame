@@ -18,6 +18,7 @@ package client.utils;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
+import client.scenes.MainCtrl;
 import commons.Activity;
 import commons.Client;
 import commons.Question;
@@ -27,10 +28,13 @@ import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Consumer;
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.glassfish.jersey.client.ClientConfig;
 
 public class ServerUtils {
@@ -101,13 +105,13 @@ public class ServerUtils {
    *
    * @return unique generated game id
    */
-  public String startGame(String ip) {
+  public String startGame(String ip, Boolean multiplayer) {
     return ClientBuilder.newClient(new ClientConfig())
       .target(ip)
-      .path("api/game/play")
+      .path("api/game/play").queryParam("m", multiplayer)
       .request(APPLICATION_JSON)
       .accept(APPLICATION_JSON)
-      .post(Entity.json("START GAME"), String.class);
+      .put(Entity.json("START GAME"), String.class);
   }
 
   public String startSingleGame(String ip, String uid) {
@@ -119,19 +123,40 @@ public class ServerUtils {
       .post(Entity.json(uid), String.class);
   }
 
+  private static ScheduledExecutorService EXECNextQuestion;
+
   /**
    * Request to get a new question from the server
-   *
-   * @return new Question / null if game ended (after 20 questions)
+   * <p>
+   * Accept the Question in the consumer, so it propagates to MainCtrl
    */
-  public Question nextQuestion(String ip, String gameId, int questionNumber) {
-    return ClientBuilder.newClient(new ClientConfig())
-      .target(ip)
-      .path("/api/game/next/" + gameId).queryParam("q", questionNumber)
-      .request(APPLICATION_JSON)
-      .accept(APPLICATION_JSON)
-      .get().readEntity(Question.class);
+  public void nextQuestion(String ip, String gameId, Consumer<Question> consumer) {
 
+    EXECNextQuestion = Executors.newSingleThreadScheduledExecutor();
+    try {
+      EXECNextQuestion.submit(() -> {
+        while (!Thread.interrupted()) {
+          var res = ClientBuilder.newClient(new ClientConfig())
+            .target(ip)
+            .path("/api/game/next/" + gameId)
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .get(Response.class);
+          if (res.getStatus() == 204) {
+            continue;
+          }
+          consumer.accept(res.readEntity(Question.class));
+        }
+      });
+    } catch (Exception e) {
+      if (!Thread.interrupted()) {
+        nextQuestion(ip, gameId, consumer);
+      }
+    }
+  }
+
+  public void stopQuestionThread() {
+    EXECNextQuestion.shutdownNow();
   }
 
   /**
@@ -175,21 +200,6 @@ public class ServerUtils {
       .target(ip).path("api/activity/image/" + id)
       .request("image/jpeg")
       .put(Entity.entity(image, MediaType.APPLICATION_OCTET_STREAM));
-  }
-
-  /**
-   * Long polling: starts a timer with the server and keeps the connection open
-   *
-   * @return true if 10s have passed and connection closes, false if an exception has been thrown
-   */
-  public boolean startServerTimer(String ip, String clientId, int duration) {
-    return ClientBuilder.newClient(new ClientConfig())
-      .target(ip)
-      .path("/api/game/startTimer/" + clientId)
-      .queryParam("duration", (long) duration)
-      .request(APPLICATION_JSON)
-      .accept(APPLICATION_JSON)
-      .get().readEntity(Boolean.class);
   }
 
   public Activity updateActivity(String ip, Activity activity) {
