@@ -182,10 +182,17 @@ public class GameController {
       }
 
       for (int i = 0; i <= 21; i++) {
-        game.playerListeners.forEach((k, l) -> l.accept(game.current(false)));
+        game.playerListeners.forEach((k, l) -> {
+          Question question = game.current(false);
+          if (question.type.equals(Question.Type.ENDSCREEN) && !game.isMultiplayer() && game.players.size() == 1) {
+            Client player = (Client) game.players.keySet().toArray()[0];
+            scoreController.addScore(new Score(player.id, player.username, game.players.get(player)));
+          }
+          l.accept(question);
+        });
         // Question timer
         try {
-          Thread.sleep(10000);
+          Thread.sleep(1000);
         } catch (InterruptedException e) {
           e.printStackTrace();
         }
