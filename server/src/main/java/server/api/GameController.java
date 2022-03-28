@@ -2,10 +2,12 @@ package server.api;
 
 import commons.Activity;
 import commons.Client;
+import commons.EndScreen;
 import commons.EstimateQuestion;
 import commons.Game;
 import commons.HowMuchQuestion;
 import commons.InsteadOfQuestion;
+import commons.IntermediateLeaderboardQuestion;
 import commons.MultipleChoiceQuestion;
 import commons.Question;
 import commons.Score;
@@ -16,7 +18,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
@@ -40,9 +41,7 @@ public class GameController {
   private final PlayerController playerController;
   private final ScoreController scoreController;
 
-  private final ExecutorService timerThreads = Executors.newFixedThreadPool(10);
-
-  private final List<Game> games = new ArrayList<>();
+  public List<Game> games = new ArrayList<>();
 
   public GameController(
     ActivityController activityController,
@@ -57,9 +56,9 @@ public class GameController {
   }
 
   private Question[] generateQuestions() {
-    Question[] questions = new Question[20];
+    Question[] questions = new Question[22];
 
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 21; i++) {
       switch (random.nextInt(4)) {
         case 0:
           Activity[] activities = activityController.getRandomActivityMultiple();
@@ -107,6 +106,10 @@ public class GameController {
       }
       questions[i].number = i;
     }
+    questions[10] = new IntermediateLeaderboardQuestion();
+    questions[10].number = 10;
+    questions[21] = new EndScreen();
+    questions[21].number = 21;
 
     return questions;
   }
@@ -117,8 +120,8 @@ public class GameController {
    *
    * @return generated game id
    */
-  @PostMapping("/play")
-  public synchronized String play() {
+  @PutMapping("/play")
+  public synchronized String play(@RequestParam("m") boolean multiplayer) {
     String gameID = UUID.randomUUID().toString();
     System.out.println(gameID + "GAMEMULTI");
     List<Client> waiting = playerController.getPlayers().stream()
@@ -126,18 +129,23 @@ public class GameController {
     games.add(new Game(
       gameID,
       waiting,
-      generateQuestions()
+      generateQuestions(),
+      multiplayer
     ));
-    games.get(games.size() - 1).setMultiplayer(true);
 
     for (Client client : waiting) {
       client.waitingForGame = false;
     }
 
     System.out.println(gameID);
-    //System.out.println(games);
 
     notifyAll();
+    try {
+      Thread.sleep(50);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    initiateGame(gameID);
 
     return gameID;
   }
@@ -154,10 +162,52 @@ public class GameController {
     games.add(new Game(
       gameID,
       playerController.getPlayers().stream().filter(client -> client.id.equals(uid)).collect(Collectors.toList()),
-      generateQuestions()
-    ));
-    games.get(games.size() - 1).setMultiplayer(false);
+      generateQuestions(),
+      false));
+    initiateGame(gameID);
     return gameID;
+  }
+
+  private void initiateGame(String id) {
+    Game game = games.stream().filter(g -> g.id.equals(id)).findFirst()
+      .orElseThrow(StringIndexOutOfBoundsException::new);
+
+    game.execTiming = Executors.newSingleThreadScheduledExecutor();
+    game.execTiming.submit(() -> {
+
+      try {
+        Thread.sleep(500);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+
+      for (int i = 0; i <= 21; i++) {
+        game.playerListeners.forEach((k, l) -> {
+          Question question = game.current(false);
+          if (question.type.equals(Question.Type.ENDSCREEN) && !game.isMultiplayer() && game.players.size() == 1) {
+            Client player = (Client) game.players.keySet().toArray()[0];
+            scoreController.addScore(new Score(player.id, player.username, game.players.get(player)));
+          }
+          l.accept(question);
+        });
+        // Question timer
+        try {
+          Thread.sleep(10000);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+        game.playerListeners.forEach((k, l) -> l.accept(game.current(true)));
+
+        // Timer for break
+        try {
+          Thread.sleep(2000);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+
+        game.increaseQuestionCounter();
+      }
+    });
   }
 
   /**
@@ -180,59 +230,6 @@ public class GameController {
     }
     return games.stream()
       .filter(game -> game.players.keySet().stream().anyMatch(client -> client.id.equals(uid))).findFirst().get().id;
-  }
-
-  /**
-   * Gets the next question or screen in a game
-   *
-   * @param id             ID of the game
-   * @param questionNumber the number of the question the client is currently on
-   * @return the next screen, with status 410 if the game ended
-   */
-  @GetMapping("/next/{id}")
-  public ResponseEntity<Question> next(
-    @PathVariable String id,
-    @RequestParam("q") int questionNumber
-  ) {
-
-    System.out.println(id);
-    //System.out.println(games);
-
-
-    Game game = games.stream().filter(g -> g.id.equals(id)).findFirst()
-      .orElseThrow(StringIndexOutOfBoundsException::new);
-
-    Question question;
-    if (questionNumber < game.questionCounter) {
-      question = game.current();
-    } else {
-      question = game.next();
-    }
-    if (question.type.equals(Question.Type.ENDSCREEN)) {
-      if (game.players.size() == 1) {
-        Client player = (Client) game.players.keySet().toArray()[0];
-        scoreController.addScore(new Score(player.id, player.username, game.players.get(player)));
-      }
-      return ResponseEntity.status(HttpStatus.GONE).body(question);
-    }
-
-    return ResponseEntity.ok(question);
-  }
-
-  @GetMapping("/startTimer/{id}")
-  public DeferredResult<Boolean> serverTimerStart(@PathVariable String id, @RequestParam long duration) {
-    DeferredResult<Boolean> result = new DeferredResult<>();
-    timerThreads.execute(() -> {
-      try {
-        Thread.sleep(duration);
-        result.setResult(true);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-        result.setErrorResult(false);
-      }
-    });
-
-    return result;
   }
 
   /**
@@ -280,6 +277,30 @@ public class GameController {
     return game.questionCounter;
   }
 
+  /**
+   * Gets the next question or screen in a game
+   *
+   * @param id ID of the game
+   * @return a Result containing the Question or a NO_CONTENT http status if expired
+   */
+  @GetMapping("/next/{id}")
+  public DeferredResult<ResponseEntity<Question>> next(
+    @PathVariable String id) {
+    var noContent = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    var res =
+      new DeferredResult<ResponseEntity<Question>>(15000L, noContent);  //timeout after 15 seconds
+
+    Game game = games.stream().filter(g -> g.id.equals(id)).findFirst()
+      .orElseThrow(StringIndexOutOfBoundsException::new);
+
+    var key = new Object();
+    game.playerListeners.put(key, u -> res.setResult(ResponseEntity.ok(u)));
+
+    res.onCompletion(() -> game.playerListeners.remove(key));
+
+    return res;
+  }
+
   @PostMapping("/score/send/{gameId}")
   public void playerScoreSend(@PathVariable("gameId") String gameId, @RequestBody Score score) {
     Game thisGame = null;
@@ -298,7 +319,7 @@ public class GameController {
       }
     }
     thisGame.getPlayers().put(player, score.points);
-    if (thisGame.getMultiplayer() == false && thisGame.questionCounter >= 20) {
+    if (thisGame.isMultiplayer() == false && thisGame.questionCounter >= 21) {
       scoreController.addScore(score);
     }
 
