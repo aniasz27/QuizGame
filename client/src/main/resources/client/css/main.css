@@ -58,6 +58,10 @@
   src: url('../fonts/FontAwesome6Free-Solid-900.otf');
 }
 
+@font-face {
+  src: url('../fonts/FiraCode-Retina.ttf');
+}
+
 * {
   -fx-fill: #fff;
   -fx-text-fill: #fff;
@@ -183,11 +187,10 @@
 }
 */
 
-.list-item .expand {
+.expand {
   -fx-max-width: Infinity;
 }
 
-/* TODO: make this work lol */
 .list-item .hover-show {
   visibility: hidden;
 }
@@ -243,7 +246,7 @@
   -fx-padding: 0;
   -fx-background-color: #fff;
 }
-  
+
 #circle {
   -fx-fill: #1E0A49;
   -fx-stroke: #0586E3;
@@ -256,4 +259,10 @@
 
 .emoji {
   -fx-cursor: hand;
+}
+
+.divider {
+  -fx-stroke: #301c5d;
+  -fx-stroke-width: 3px;
+  -fx-stroke-line-cap: round;
 }

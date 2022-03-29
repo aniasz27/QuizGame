@@ -3,3 +3,31 @@
 .title {
   -fx-font-size: 60px;
 }
+
+.popup-title, .popup-title > * {
+  -fx-font-size: 40px;
+}
+
+.popup-text, .popup-text > * {
+  -fx-font-size: 26px;
+}
+
+.search-keyword {
+  -fx-min-width: 200px;
+}
+
+.code {
+  -fx-background-color: #301c5d;
+  -fx-background-radius: 3px;
+  -fx-padding: 0 5px;
+}
+
+.code, .code > * {
+  -fx-font-size: 22px;
+  -fx-font-family: 'Fira Code Retina', monospace;
+  font-variant-ligatures: contextual;
+}
+
+#helpButton {
+  -fx-padding: 10px 15px 15px 15px;
+}
