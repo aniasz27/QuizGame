@@ -163,10 +163,7 @@ public abstract class QuestionCtrl {
    * Set hover effect on emojis
    */
   public void hoverEffect() {
-    if (!mainCtrl.multiplayer) {
-      emojiButton.setVisible(false);
-      return;
-    }
+    System.out.println("multiplayer: " + mainCtrl.multiplayer);
     this.emojiButton.setOnMouseEntered(event -> {
       this.pane.setVisible(true);
       this.circle.setVisible(true);
@@ -285,6 +282,9 @@ public abstract class QuestionCtrl {
    * Hides emojis on the screen
    */
   public void displayEmojis() {
+    if (!mainCtrl.multiplayer) {
+      emojiButton.setVisible(false);
+    }
     this.pane.setVisible(false);
     this.circle.setVisible(false);
     this.emojiGrid.setVisible(false);
