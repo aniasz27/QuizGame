@@ -2,13 +2,11 @@ package commons;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 
 
 public class ActivityTest {
@@ -68,7 +66,12 @@ public class ActivityTest {
   }
 
   @Test
-  public void equalsSameButDifferentTest() {
+  public void equalsNotActivity() {
+    assertNotEquals(testActivity, new Score("uuid", "baba", 10));
+  }
+
+  @Test
+  public void equalsEqual() {
     String id = "RandomID";
     String author = "Group00";
     String image = "imagePath";
@@ -80,15 +83,80 @@ public class ActivityTest {
   }
 
   @Test
-  public void equalsDifferent() {
+  public void equalsDifferentConsumption() {
     String id = "RandomID";
-    String author = "Group0"; // one 0 missing
+    String author = "Group00";
+    String image = "imagePath";
+    String title = "Title of the Activity";
+    long consumption = 300;
+    String source = "someURL";
+    Activity activity2 = new Activity(id, author, image, title, consumption, source);
+    assertNotEquals(testActivity, activity2);
+  }
+
+  @Test
+  public void equalsDifferentId() {
+    String id = "NotAtAllRandomID";
+    String author = "Group00";
     String image = "imagePath";
     String title = "Title of the Activity";
     long consumption = 3000;
     String source = "someURL";
     Activity activity2 = new Activity(id, author, image, title, consumption, source);
-    assertFalse(testActivity.equals(activity2));
+    assertNotEquals(testActivity, activity2);
+  }
+
+  @Test
+  public void equalsDifferentAuthor() {
+    String id = "RandomID";
+    String author = "GroupNot00";
+    String image = "imagePath";
+    String title = "Title of the Activity";
+    long consumption = 3000;
+    String source = "someURL";
+    Activity activity2 = new Activity(id, author, image, title, consumption, source);
+    assertNotEquals(testActivity, activity2);
+  }
+
+  @Test
+  public void equalsDifferentImage() {
+    String id = "RandomID";
+    String author = "Group00";
+    String image = "imagePath???";
+    String title = "Title of the Activity";
+    long consumption = 3000;
+    String source = "someURL";
+    Activity activity2 = new Activity(id, author, image, title, consumption, source);
+    assertNotEquals(testActivity, activity2);
+  }
+
+  @Test
+  public void equalsDifferentTitle() {
+    String id = "RandomID";
+    String author = "Group00";
+    String image = "imagePath";
+    String title = "les gooooooo";
+    long consumption = 3000;
+    String source = "someURL";
+    Activity activity2 = new Activity(id, author, image, title, consumption, source);
+    assertNotEquals(testActivity, activity2);
+  }
+
+  @Test
+  public void equalsDifferentSource() {
+    String id = "RandomID";
+    String author = "Group00";
+    String image = "imagePath";
+    String title = "Title of the Activity";
+    long consumption = 3000;
+    String source = "someOtherURL";
+    Activity activity2 = new Activity(id, author, image, title, consumption, source);
+    assertNotEquals(testActivity, activity2);
+  }
+
+  @Test
+  public void hashCodeSameTest() {
+    assertEquals(testActivity.hashCode(), testActivity.hashCode());
   }
 
   @Test
@@ -98,6 +166,4 @@ public class ActivityTest {
         + " consumption_in_wh=3000, source='someURL'}",
       testActivity.toString());
   }
-
-
 }
