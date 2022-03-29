@@ -49,6 +49,7 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
     displayEmojis();
     this.question = (MultipleChoiceQuestion) question;
     this.clickedButton = null;
+    this.dbPoint = false;
 
     // reset correct button colors
     for (Button button : buttons) {

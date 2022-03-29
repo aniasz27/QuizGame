@@ -53,6 +53,7 @@ public class InsteadOfCtrl extends QuestionCtrl implements Initializable {
     this.question = (InsteadOfQuestion) question;
     this.title.setText(((InsteadOfQuestion) question).getQuestion());
     this.clickedButton = null;
+    this.dbPoint = false;
 
     // reset correct button colors
     for (Button button : buttons) {
