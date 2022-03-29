@@ -57,7 +57,7 @@ public class WaitingRoomCtrl implements Initializable {
   @FXML
   private void play(ActionEvent actionEvent) {
     server.stopUpdates();
-    mainCtrl.start();
+    server.startGame(mainCtrl.serverIp, true);
   }
 
   /**
