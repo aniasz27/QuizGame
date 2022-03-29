@@ -11,11 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Circle;
 
 public class IntermediateLeaderboardCtrl extends QuestionCtrl implements Initializable {
   @FXML
@@ -24,12 +20,6 @@ public class IntermediateLeaderboardCtrl extends QuestionCtrl implements Initial
   private Button backButton;
   @FXML
   private Button helpButton;
-  @FXML
-  private Circle circle;
-  @FXML
-  private GridPane emojiGrid;
-  @FXML
-  private StackPane pane;
 
   @Inject
   public IntermediateLeaderboardCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -42,7 +32,7 @@ public class IntermediateLeaderboardCtrl extends QuestionCtrl implements Initial
   }
 
   public void display() {
-    QuestionCtrl.displayEmojis(circle, emojiGrid, pane);
+    displayEmojis();
   }
 
   public void refresh() {
@@ -69,11 +59,6 @@ public class IntermediateLeaderboardCtrl extends QuestionCtrl implements Initial
 
   @Override
   public void showCorrect() {
-
-  }
-
-  @Override
-  public void disableButtons() {
 
   }
 }

@@ -22,7 +22,6 @@ import client.utils.JokerWebSocket;
 import client.utils.ServerUtils;
 import commons.Activity;
 import commons.Emoji;
-import commons.EmojiMessage;
 import commons.EstimateQuestion;
 import commons.HowMuchQuestion;
 import commons.InsteadOfQuestion;
@@ -125,33 +124,14 @@ public class MainCtrl {
   private Date pointsTimer;
   private int pointsOffset;
   public JokerWebSocket jokerWebSocket;
-
-  /**
-   * The controller of the question that was last shown (ie currently being shown)
-   */
-  public QuestionCtrl currentQuestionCtrl;
-
-  // Emoji WebSockets
   public EmojiWebSocket emojiWebSocket;
+  //The controller of the question that was last shown (ie currently being shown)
+  public QuestionCtrl currentQuestionCtrl;
 
   @Inject
   public MainCtrl(ServerUtils server) {
     this.server = server;
   }
-
-  public enum Mode {
-    MULTI(0),
-    SINGLE(1),
-    ADMIN(2);
-
-    private final int mode;
-
-    private Mode(int m) {
-      mode = m;
-    }
-  }
-
-  public Mode mode;
 
   /**
    * The user's name in the current game.
@@ -273,7 +253,6 @@ public class MainCtrl {
    */
   public void start() {
     gameId = server.startGame(serverIp, this.multiplayer);
-    jokerWebSocket = new JokerWebSocket(this, serverIp, gameId);
     points = 0;
     play();
   }
@@ -282,6 +261,7 @@ public class MainCtrl {
     this.usedJokers = new boolean[3];
     System.out.println("session: " + gameId);
     emojiWebSocket = new EmojiWebSocket(this, serverIp, gameId);
+    jokerWebSocket = new JokerWebSocket(this, serverIp, gameId);
     playerExited = false;
     this.usedJokers = new boolean[3];
     points = 0;
@@ -394,6 +374,7 @@ public class MainCtrl {
   }
 
   public void showInstead(InsteadOfQuestion question) {
+    currentQuestionCtrl = insteadOfCtrl;
     primaryStage.getScene().setRoot(insteadOfParent);
     insteadOfCtrl.displayQuestion(question);
     insteadOfCtrl.startTimer();
@@ -591,36 +572,28 @@ public class MainCtrl {
   /**
    * Shows joker on the screen
    */
-  public void showJoker(Joker joker) {
-    //TODO: show jokers on the screen
-    System.out.println(joker);
-    if (joker.equals(Joker.TIME)) {
-      switch (question.type) {
-        case MULTICHOICE:
-          System.out.println("Showed multiple choice - joker");
-          Platform.runLater(() -> whatRequiresMoreEnergyCtrl.reduceTime());
-          break;
-        case ESTIMATE:
-          System.out.println("Showed guess - joker");
-          Platform.runLater(() -> guessCtrl.reduceTime());
-          break;
-        case HOWMUCH:
-          System.out.println("Showed how much - joker");
-          Platform.runLater(() -> howMuchCtrl.reduceTime());
-          break;
-        default:
-          System.out.println("Wrong question type - joker");
-          break;
-      }
+  public void showJoker(Joker joker, String playerId) {
+    System.out.println("Shown joker: " + joker + " in controller: " + currentQuestionCtrl);
+    currentQuestionCtrl.showJoker(joker);
+    if (joker == Joker.TIME && !clientId.equals(playerId)) {
+      currentQuestionCtrl.reduceTime();
     }
   }
 
+  /**
+   * Shows emoji on the screen
+   *
+   * @param emoji to show
+   */
   public void showEmoji(Emoji emoji) {
     // TODO: show emojis per screen
     System.out.println("Shown emoji: " + emoji + " in controller: " + currentQuestionCtrl);
     currentQuestionCtrl.showEmoji(emoji);
   }
 
+  /**
+   * Resets the game session
+   */
   public void reset() {
     serverIp = null;
     clientId = null;

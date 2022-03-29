@@ -18,7 +18,7 @@ public class EmojiController {
   SimpMessagingTemplate messagingTemplate;
 
   @MessageMapping("/emoji")
-  public void sendEmoji(@Payload EmojiMessage emojiMessage) throws Exception {
+  public void sendEmoji(@Payload EmojiMessage emojiMessage) {
     System.out.println("Sent emoji!");
     Emoji emoji = emojiMessage.emoji;
     String gameSession = emojiMessage.gameSession;

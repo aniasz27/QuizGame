@@ -12,13 +12,10 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
@@ -37,23 +34,10 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
   private Button answer_2;
   @FXML
   private Button answer_3;
-  @FXML
-  private Text points;
-  @FXML
-  private Circle circle;
-  @FXML
-  private GridPane emojiGrid;
-  @FXML
-  private StackPane pane;
-  @FXML
-  private Button doublePts;
-  @FXML
-  private Button hint;
-  @FXML
-  private Button minusTime;
+
 
   private Button[] buttons;
-  private Button[] jokers;
+
 
   private Activity activity;
   private HowMuchQuestion question;
@@ -73,12 +57,11 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
   public void initialize(URL location, ResourceBundle resources) {
     super.initialize(location, resources);
     buttons = new Button[] {answer_1, answer_2, answer_3};
-    jokers = new Button[] {doublePts, minusTime, hint};
   }
 
   @Override
   public void displayQuestion(Question question) {
-    displayEmojis(circle, emojiGrid, pane);
+    displayEmojis();
     this.clickedButton = null;
     this.dbPoint = false;
     this.question = (HowMuchQuestion) question;
@@ -104,8 +87,8 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
       buttons[i].setText(answers[i] + " Wh");
       buttons[i].setUserData(correct[i]);
     }
-    showPoints(points);
-    displayJokers(jokers);
+    showPoints();
+    displayJokers();
   }
 
   @Override
@@ -127,7 +110,7 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
       toAdd *= 2;
     }
     mainCtrl.addPoints(toAdd);
-    showPoints(points);
+    showPoints();
   }
 
   /**
@@ -146,23 +129,17 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
 
   @Override
   public void disableButtons() {
+    super.disableButtons();
     for (Button button : buttons) {
       button.setDisable(true);
-    }
-    for (Button joker : jokers) {
-      joker.setDisable(true);
     }
   }
 
   public void hint() {
-    hintQ(correct, buttons, hint);
+    hintQ(correct, buttons);
   }
 
   public void doublePoints() {
-    dbPoint = doublePoints(doublePts);
-  }
-
-  public void decreaseTime() {
-    decreaseTimeQ(minusTime);
+    dbPoint = doublePointsQ();
   }
 }
