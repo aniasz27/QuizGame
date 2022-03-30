@@ -20,8 +20,13 @@ public class InsteadOfQuestion extends Question {
   public InsteadOfQuestion(Activity activity1, Activity activity2, double factor) {
 
     super(Type.INSTEAD);
-    this.title1 = "Instead of " + activity1.title + ", ";
-    this.title2 = activity2.getTitle() + " ?";
+    String titleMock = activity1.getTitle().replace(".", "");
+    ;
+    titleMock = Character.toLowerCase(titleMock.charAt(0)) + titleMock.substring(1);
+    this.title1 = "Instead of " + titleMock + ", ";
+    titleMock = activity2.getTitle().replace(".", "");
+    titleMock = Character.toLowerCase(titleMock.charAt(0)) + titleMock.substring(1);
+    this.title2 = titleMock + " ?";
     this.activity1 = activity1;
     this.activity2 = activity2;
     this.factor = factor;

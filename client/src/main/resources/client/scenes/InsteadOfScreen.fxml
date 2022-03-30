@@ -93,7 +93,7 @@
         <Region maxHeight="40" styleClass="margin" VBox.vgrow="ALWAYS"/>
         <TextField fx:id="answer" promptText="Type in your answer up to 2 decimal places"
                    styleClass="border, rounded, drop-shadow"
-                   onMouseClicked="#deleteText"/>
+                   onMouseClicked="#deleteText" maxWidth="800"/>
         <Button fx:id="submit" onAction="#checkCorrect" styleClass="border, rounded, drop-shadow" text="Submit"/>
         <Region styleClass="margin" VBox.vgrow="ALWAYS" maxWidth="50"/>
     </VBox>

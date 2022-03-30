@@ -11,6 +11,7 @@ import commons.IntermediateLeaderboardQuestion;
 import commons.MultipleChoiceQuestion;
 import commons.Question;
 import commons.Score;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -80,9 +81,15 @@ public class GameController {
         case 3:
           Activity activity1 = activityController.getRandomActivity().getBody();
           Activity activity2 = activityController.getRandomActivity().getBody();
+          while (activity1.getTitle().length() > 40) { //limit so it doesn't run out of the screen
+            activity1 = activityController.getRandomActivity().getBody();
+          }
+          while (activity2.getTitle().length() > 50) {//limit so it doesn't run out of the screen
+            activity2 = activityController.getRandomActivity().getBody();
+          }
           boolean finished = false;
           while (!finished) {
-            if (activity1.getTitle().contains("ing ")) {
+            if (activity1.getTitle().contains("ing ")) { //for the right formatting of the question
               if (activity2.getTitle().contains("ing ")) {
                 finished = true;
               } else {
@@ -93,7 +100,7 @@ public class GameController {
             }
           }
           double factor = 0;
-          if (activity1.getConsumption_in_wh() <= activity2.getConsumption_in_wh()) {
+          if (activity1.getConsumption_in_wh() <= activity2.getConsumption_in_wh()) { // factor is never smaller than 1
             factor = ((double) activity2.getConsumption_in_wh()) / activity1.getConsumption_in_wh();
             Activity holder = activity1;
             activity1 = activity2;
@@ -101,6 +108,7 @@ public class GameController {
           } else {
             factor = ((double) activity1.getConsumption_in_wh()) / activity2.getConsumption_in_wh();
           }
+          factor = Math.round(factor * 100.0) / 100.0;
           questions[i] = new InsteadOfQuestion(activity1, activity2, factor);
           break;
         default:

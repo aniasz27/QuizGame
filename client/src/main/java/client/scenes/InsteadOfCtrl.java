@@ -63,7 +63,7 @@ public class InsteadOfCtrl extends QuestionCtrl implements Initializable {
     this.question = (InsteadOfQuestion) question;
     this.title1.setText(((InsteadOfQuestion) question).getTitle1());
     this.title2.setText("how many time could you be");
-    this.title3.setText(((InsteadOfQuestion) question).getActivity2().getTitle());
+    this.title3.setText(((InsteadOfQuestion) question).getTitle2());
     this.dbPoint = false;
     this.activity1 = ((InsteadOfQuestion) question).getActivity1();
     this.activity2 = ((InsteadOfQuestion) question).getActivity2();
