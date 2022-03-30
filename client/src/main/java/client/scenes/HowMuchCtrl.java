@@ -8,6 +8,7 @@ import commons.HowMuchQuestion;
 import commons.Question;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
+import java.util.Collections;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -79,8 +80,8 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
 
     description.setText(activity.getTitle());
     for (Button button : buttons) {
-      button.getStyleClass().remove("good");
-      button.getStyleClass().remove("bad");
+      button.getStyleClass().removeAll(Collections.singleton("good"));
+      button.getStyleClass().removeAll(Collections.singleton("bad"));
       button.setDisable(false);
     }
     for (int i = 0; i < 3; i++) {

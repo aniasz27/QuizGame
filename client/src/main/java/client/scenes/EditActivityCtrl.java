@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -81,8 +82,8 @@ public class EditActivityCtrl implements Initializable {
     imageView.setImage(new Image(new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity.id))));
 
     consumptionField.onMouseClickedProperty().set(event -> {
-      consumptionField.getStyleClass().remove("bad");
-      saveButton.getStyleClass().remove("bad");
+      consumptionField.getStyleClass().removeAll(Collections.singleton("bad"));
+      saveButton.getStyleClass().removeAll(Collections.singleton("bad"));
     });
   }
 
