@@ -35,7 +35,8 @@
     <Text styleClass="title" text="Quizzzzz" textAlignment="CENTER" BorderPane.alignment="CENTER"/>
     <Region maxHeight="120" styleClass="margin" VBox.vgrow="ALWAYS"/>
     <TextField fx:id="nameField" promptText="Name (Optional)" styleClass="border, rounded, drop-shadow"/>
-    <TextField fx:id="serverField" promptText="Server IP" styleClass="border, rounded, drop-shadow"/>
+    <TextField fx:id="serverField" promptText="Server IP (Default: localhost:8080)"
+               styleClass="border, rounded, drop-shadow"/>
     <Button fx:id="playButton" onAction="#connect" styleClass="border, rounded, drop-shadow" text="Connect"/>
   </VBox>
 </StackPane>
