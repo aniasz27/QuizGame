@@ -109,16 +109,12 @@ public class MainCtrl {
   public String serverIp;
   public String clientId;
   public String gameId;
-  public String previousGameId;
   public ScheduledExecutorService keepAliveExec;
   public boolean waitingForGame;
   public boolean[] usedJokers;
   public int questionNumber = 0;
-
   private int points;
-
   private Question question;
-  public Thread timerThread;
   public boolean playerExited = false;
   private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSS");
   private Date pointsTimer;
@@ -127,17 +123,13 @@ public class MainCtrl {
   public EmojiWebSocket emojiWebSocket;
   //The controller of the question that was last shown (ie currently being shown)
   public QuestionCtrl currentQuestionCtrl;
+  //The user's name in the current game. Null if not in a game.
+  public String name = null;
 
   @Inject
   public MainCtrl(ServerUtils server) {
     this.server = server;
   }
-
-  /**
-   * The user's name in the current game.
-   * Null if not in a game.
-   */
-  public String name = null;
 
   public void initialize(
     Stage primaryStage,

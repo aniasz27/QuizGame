@@ -163,7 +163,6 @@ public abstract class QuestionCtrl {
    * Set hover effect on emojis
    */
   public void hoverEffect() {
-    System.out.println("multiplayer: " + mainCtrl.multiplayer);
     this.emojiButton.setOnMouseEntered(event -> {
       this.pane.setVisible(true);
       this.circle.setVisible(true);
