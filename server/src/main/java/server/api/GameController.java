@@ -60,7 +60,7 @@ public class GameController {
     Question[] questions = new Question[22];
 
     for (int i = 0; i < 21; i++) {
-      switch (3) { //random.nextInt(4)
+      switch (random.nextInt(4)) {
         case 0:
           Activity[] activities = activityController.getRandomActivityMultiple();
           List<Activity> list = Arrays.asList(activities);
@@ -84,7 +84,7 @@ public class GameController {
           while (activity1.getTitle().length() > 40) { //limit so it doesn't run out of the screen
             activity1 = activityController.getRandomActivity().getBody();
           }
-          while (activity2.getTitle().length() > 50) {//limit so it doesn't run out of the screen
+          while (activity2.getTitle().length() > 50) { //limit so it doesn't run out of the screen
             activity2 = activityController.getRandomActivity().getBody();
           }
           boolean finished = false;
@@ -109,6 +109,7 @@ public class GameController {
             factor = ((double) activity1.getConsumption_in_wh()) / activity2.getConsumption_in_wh();
           }
           factor = Math.round(factor * 100.0) / 100.0;
+          System.out.println("Question:" + activity1.getTitle() + " answer: " + factor);
           questions[i] = new InsteadOfQuestion(activity1, activity2, factor);
           break;
         default:

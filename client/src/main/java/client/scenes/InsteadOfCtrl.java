@@ -62,7 +62,7 @@ public class InsteadOfCtrl extends QuestionCtrl implements Initializable {
     displayEmojis();
     this.question = (InsteadOfQuestion) question;
     this.title1.setText(((InsteadOfQuestion) question).getTitle1());
-    this.title2.setText("how many time could you be");
+    this.title2.setText("how many times could you be");
     this.title3.setText(((InsteadOfQuestion) question).getTitle2());
     this.dbPoint = false;
     this.activity1 = ((InsteadOfQuestion) question).getActivity1();
@@ -111,6 +111,7 @@ public class InsteadOfCtrl extends QuestionCtrl implements Initializable {
     }
     double value = Double.parseDouble(answer.getText());
     point = (int) (question.calculateHowClose(value) * mainCtrl.getPointsOffset());
+    point = point / 100;
     submit.setDisable(true);
   }
 
