@@ -1,23 +1,19 @@
 package commons;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class ScoreTest {
 
-  static Score score;
+  Score score;
 
-  @BeforeAll
-  public static void setUp() {
-    String player = "Username";
-    String name = "Name";
-    int points = 0;
-    score = new Score(player, name, points);
+  @BeforeEach
+  public void setUp() {
+    score = new Score("Username", "Name", 0);
   }
 
   @Test
@@ -26,31 +22,39 @@ public class ScoreTest {
   }
 
   @Test
-  public void getPlayerTest() {
+  public void getName() {
+    assertEquals("Name", score.getName());
+  }
+
+  @Test
+  public void getPlayer() {
     assertEquals("Username", score.getPlayer());
   }
 
-
   @Test
-  public void getPointsTest() {
+  public void getPoints() {
     assertEquals(0, score.getPoints());
   }
-
 
   @Test
   public void addPointsTest() {
     score.addPoints(100);
     assertEquals(100, score.getPoints());
-    score.points = 0;
   }
 
   @Test
-  public void equalsSameTest() {
+  public void setPoints() {
+    score.setPoints(1000);
+    assertEquals(1000, score.getPoints());
+  }
+
+  @Test
+  public void equalsSame() {
     assertEquals(score, score);
   }
 
   @Test
-  public void equalsSameButDifferentTest() {
+  public void equalsEqual() {
     String player = "Username";
     int points = 0;
     String name = "Name";
@@ -59,12 +63,43 @@ public class ScoreTest {
   }
 
   @Test
-  public void equalsDifferentTest() {
-    String player = "Username";
-    int points = 100;
-    String name = "Name";
-    Score score1 = new Score(player, name, points);
-    assertFalse(score.equals(score1));
+  public void equalsNull() {
+    assertNotEquals(score, null);
+  }
+
+  @Test
+  public void equalsNotScore() {
+    assertNotEquals(score, new Activity("a", "aa", "aaa", "aaaa", 0xAAAAA, "aaaaaa"));
+  }
+
+  @Test
+  public void equalsDifferentPoints() {
+    assertNotEquals(score, new Score("Username", "Name", 42));
+  }
+
+  @Test
+  public void equalsDifferentId() {
+    assertNotEquals(score, new Score("ID", "Name", 0));
+  }
+
+  @Test
+  public void equalsDifferentUsername() {
+    assertNotEquals(score, new Score("Username", "Username", 0));
+  }
+
+  @Test
+  public void hashCodeSame() {
+    assertEquals(score.hashCode(), score.hashCode());
+  }
+
+  @Test
+  public void hashCodeEqual() {
+    assertEquals(score.hashCode(), new Score("Username", "Name", 0).hashCode());
+  }
+
+  @Test
+  public void hashCodeDifferent() {
+    assertNotEquals(score.hashCode(), new Score("aaaaaaaa", "AAAAA", 0xAAAAAAA).hashCode());
   }
 
   @Test
