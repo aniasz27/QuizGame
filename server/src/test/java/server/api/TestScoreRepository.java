@@ -2,9 +2,6 @@ package server.api;
 
 import commons.Score;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -26,7 +23,7 @@ public class TestScoreRepository implements ScoreRepository {
   @Override
   public Iterable<Score> getLeaderboard() {
     call("getLeaderboard");
-    Collections.sort(scores, (a, b) -> a.points > b.points ? -1 : a.points == b.points ? 0 : 1);
+    scores.sort((scoreA, scoreB) -> Integer.compare(scoreB.points, scoreA.points));
     return scores;
   }
 
@@ -47,8 +44,23 @@ public class TestScoreRepository implements ScoreRepository {
   }
 
   @Override
-  public List<Score> findAllById(Iterable<Long> longs) {
+  public <S extends Score> List<S> findAll(Example<S> example) {
     return null;
+  }
+
+  @Override
+  public <S extends Score> List<S> findAll(Example<S> example, Sort sort) {
+    return null;
+  }
+
+  @Override
+  public <S extends Score> Page<S> findAll(Example<S> example, Pageable pageable) {
+    return null;
+  }
+
+  @Override
+  public <S extends Score> long count(Example<S> example) {
+    return 0;
   }
 
   @Override
@@ -57,7 +69,12 @@ public class TestScoreRepository implements ScoreRepository {
   }
 
   @Override
-  public void deleteById(Long aLong) {
+  public List<Score> findAllById(Iterable<Long> longs) {
+    return null;
+  }
+
+  @Override
+  public void deleteById(Long andLong) {
 
   }
 
@@ -85,7 +102,7 @@ public class TestScoreRepository implements ScoreRepository {
   @Override
   public <S extends Score> S save(S entity) {
     call("save");
-    entity.id = (long) scores.size();
+    entity.id = scores.size();
     scores.add(entity);
     return entity;
 
@@ -97,12 +114,12 @@ public class TestScoreRepository implements ScoreRepository {
   }
 
   @Override
-  public Optional<Score> findById(Long aLong) {
+  public Optional<Score> findById(Long andLong) {
     return Optional.empty();
   }
 
   @Override
-  public boolean existsById(Long aLong) {
+  public boolean existsById(Long andLong) {
     return false;
   }
 
@@ -127,48 +144,28 @@ public class TestScoreRepository implements ScoreRepository {
   }
 
   @Override
-  public void deleteAllByIdInBatch(Iterable<Long> longs) {
-
-  }
-
-  @Override
   public void deleteAllInBatch() {
 
   }
 
   @Override
-  public Score getOne(Long aLong) {
+  public void deleteAllByIdInBatch(Iterable<Long> longs) {
+
+  }
+
+  @Override
+  public Score getOne(Long andLong) {
     return null;
   }
 
   @Override
-  public Score getById(Long aLong) {
+  public Score getById(Long andLong) {
     return null;
   }
 
   @Override
   public <S extends Score> Optional<S> findOne(Example<S> example) {
     return Optional.empty();
-  }
-
-  @Override
-  public <S extends Score> List<S> findAll(Example<S> example) {
-    return null;
-  }
-
-  @Override
-  public <S extends Score> List<S> findAll(Example<S> example, Sort sort) {
-    return null;
-  }
-
-  @Override
-  public <S extends Score> Page<S> findAll(Example<S> example, Pageable pageable) {
-    return null;
-  }
-
-  @Override
-  public <S extends Score> long count(Example<S> example) {
-    return 0;
   }
 
   @Override
