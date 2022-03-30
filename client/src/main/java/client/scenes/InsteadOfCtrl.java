@@ -14,28 +14,39 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 public class InsteadOfCtrl extends QuestionCtrl implements Initializable {
 
   @FXML
-  private Button button0;
+  public StackPane imgContainer1;
   @FXML
-  private Button button1;
+  private ImageView imageView1;
   @FXML
-  private Button button2;
+  public StackPane imgContainer2;
   @FXML
-  private Text title;
-
-  private Button[] buttons;
-
-  private Button clickedButton;
+  private ImageView imageView2;
+  @FXML
+  private Text title1;
+  @FXML
+  private Text title2;
+  @FXML
+  private Text title3;
+  @FXML
+  private TextField answer;
+  @FXML
+  private Button submit;
+  private int point;
   private InsteadOfQuestion question;
   private boolean dbPoint;
+  private Activity activity1;
+  private Activity activity2;
 
   @Inject
   InsteadOfCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -45,106 +56,73 @@ public class InsteadOfCtrl extends QuestionCtrl implements Initializable {
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     super.initialize(location, resources);
-    buttons = new Button[] {button0, button1, button2};
   }
 
   @Override
   public void displayQuestion(Question question) {
     displayEmojis();
     this.question = (InsteadOfQuestion) question;
-    this.title.setText(((InsteadOfQuestion) question).getQuestion());
-    this.clickedButton = null;
+    this.title1.setText(((InsteadOfQuestion) question).getTitle1());
+    this.title2.setText("how many times could you be");
+    this.title3.setText(((InsteadOfQuestion) question).getTitle2());
     this.dbPoint = false;
-
-    // reset correct button colors
-    for (Button button : buttons) {
-      button.getStyleClass().removeAll(Collections.singleton("good"));
-      button.getStyleClass().removeAll(Collections.singleton("bad"));
-      button.setDisable(false);
-    }
-
-    Activity[] activities = {
-      this.question.getActivity1(),
-      this.question.getActivity2(),
-      this.question.getActivity3()
-    };
-
-    boolean[] correctAnswers = this.question.getCorrect();
-    for (int i = 0; i < buttons.length; i++) {
-      Activity activity = activities[i];
-
-      // get image
-      StackPane imgContainer = new StackPane();
-      imgContainer.getStyleClass().add("rounded");
-      imgContainer.getStyleClass().add("img");
-      //Rectangle clip = new Rectangle(
-      //  imgContainer.getWidth(), imgContainer.getHeight()
-      //);
-      //clip.setArcWidth(20);
-      //clip.setArcHeight(20);
-      //imgContainer.setClip(clip);
-
-      ImageView imageView = new ImageView(new Image(
-        new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity.id))
-      ));
-
-      // resize image
-      imageView.setFitWidth(1140 / 3.0);
-      imageView.setFitHeight(1140 / 3.0);
-
-      imgContainer.getChildren().add(imageView);
-
-      //set image
-      buttons[i].setGraphic(imgContainer);
-
-      // image is displayed on top of text
-      buttons[i].setContentDisplay(ContentDisplay.TOP);
-      buttons[i].setText(activity.getTitle());
-      buttons[i].setUserData(correctAnswers[i]);
-    }
+    this.activity1 = ((InsteadOfQuestion) question).getActivity1();
+    this.activity2 = ((InsteadOfQuestion) question).getActivity2();
+    this.submit.setDisable(false);
+    this.answer.getStyleClass().removeAll(Collections.singleton("bad"));
+    this.answer.getStyleClass().removeAll(Collections.singleton("good"));
     displayJokers();
+    this.hint.setDisable(true);
     showPoints();
+    Rectangle clip1 = new Rectangle(
+      imgContainer1.getWidth(), imgContainer1.getHeight()
+    );
+    clip1.setArcWidth(20);
+    clip1.setArcHeight(20);
+    imgContainer1.setClip(clip1);
+    imageView1.setImage(new Image(new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity1.id))));
+    Rectangle clip2 = new Rectangle(
+      imgContainer2.getWidth(), imgContainer2.getHeight()
+    );
+    clip2.setArcWidth(20);
+    clip2.setArcHeight(20);
+    imgContainer2.setClip(clip2);
+    imageView2.setImage(new Image(new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity2.id))));
+    answer.setText("Type in your answer up to 2 decimal places");
   }
 
-  @Override
+
   public void showCorrect() {
-    for (Button button : buttons) {
-      button.getStyleClass().add((boolean) button.getUserData() ? "good" : "bad");
-    }
-    if (clickedButton != null && (boolean) clickedButton.getUserData()) {
-      showUserCorrect();
-    }
-  }
-
-  @Override
-  public void disableButtons() {
-    super.disableButtons();
-    for (Button button : buttons) {
-      button.setDisable(true);
-    }
-  }
-
-  @FXML
-  public void checkCorrectAnswer(MouseEvent event) {
-    mainCtrl.stopPointsTimer();
-    this.clickedButton = (Button) event.getSource();
-    for (Button button : buttons) {
-      button.setDisable(true);
-    }
-  }
-
-  public void showUserCorrect() {
-    int toAdd = mainCtrl.getPointsOffset();
+    answer.getStyleClass().add(point != 0 ? "good" : "bad");
     if (dbPoint) {
-      toAdd *= 2;
+      point *= 2;
     }
-    mainCtrl.addPoints(toAdd);
+    mainCtrl.addPoints(point);
     showPoints();
+    answer.setText("Correct answer is: " + question.getFactor());
   }
 
-  public void hint() {
-    hintQ(question.getCorrect(), buttons);
+  /**
+   * On clicking the submit button on the screen, the answer gets evaluated
+   */
+  public void checkCorrect() {
+    mainCtrl.stopPointsTimer();
+    if (answer.getText().equals("")) {
+      return;
+    }
+    double value = Double.parseDouble(answer.getText());
+    point = (int) (question.calculateHowClose(value) * mainCtrl.getPointsOffset());
+    point = point / 100;
+    submit.setDisable(true);
   }
+
+  /**
+   * Deletes the text upon mouse click
+   */
+  public void deleteText() {
+    answer.setText("");
+  }
+
 
   public void doublePoints() {
     dbPoint = doublePointsQ();

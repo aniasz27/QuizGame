@@ -2,6 +2,7 @@ package commons;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -57,11 +58,16 @@ public class EstimateQuestionTest {
 
   @Test
   public void equalsSame() {
-    assertTrue(question.equals(question));
+    assertEquals(question, question);
   }
 
   @Test
-  public void equalsDifferentButSame() {
+  public void equalsNotEstimateQuestion() {
+    assertNotEquals(question, new Score("uuid", "baba", 10));
+  }
+
+  @Test
+  public void equalsEqual() {
     String id = "RandomID";
     String author = "Group00";
     String image = "imagePath";
@@ -83,7 +89,7 @@ public class EstimateQuestionTest {
     String source = "someURL";
     Activity activity = new Activity(id, author, image, title, consumption, source);
     Question question1 = new EstimateQuestion(activity);
-    assertFalse(question1.equals(question));
+    assertNotEquals(question1, question);
   }
 
   @Test
@@ -98,14 +104,18 @@ public class EstimateQuestionTest {
   @Test
   public void calculateHowCloseCorrect() {
     long answer = 2900;
-    assertTrue(0 < question.calculateHowClose(answer));
+    assertTrue(question.calculateHowClose(answer) > 0);
   }
 
   @Test
-  public void calculateHowCloseIncorrect() {
+  public void calculateHowCloseBelow() {
     long answer = 2300;
-    assertFalse(0 < question.calculateHowClose(answer));
+    assertFalse(question.calculateHowClose(answer) > 0);
   }
 
-
+  @Test
+  public void calculateHowCloseAbove() {
+    long answer = 3700;
+    assertFalse(question.calculateHowClose(answer) > 0);
+  }
 }
