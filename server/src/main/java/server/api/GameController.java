@@ -59,7 +59,7 @@ public class GameController {
     Question[] questions = new Question[22];
 
     for (int i = 0; i < 21; i++) {
-      switch (random.nextInt(4)) {
+      switch (3) { //random.nextInt(4)
         case 0:
           Activity[] activities = activityController.getRandomActivityMultiple();
           List<Activity> list = Arrays.asList(activities);
@@ -78,28 +78,30 @@ public class GameController {
           questions[i] = new HowMuchQuestion(activityController.getRandomActivity().getBody());
           break;
         case 3:
-          Activity[] activities1 = activityController.getRandomActivityMultiple();
-          Activity activity = activityController.getRandomActivity().getBody();
-          boolean more = false;
-          while (!more) {
-            if (activities1[0].getConsumption_in_wh() < activity.getConsumption_in_wh()) {
-              if (activities1[1].getConsumption_in_wh() < activity.getConsumption_in_wh()) {
-                if (activities1[2].getConsumption_in_wh() < activity.getConsumption_in_wh()) {
-                  more = true;
-                }
+          Activity activity1 = activityController.getRandomActivity().getBody();
+          Activity activity2 = activityController.getRandomActivity().getBody();
+          boolean finished = false;
+          while (!finished) {
+            if (activity1.getTitle().contains("ing ")) {
+              if (activity2.getTitle().contains("ing ")) {
+                finished = true;
+              } else {
+                activity2 = activityController.getRandomActivity().getBody();
               }
             } else {
-              activity = activityController.getRandomActivity().getBody();
+              activity1 = activityController.getRandomActivity().getBody();
             }
           }
-          System.out.println("Activity1:" + activities1[0].getConsumption_in_wh());
-          System.out.println("Activity2:" + activities1[1].getConsumption_in_wh());
-          System.out.println("Activity3:" + activities1[2].getConsumption_in_wh());
-          System.out.println("Activity4:" + activity.getConsumption_in_wh());
-          questions[i] = new InsteadOfQuestion(
-            activities1[0],
-            activities1[1],
-            activities1[2], activity);
+          double factor = 0;
+          if (activity1.getConsumption_in_wh() <= activity2.getConsumption_in_wh()) {
+            factor = ((double) activity2.getConsumption_in_wh()) / activity1.getConsumption_in_wh();
+            Activity holder = activity1;
+            activity1 = activity2;
+            activity2 = holder;
+          } else {
+            factor = ((double) activity1.getConsumption_in_wh()) / activity2.getConsumption_in_wh();
+          }
+          questions[i] = new InsteadOfQuestion(activity1, activity2, factor);
           break;
         default:
           break;
