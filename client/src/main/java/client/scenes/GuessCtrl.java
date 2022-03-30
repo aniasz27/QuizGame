@@ -85,8 +85,13 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     if (answer.getText().equals("")) {
       return;
     }
-
-    long value = Long.parseLong(answer.getText());
+    long value = 0;
+    try {
+      value = Long.parseLong(answer.getText());
+    } catch (NumberFormatException nfe) {
+      answer.setText("Not a number");
+      return;
+    }
     point = (int) (question.calculateHowClose(value) * mainCtrl.getPointsOffset() / 100);
     submit.setDisable(true);
   }

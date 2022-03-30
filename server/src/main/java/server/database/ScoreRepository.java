@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface ScoreRepository extends JpaRepository<Score, Long> {
 
-  @Query(value = "SELECT * FROM score s WHERE s.points != 0 ORDER BY s.points DESC", nativeQuery = true)
+  @Query(value = "SELECT * FROM score s ORDER BY s.points DESC", nativeQuery = true)
   Iterable<Score> getLeaderboard();
 }
