@@ -55,8 +55,8 @@
         /> <!-- text is \uf059 (help in font awesome) -->
     </HBox>
     <VBox spacing="20" alignment="TOP_CENTER" maxWidth="800" StackPane.alignment="CENTER">
-        <Region styleClass="margin" VBox.vgrow="ALWAYS"/>
-        <Text fx:id="points" text="Points:" translateY="30.0"/>
+        <Text fx:id="points" text="Points:" translateY="60.0"/>
+        <Region styleClass="margin" VBox.vgrow="ALWAYS"/> <!-- text is \uf059 (help in font awesome) -->
         <Text styleClass="title" text="How much energy does it take?" textAlignment="CENTER"
               StackPane.alignment="CENTER" fx:id="title1"/>
         <Text styleClass="title" text="How much energy does it take?" textAlignment="CENTER"
