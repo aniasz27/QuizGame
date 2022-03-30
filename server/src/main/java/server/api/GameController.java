@@ -101,18 +101,7 @@ public class GameController {
               activity1 = activityController.getRandomActivity().getBody();
             }
           }
-          double factor = 0;
-          if (activity1.getConsumption_in_wh() <= activity2.getConsumption_in_wh()) { // factor is never smaller than 1
-            factor = ((double) activity2.getConsumption_in_wh()) / activity1.getConsumption_in_wh();
-            Activity holder = activity1;
-            activity1 = activity2;
-            activity2 = holder;
-          } else {
-            factor = ((double) activity1.getConsumption_in_wh()) / activity2.getConsumption_in_wh();
-          }
-          factor = Math.round(factor * 100.0) / 100.0;
-          System.out.println("Question:" + activity1.getTitle() + " answer: " + factor);
-          questions[i] = new InsteadOfQuestion(activity1, activity2, factor);
+          questions[i] = new InsteadOfQuestion(activity1, activity2);
           break;
         default:
           break;

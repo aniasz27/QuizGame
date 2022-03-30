@@ -17,11 +17,19 @@ public class InsteadOfQuestion extends Question {
     super(Type.INSTEAD);
   }
 
-  public InsteadOfQuestion(Activity activity1, Activity activity2, double factor) {
+  public InsteadOfQuestion(Activity activity1, Activity activity2) {
 
     super(Type.INSTEAD);
+    if (activity1.getConsumption_in_wh() <= activity2.getConsumption_in_wh()) { // factor is never smaller than 1
+      factor = ((double) activity2.getConsumption_in_wh()) / activity1.getConsumption_in_wh();
+      Activity holder = activity1;
+      activity1 = activity2;
+      activity2 = holder;
+    } else {
+      factor = ((double) activity1.getConsumption_in_wh()) / activity2.getConsumption_in_wh();
+    }
+    factor = Math.round(factor * 100.0) / 100.0;
     String titleMock = activity1.getTitle().replace(".", "");
-    ;
     titleMock = Character.toLowerCase(titleMock.charAt(0)) + titleMock.substring(1);
     this.title1 = "Instead of " + titleMock + ", ";
     titleMock = activity2.getTitle().replace(".", "");
@@ -29,7 +37,6 @@ public class InsteadOfQuestion extends Question {
     this.title2 = titleMock + " ?";
     this.activity1 = activity1;
     this.activity2 = activity2;
-    this.factor = factor;
   }
 
   /**
