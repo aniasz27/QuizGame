@@ -4,7 +4,10 @@ import client.scenes.helpers.QuestionCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Question;
+import commons.ScoreComparator;
 import java.net.URL;
+import java.util.Collections;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -37,7 +40,7 @@ public class IntermediateLeaderboardCtrl extends QuestionCtrl implements Initial
 
   public void refresh() {
     var leaderboard = server.getMultiLeaderboard(mainCtrl.serverIp, mainCtrl.gameId);
-
+    Collections.sort((List) leaderboard, new ScoreComparator());
     Platform.runLater(() -> MainCtrl.refreshLeaderboard(leaderboardDisplay, leaderboard));
   }
 

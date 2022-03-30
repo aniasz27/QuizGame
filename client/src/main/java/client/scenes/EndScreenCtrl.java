@@ -2,7 +2,10 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Score;
+import commons.ScoreComparator;
 import java.net.URL;
+import java.util.Collections;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -54,7 +57,7 @@ public class EndScreenCtrl implements Initializable {
     } else {
       scores = server.getMultiLeaderboard(mainCtrl.serverIp, mainCtrl.gameId);
     }
-    System.out.println(scores);
+    Collections.sort((List) scores, new ScoreComparator());
     Platform.runLater(() -> MainCtrl.refreshLeaderboard(leaderboardDisplay, scores));
 
   }
