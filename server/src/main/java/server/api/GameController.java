@@ -81,10 +81,12 @@ public class GameController {
         case 3:
           Activity activity1 = activityController.getRandomActivity().getBody();
           Activity activity2 = activityController.getRandomActivity().getBody();
-          while (activity1.getTitle().length() > 40) { //limit so it doesn't run out of the screen
+          while (activity1.getTitle().length() > 40
+            || activity1.getConsumption_in_wh() <= 0) { //limit so it doesn't run out of the screen
             activity1 = activityController.getRandomActivity().getBody();
           }
-          while (activity2.getTitle().length() > 50) { //limit so it doesn't run out of the screen
+          while (activity2.getTitle().length() > 50
+            || activity2.getConsumption_in_wh() <= 0) { //limit so it doesn't run out of the screen
             activity2 = activityController.getRandomActivity().getBody();
           }
           boolean finished = false;

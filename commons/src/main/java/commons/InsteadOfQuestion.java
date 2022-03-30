@@ -42,6 +42,9 @@ public class InsteadOfQuestion extends Question {
    * linearly between them for answers within the percentage boundary
    */
   public float calculateHowClose(double guessedValue) {
+    if (guessedValue < 0) {
+      return 0;
+    }
     double min = factor * 0.8;
     double max = factor * 1.2;
     if (guessedValue > max || guessedValue < min) {
