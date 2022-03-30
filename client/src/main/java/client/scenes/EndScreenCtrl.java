@@ -2,11 +2,11 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Score;
-import commons.ScoreComparator;
 import java.net.URL;
-import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -57,8 +57,10 @@ public class EndScreenCtrl implements Initializable {
     } else {
       scores = server.getMultiLeaderboard(mainCtrl.serverIp, mainCtrl.gameId);
     }
-    Collections.sort((List) scores, new ScoreComparator());
-    Platform.runLater(() -> MainCtrl.refreshLeaderboard(leaderboardDisplay, scores));
-
+    List<Score> list = StreamSupport
+      .stream(scores.spliterator(), false)
+      .collect(Collectors.toList());
+    list.sort((Score scoreA, Score scoreB) -> Integer.compare(scoreB.points, scoreA.points));
+    Platform.runLater(() -> MainCtrl.refreshLeaderboard(leaderboardDisplay, list));
   }
 }
