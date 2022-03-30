@@ -44,12 +44,6 @@ public class ScoreController {
     return repo.getLeaderboard();
   }
 
-  // TODO: implement actual multiplayer leaderboard by game session id
-  @GetMapping("/multiLeaderboard/{gameId}")
-  public Iterable<Score> getMultiLeaderboard(@PathVariable("gameId") String gameId) {
-    return getLeaderboard();
-  }
-
   /**
    * Adds a score to the database
    *
