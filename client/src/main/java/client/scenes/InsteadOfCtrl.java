@@ -8,6 +8,7 @@ import commons.InsteadOfQuestion;
 import commons.Question;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
+import java.util.Collections;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -68,8 +69,8 @@ public class InsteadOfCtrl extends QuestionCtrl implements Initializable {
     this.activity1 = ((InsteadOfQuestion) question).getActivity1();
     this.activity2 = ((InsteadOfQuestion) question).getActivity2();
     this.submit.setDisable(false);
-    this.answer.getStyleClass().remove("good");
-    this.answer.getStyleClass().remove("bad");
+    this.answer.getStyleClass().removeAll(Collections.singleton("bad"));
+    this.answer.getStyleClass().removeAll(Collections.singleton("good"));
     displayJokers();
     this.hint.setDisable(true);
     showPoints();
