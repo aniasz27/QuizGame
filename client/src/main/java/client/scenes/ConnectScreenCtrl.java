@@ -4,6 +4,7 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.WebApplicationException;
+import java.util.Collections;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import javafx.application.Platform;
@@ -73,11 +74,9 @@ public class ConnectScreenCtrl {
         1,
         TimeUnit.SECONDS
       );
-
-      serverField.getStyleClass().remove("bad");
-      nameField.getStyleClass().remove("bad");
-      playButton.getStyleClass().remove("bad");
-
+      serverField.getStyleClass().removeAll(Collections.singleton("bad"));
+      playButton.getStyleClass().removeAll(Collections.singleton("bad"));
+      nameField.getStyleClass().removeAll(Collections.singleton("bad"));
       mainCtrl.showSplash();
     } catch (WebApplicationException e) {
       if (e.getResponse().getStatus() == 409) {
@@ -88,5 +87,12 @@ public class ConnectScreenCtrl {
       serverField.getStyleClass().add("bad");
       playButton.getStyleClass().add("bad");
     }
+  }
+
+  @FXML
+  private void resetBad() {
+    serverField.getStyleClass().removeAll(Collections.singleton("bad"));
+    playButton.getStyleClass().removeAll(Collections.singleton("bad"));
+    nameField.getStyleClass().removeAll(Collections.singleton("bad"));
   }
 }

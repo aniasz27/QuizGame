@@ -8,6 +8,7 @@ import commons.EstimateQuestion;
 import commons.Question;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
+import java.util.Collections;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -59,8 +60,8 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     this.question = (EstimateQuestion) question;
     this.activity = this.question.getActivity();
     this.submit.setDisable(false);
-    this.answer.getStyleClass().remove("good");
-    this.answer.getStyleClass().remove("bad");
+    this.answer.getStyleClass().removeAll(Collections.singleton("good"));
+    this.answer.getStyleClass().removeAll(Collections.singleton("bad"));
     displayJokers();
     this.hint.setDisable(true);
 

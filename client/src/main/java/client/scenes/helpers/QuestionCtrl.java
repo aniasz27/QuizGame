@@ -7,6 +7,7 @@ import commons.Emoji;
 import commons.Joker;
 import commons.Question;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Random;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
@@ -134,7 +135,7 @@ public abstract class QuestionCtrl {
    */
   public void useJoker(Button joker) {
     joker.getStyleClass().add("used");
-    joker.getStyleClass().remove("drop-shadow");
+    joker.getStyleClass().removeAll(Collections.singleton("drop-shadow"));
   }
 
   /**
@@ -163,7 +164,6 @@ public abstract class QuestionCtrl {
    * Set hover effect on emojis
    */
   public void hoverEffect() {
-    System.out.println("multiplayer: " + mainCtrl.multiplayer);
     this.emojiButton.setOnMouseEntered(event -> {
       this.pane.setVisible(true);
       this.circle.setVisible(true);
