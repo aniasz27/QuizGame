@@ -9,6 +9,7 @@ import commons.Question;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.util.Collections;
+import java.util.Random;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -63,7 +64,6 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     this.answer.getStyleClass().removeAll(Collections.singleton("good"));
     this.answer.getStyleClass().removeAll(Collections.singleton("bad"));
     displayJokers();
-    this.hint.setDisable(true);
 
     Rectangle clip = new Rectangle(
       imgContainer.getWidth(), imgContainer.getHeight()
@@ -76,13 +76,13 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     description.setText(activity.getTitle());
     showPoints();
     answer.setText("Type in your answer");
+    answer.setPromptText("Type in your answer");
   }
 
   /**
    * On clicking the submit button on the screen, the answer gets evaluated
    */
   public void checkCorrect() {
-    mainCtrl.stopPointsTimer();
     if (answer.getText().equals("")) {
       return;
     }
@@ -93,6 +93,7 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
       answer.setText("Not a number");
       return;
     }
+    mainCtrl.stopPointsTimer();
     point = (int) (question.calculateHowClose(value) * mainCtrl.getPointsOffset() / 100);
     submit.setDisable(true);
   }
@@ -124,5 +125,9 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
 
   public void doublePoints() {
     dbPoint = doublePointsQ();
+  }
+
+  public void hint() {
+    hintR(answer, this.activity.consumption_in_wh);
   }
 }

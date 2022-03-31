@@ -16,42 +16,42 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Text?>
 <StackPane
-  fx:id="root"
-  xmlns="http://javafx.com/javafx/17"
-  xmlns:fx="http://javafx.com/fxml/1"
-  fx:controller="client.scenes.InsteadOfCtrl"
-  stylesheets="@../css/Guess.css"
+        fx:id="root"
+        xmlns="http://javafx.com/javafx/17"
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="client.scenes.InsteadOfCtrl"
+        stylesheets="@../css/Guess.css"
 >
 
   <HBox StackPane.alignment="TOP_CENTER" maxHeight="0" maxWidth="Infinity" styleClass="pad, margin">
     <Button
-      fx:id="backButton"
-      styleClass="icon, border, rounded, drop-shadow"
-      StackPane.alignment="TOP_LEFT"
-      onAction="#back"
-      text=""
+            fx:id="backButton"
+            styleClass="icon, border, rounded, drop-shadow"
+            StackPane.alignment="TOP_LEFT"
+            onAction="#back"
+            text=""
     /> <!-- text is \uf053 (back arrow in font awesome) -->
     <Region HBox.hgrow="ALWAYS"/>
     <StackPane>
       <Line
-        endX="800"
-        StackPane.alignment="CENTER_LEFT"
-        styleClass="timer-bg"
+              endX="800"
+              StackPane.alignment="CENTER_LEFT"
+              styleClass="timer-bg"
       />
       <Line
-        endX="800"
-        StackPane.alignment="CENTER_LEFT"
-        fx:id="timer"
-        styleClass="drop-shadow, timer"
+              endX="800"
+              StackPane.alignment="CENTER_LEFT"
+              fx:id="timer"
+              styleClass="drop-shadow, timer"
       />
     </StackPane>
     <Region HBox.hgrow="ALWAYS"/>
     <Button
-      fx:id="helpButton"
-      styleClass="icon, border, rounded, drop-shadow"
-      StackPane.alignment="TOP_RIGHT"
-      onAction="#help"
-      text=""
+            fx:id="helpButton"
+            styleClass="icon, border, rounded, drop-shadow"
+            StackPane.alignment="TOP_RIGHT"
+            onAction="#help"
+            text=""
     /> <!-- text is \uf059 (help in font awesome) -->
   </HBox>
   <VBox spacing="20" alignment="TOP_CENTER" maxWidth="800" StackPane.alignment="CENTER">
@@ -66,12 +66,12 @@
     <HBox StackPane.alignment="CENTER" maxHeight="0" maxWidth="800" styleClass="pad, margin">
       <StackPane fx:id="imgContainer1" styleClass="rounded, img">
         <ImageView
-          fx:id="imageView1"
-          fitHeight="250.0"
-          fitWidth="350.0"
-          pickOnBounds="true"
-          preserveRatio="true"
-          styleClass="rounded, img"
+                fx:id="imageView1"
+                fitHeight="250.0"
+                fitWidth="350.0"
+                pickOnBounds="true"
+                preserveRatio="true"
+                styleClass="rounded, img"
         >
           <Image url="@../img/sample.jpg"/>
         </ImageView>
@@ -79,12 +79,12 @@
       <Region styleClass="margin" HBox.hgrow="ALWAYS"/>
       <StackPane fx:id="imgContainer2" styleClass="rounded, img">
         <ImageView
-          fx:id="imageView2"
-          fitHeight="250.0"
-          fitWidth="350.0"
-          pickOnBounds="true"
-          preserveRatio="true"
-          styleClass="rounded, img"
+                fx:id="imageView2"
+                fitHeight="250.0"
+                fitWidth="350.0"
+                pickOnBounds="true"
+                preserveRatio="true"
+                styleClass="rounded, img"
         >
           <Image url="@../img/sample.jpg"/>
         </ImageView>
@@ -149,7 +149,8 @@
               styleClass="border, rounded, drop-shadow, button"
               text="-50%"
               GridPane.columnIndex="2"/>
-      <Button fx:id="hint" mnemonicParsing="false" styleClass="border, rounded, drop-shadow, button" text="Hint"
+      <Button fx:id="hint" mnemonicParsing="false" onMouseClicked="#hint"
+              styleClass="border, rounded, drop-shadow, button" text="Hint"
               GridPane.columnIndex="4"/>
     </children>
   </GridPane>

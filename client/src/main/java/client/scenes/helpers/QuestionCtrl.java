@@ -17,6 +17,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
@@ -290,7 +291,28 @@ public abstract class QuestionCtrl {
   }
 
   /**
-   * Gives a hint to the user
+   * Shows the user the range in which the answer is
+   *
+   * @param field  in which range is indicated
+   * @param answer correct answer
+   */
+  public void hintR(TextField field, long answer) {
+    if (mainCtrl.usedJokers[2]) {
+      return;
+    }
+    int range = random.nextInt(50);
+    long leftBound = (long) (answer * (1 - range / 100.0));
+    range = random.nextInt(50);
+    long rightBound = (long) (answer * (1 + range / 100.0));
+    field.setText("Range: " + leftBound + " - " + rightBound);
+    field.setPromptText("Range: " + leftBound + " - " + rightBound);
+    useJoker(hint);
+    mainCtrl.usedJokers[2] = true;
+    mainCtrl.jokerWebSocket.sendMessage(Joker.HINT);
+  }
+
+  /**
+   * Disables wrong answer
    *
    * @param correct answer
    * @param buttons answers
@@ -299,7 +321,6 @@ public abstract class QuestionCtrl {
     if (mainCtrl.usedJokers[2]) {
       return;
     }
-    Random random = new Random();
     int guess;
     do {
       guess = random.nextInt(3);
