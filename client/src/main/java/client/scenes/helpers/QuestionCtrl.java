@@ -4,6 +4,8 @@ import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Emoji;
+import commons.EstimateQuestion;
+import commons.InsteadOfQuestion;
 import commons.Joker;
 import commons.Question;
 import java.net.URL;
@@ -276,6 +278,36 @@ public abstract class QuestionCtrl {
     Label movingJoker = new Label(pair.getKey().getText());
     movingJoker.setTranslateX(-1920.0 / 2.0);
     makeAnimation(movingJoker, pair.getValue());
+  }
+
+  /**
+   * On clicking the submit button on the screen, the answer gets evaluated
+   *
+   * @param answer            textField to get answer from
+   * @param estimateQuestion  EstimateQuestion
+   * @param insteadOfQuestion InsteadOfQuestion
+   * @param submit            Button
+   * @return points to add
+   */
+  public int checkCorrect(TextField answer, EstimateQuestion estimateQuestion, InsteadOfQuestion insteadOfQuestion,
+                          Button submit) {
+    if (answer.getText().equals("")) {
+      return -1;
+    }
+    long value;
+    try {
+      value = Long.parseLong(answer.getText());
+    } catch (NumberFormatException nfe) {
+      answer.setText("Not a number");
+      return -1;
+    }
+    mainCtrl.stopPointsTimer();
+    submit.setDisable(true);
+    if (estimateQuestion == null) {
+      return (int) (insteadOfQuestion.calculateHowClose(value) * mainCtrl.getPointsOffset() / 100);
+    } else {
+      return (int) (estimateQuestion.calculateHowClose(value) * mainCtrl.getPointsOffset() / 100);
+    }
   }
 
   /**

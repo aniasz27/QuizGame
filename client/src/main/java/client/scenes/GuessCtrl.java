@@ -79,23 +79,12 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     answer.setPromptText("Type in your answer");
   }
 
-  /**
-   * On clicking the submit button on the screen, the answer gets evaluated
-   */
+
   public void checkCorrect() {
-    if (answer.getText().equals("")) {
-      return;
+    int check = super.checkCorrect(answer, question, null, submit);
+    if (check != -1) {
+      point = check;
     }
-    long value;
-    try {
-      value = Long.parseLong(answer.getText());
-    } catch (NumberFormatException nfe) {
-      answer.setText("Not a number");
-      return;
-    }
-    mainCtrl.stopPointsTimer();
-    point = (int) (question.calculateHowClose(value) * mainCtrl.getPointsOffset() / 100);
-    submit.setDisable(true);
   }
 
   /**

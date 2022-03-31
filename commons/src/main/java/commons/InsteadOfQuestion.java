@@ -17,7 +17,6 @@ public class InsteadOfQuestion extends Question {
   }
 
   public InsteadOfQuestion(Activity activity1, Activity activity2) {
-
     super(Type.INSTEAD);
     if (activity1.getConsumption_in_wh() <= activity2.getConsumption_in_wh()) { // factor is never smaller than 1
       Activity holder = activity1;
