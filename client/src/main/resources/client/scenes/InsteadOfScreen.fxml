@@ -16,141 +16,141 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Text?>
 <StackPane
-        fx:id="root"
-        xmlns="http://javafx.com/javafx/17"
-        xmlns:fx="http://javafx.com/fxml/1"
-        fx:controller="client.scenes.InsteadOfCtrl"
-        stylesheets="@../css/Guess.css"
+  fx:id="root"
+  xmlns="http://javafx.com/javafx/17"
+  xmlns:fx="http://javafx.com/fxml/1"
+  fx:controller="client.scenes.InsteadOfCtrl"
+  stylesheets="@../css/Guess.css"
 >
 
-    <HBox StackPane.alignment="TOP_CENTER" maxHeight="0" maxWidth="Infinity" styleClass="pad, margin">
-        <Button
-                fx:id="backButton"
-                styleClass="icon, border, rounded, drop-shadow"
-                StackPane.alignment="TOP_LEFT"
-                onAction="#back"
-                text=""
-        /> <!-- text is \uf053 (back arrow in font awesome) -->
-        <Region HBox.hgrow="ALWAYS"/>
-        <StackPane>
-            <Line
-                    endX="800"
-                    StackPane.alignment="CENTER_LEFT"
-                    styleClass="timer-bg"
-            />
-            <Line
-                    endX="800"
-                    StackPane.alignment="CENTER_LEFT"
-                    fx:id="timer"
-                    styleClass="drop-shadow, timer"
-            />
-        </StackPane>
-        <Region HBox.hgrow="ALWAYS"/>
-        <Button
-                fx:id="helpButton"
-                styleClass="icon, border, rounded, drop-shadow"
-                StackPane.alignment="TOP_RIGHT"
-                onAction="#help"
-                text=""
-        /> <!-- text is \uf059 (help in font awesome) -->
+  <HBox StackPane.alignment="TOP_CENTER" maxHeight="0" maxWidth="Infinity" styleClass="pad, margin">
+    <Button
+      fx:id="backButton"
+      styleClass="icon, border, rounded, drop-shadow"
+      StackPane.alignment="TOP_LEFT"
+      onAction="#back"
+      text=""
+    /> <!-- text is \uf053 (back arrow in font awesome) -->
+    <Region HBox.hgrow="ALWAYS"/>
+    <StackPane>
+      <Line
+        endX="800"
+        StackPane.alignment="CENTER_LEFT"
+        styleClass="timer-bg"
+      />
+      <Line
+        endX="800"
+        StackPane.alignment="CENTER_LEFT"
+        fx:id="timer"
+        styleClass="drop-shadow, timer"
+      />
+    </StackPane>
+    <Region HBox.hgrow="ALWAYS"/>
+    <Button
+      fx:id="helpButton"
+      styleClass="icon, border, rounded, drop-shadow"
+      StackPane.alignment="TOP_RIGHT"
+      onAction="#help"
+      text=""
+    /> <!-- text is \uf059 (help in font awesome) -->
+  </HBox>
+  <VBox spacing="20" alignment="TOP_CENTER" maxWidth="800" StackPane.alignment="CENTER">
+    <Text fx:id="points" text="Points:" translateY="60.0"/>
+    <Region styleClass="margin" VBox.vgrow="ALWAYS"/> <!-- text is \uf059 (help in font awesome) -->
+    <Text styleClass="title" text="How much energy does it take?" textAlignment="CENTER"
+          StackPane.alignment="CENTER" fx:id="title1"/>
+    <Text styleClass="title" text="How much energy does it take?" textAlignment="CENTER"
+          StackPane.alignment="CENTER" fx:id="title2"/>
+    <Text styleClass="title" text="How much energy does it take?" textAlignment="CENTER"
+          StackPane.alignment="CENTER" fx:id="title3"/>
+    <HBox StackPane.alignment="CENTER" maxHeight="0" maxWidth="800" styleClass="pad, margin">
+      <StackPane fx:id="imgContainer1" styleClass="rounded, img">
+        <ImageView
+          fx:id="imageView1"
+          fitHeight="250.0"
+          fitWidth="350.0"
+          pickOnBounds="true"
+          preserveRatio="true"
+          styleClass="rounded, img"
+        >
+          <Image url="@../img/sample.jpg"/>
+        </ImageView>
+      </StackPane>
+      <Region styleClass="margin" HBox.hgrow="ALWAYS"/>
+      <StackPane fx:id="imgContainer2" styleClass="rounded, img">
+        <ImageView
+          fx:id="imageView2"
+          fitHeight="250.0"
+          fitWidth="350.0"
+          pickOnBounds="true"
+          preserveRatio="true"
+          styleClass="rounded, img"
+        >
+          <Image url="@../img/sample.jpg"/>
+        </ImageView>
+      </StackPane>
     </HBox>
-    <VBox spacing="20" alignment="TOP_CENTER" maxWidth="800" StackPane.alignment="CENTER">
-        <Region styleClass="margin" VBox.vgrow="ALWAYS"/>
-        <Text fx:id="points" text="Points:" translateY="30.0"/>
-        <Text styleClass="title" text="How much energy does it take?" textAlignment="CENTER"
-              StackPane.alignment="CENTER" fx:id="title1"/>
-        <Text styleClass="title" text="How much energy does it take?" textAlignment="CENTER"
-              StackPane.alignment="CENTER" fx:id="title2"/>
-        <Text styleClass="title" text="How much energy does it take?" textAlignment="CENTER"
-              StackPane.alignment="CENTER" fx:id="title3"/>
-        <HBox StackPane.alignment="CENTER" maxHeight="0" maxWidth="800" styleClass="pad, margin">
-            <StackPane fx:id="imgContainer1" styleClass="rounded, img">
-                <ImageView
-                        fx:id="imageView1"
-                        fitHeight="250.0"
-                        fitWidth="350.0"
-                        pickOnBounds="true"
-                        preserveRatio="true"
-                        styleClass="rounded, img"
-                >
-                    <Image url="@../img/sample.jpg"/>
-                </ImageView>
-            </StackPane>
-            <Region styleClass="margin" HBox.hgrow="ALWAYS"/>
-            <StackPane fx:id="imgContainer2" styleClass="rounded, img">
-                <ImageView
-                        fx:id="imageView2"
-                        fitHeight="250.0"
-                        fitWidth="350.0"
-                        pickOnBounds="true"
-                        preserveRatio="true"
-                        styleClass="rounded, img"
-                >
-                    <Image url="@../img/sample.jpg"/>
-                </ImageView>
-            </StackPane>
-        </HBox>
-        <Region maxHeight="40" styleClass="margin" VBox.vgrow="ALWAYS"/>
-        <TextField fx:id="answer" promptText="Type in your answer up to 2 decimal places"
-                   styleClass="border, rounded, drop-shadow"
-                   onMouseClicked="#deleteText" maxWidth="800"/>
-        <Button fx:id="submit" onAction="#checkCorrect" styleClass="border, rounded, drop-shadow" text="Submit"/>
-        <Region styleClass="margin" VBox.vgrow="ALWAYS" maxWidth="50"/>
-    </VBox>
-    <Button fx:id="emojiButton" mnemonicParsing="false" styleClass="icon, border, rounded, drop-shadow" text=""
-            translateX="-20.0" translateY="-20.0" StackPane.alignment="BOTTOM_RIGHT"/>
-    <StackPane fx:id="pane" maxHeight="400.0" maxWidth="400.0" prefHeight="400.0" prefWidth="400.0"
-               StackPane.alignment="BOTTOM_RIGHT"/>
-    <Circle fx:id="circle" fill="DODGERBLUE" radius="300.0" stroke="BLACK" strokeType="INSIDE" translateX="250.0"
-            translateY="250.0" StackPane.alignment="BOTTOM_RIGHT"/>
-    <GridPane fx:id="emojiGrid" alignment="CENTER" maxHeight="350.0" maxWidth="350.0"
-              StackPane.alignment="BOTTOM_RIGHT">
-        <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-        </columnConstraints>
-        <rowConstraints>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-        </rowConstraints>
-        <children>
-            <Label fx:id="emoji1" styleClass="icon, emoji" text="" GridPane.halignment="CENTER" GridPane.rowIndex="4"/>
-            <Label fx:id="emoji2" styleClass="icon, emoji" text="" translateX="-45.0" translateY="-30.0"
-                   GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3"/>
-            <Label fx:id="emoji3" styleClass="icon, emoji" text="" translateX="-60.0" translateY="-50.0"
-                   GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2"/>
-            <Label fx:id="emoji4" styleClass="icon, emoji" text="" translateX="-40.0" translateY="-45.0"
-                   GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1"/>
-            <Label fx:id="emoji5" styleClass="icon, emoji" text="" GridPane.columnIndex="4"
-                   GridPane.halignment="CENTER"/>
-        </children>
-    </GridPane>
-    <GridPane maxHeight="70.0" maxWidth="521.0" translateX="20.0" translateY="-20.0" StackPane.alignment="BOTTOM_LEFT">
-        <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="20.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="20.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
-        </columnConstraints>
-        <rowConstraints>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-        </rowConstraints>
-        <children>
-            <Button fx:id="doublePts" mnemonicParsing="false" onMouseClicked="#doublePoints"
-                    styleClass="border, rounded, drop-shadow, button" text="x2"/>
-            <Button fx:id="minusTime" mnemonicParsing="false" onMouseClicked="#decreaseTime"
-                    styleClass="border, rounded, drop-shadow, button"
-                    text="-50%"
-                    GridPane.columnIndex="2"/>
-            <Button fx:id="hint" mnemonicParsing="false" styleClass="border, rounded, drop-shadow, button" text="Hint"
-                    GridPane.columnIndex="4"/>
-        </children>
-    </GridPane>
+    <Region maxHeight="40" styleClass="margin" VBox.vgrow="ALWAYS"/>
+    <TextField fx:id="answer" promptText="Type in your answer up to 2 decimal places"
+               styleClass="border, rounded, drop-shadow"
+               onMouseClicked="#deleteText" maxWidth="800"/>
+    <Button fx:id="submit" onAction="#checkCorrect" styleClass="border, rounded, drop-shadow" text="Submit"/>
+    <Region styleClass="margin" VBox.vgrow="ALWAYS" maxWidth="50"/>
+  </VBox>
+  <Button fx:id="emojiButton" mnemonicParsing="false" styleClass="icon, border, rounded, drop-shadow" text=""
+          translateX="-20.0" translateY="-20.0" StackPane.alignment="BOTTOM_RIGHT"/>
+  <StackPane fx:id="pane" maxHeight="400.0" maxWidth="400.0" prefHeight="400.0" prefWidth="400.0"
+             StackPane.alignment="BOTTOM_RIGHT"/>
+  <Circle fx:id="circle" fill="DODGERBLUE" radius="300.0" stroke="BLACK" strokeType="INSIDE" translateX="250.0"
+          translateY="250.0" StackPane.alignment="BOTTOM_RIGHT"/>
+  <GridPane fx:id="emojiGrid" alignment="CENTER" maxHeight="350.0" maxWidth="350.0"
+            StackPane.alignment="BOTTOM_RIGHT">
+    <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+    </columnConstraints>
+    <rowConstraints>
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+    </rowConstraints>
+    <children>
+      <Label fx:id="emoji1" styleClass="icon, emoji" text="" GridPane.halignment="CENTER" GridPane.rowIndex="4"/>
+      <Label fx:id="emoji2" styleClass="icon, emoji" text="" translateX="-45.0" translateY="-30.0"
+             GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3"/>
+      <Label fx:id="emoji3" styleClass="icon, emoji" text="" translateX="-60.0" translateY="-50.0"
+             GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2"/>
+      <Label fx:id="emoji4" styleClass="icon, emoji" text="" translateX="-40.0" translateY="-45.0"
+             GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1"/>
+      <Label fx:id="emoji5" styleClass="icon, emoji" text="" GridPane.columnIndex="4"
+             GridPane.halignment="CENTER"/>
+    </children>
+  </GridPane>
+  <GridPane maxHeight="70.0" maxWidth="521.0" translateX="20.0" translateY="-20.0" StackPane.alignment="BOTTOM_LEFT">
+    <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="20.0"/>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="20.0"/>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+    </columnConstraints>
+    <rowConstraints>
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+    </rowConstraints>
+    <children>
+      <Button fx:id="doublePts" mnemonicParsing="false" onMouseClicked="#doublePoints"
+              styleClass="border, rounded, drop-shadow, button" text="x2"/>
+      <Button fx:id="minusTime" mnemonicParsing="false" onMouseClicked="#decreaseTime"
+              styleClass="border, rounded, drop-shadow, button"
+              text="-50%"
+              GridPane.columnIndex="2"/>
+      <Button fx:id="hint" mnemonicParsing="false" styleClass="border, rounded, drop-shadow, button" text="Hint"
+              GridPane.columnIndex="4"/>
+    </children>
+  </GridPane>
 </StackPane>

@@ -32,9 +32,8 @@
 
   </HBox>
   <VBox alignment="CENTER" maxWidth="800" spacing="40" StackPane.alignment="CENTER">
+    <Text fx:id="points" text="Points:" translateY="60.0"/>
     <Region styleClass="margin" VBox.vgrow="ALWAYS"/> <!-- text is \uf059 (help in font awesome) -->
-
-    <Text fx:id="points" text="Points:" translateY="30.0"/>
     <Text styleClass="title" text="How much energy does it take?" textAlignment="CENTER"
           StackPane.alignment="CENTER"/>
     <StackPane fx:id="imgContainer" styleClass="rounded, img">

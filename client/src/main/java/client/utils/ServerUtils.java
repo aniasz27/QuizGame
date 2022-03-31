@@ -254,7 +254,7 @@ public class ServerUtils {
    */
   public Iterable<Score> getMultiLeaderboard(String ip, String gameId) {
     return ClientBuilder.newClient(new ClientConfig())
-      .target(ip).path("api/score/multiLeaderboard/" + gameId)
+      .target(ip).path("api/game/multiLeaderboard/" + gameId)
       .request(APPLICATION_JSON)
       .accept(APPLICATION_JSON)
       .get(new GenericType<>() {

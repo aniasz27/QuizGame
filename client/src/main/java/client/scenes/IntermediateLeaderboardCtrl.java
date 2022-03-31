@@ -4,8 +4,12 @@ import client.scenes.helpers.QuestionCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Question;
+import commons.Score;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -37,8 +41,12 @@ public class IntermediateLeaderboardCtrl extends QuestionCtrl implements Initial
 
   public void refresh() {
     var leaderboard = server.getMultiLeaderboard(mainCtrl.serverIp, mainCtrl.gameId);
+    List<Score> list = StreamSupport
+      .stream(leaderboard.spliterator(), false)
+      .collect(Collectors.toList());
+    list.sort((Score scoreA, Score scoreB) -> Integer.compare(scoreB.points, scoreA.points));
 
-    Platform.runLater(() -> MainCtrl.refreshLeaderboard(leaderboardDisplay, leaderboard));
+    Platform.runLater(() -> MainCtrl.refreshLeaderboard(leaderboardDisplay, list));
   }
 
   @FXML

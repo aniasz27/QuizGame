@@ -245,7 +245,6 @@ public class MainCtrl {
    */
   public void start() {
     gameId = server.startGame(serverIp, this.multiplayer);
-    points = 0;
     play();
   }
 
@@ -255,10 +254,8 @@ public class MainCtrl {
     emojiWebSocket = new EmojiWebSocket(this, serverIp, gameId);
     jokerWebSocket = new JokerWebSocket(this, serverIp, gameId);
     playerExited = false;
-    this.usedJokers = new boolean[3];
     points = 0;
     questionNumber = 0;
-
     nextQuestion();
   }
 
@@ -327,11 +324,18 @@ public class MainCtrl {
           break;
         case INTERLEADERBOARD:
           System.out.println("Showed Intermediate Leaderboard");
+          if (multiplayer) {
+            server.sendScore(serverIp, new Score(clientId, name, points), gameId);
+          }
           Platform.runLater(this::showIntermediateLeaderboard);
           break;
         case ENDSCREEN:
           System.out.println("Showed end screen");
-          server.addScore(serverIp, new Score(clientId, name, points));
+          if (multiplayer) {
+            server.sendScore(serverIp, new Score(clientId, name, points), gameId);
+          } else {
+            server.addScore(serverIp, new Score(clientId, name, points));
+          }
           Platform.runLater(this::showEndScreen);
           break;
         default:
