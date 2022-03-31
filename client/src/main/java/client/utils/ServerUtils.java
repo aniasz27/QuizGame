@@ -171,11 +171,11 @@ public class ServerUtils {
   }
 
   /**
-   * Get all activities from the server
+   * Get the activity's image
    *
    * @param ip the server's IP address
    * @param id the ID of the activity
-   * @return list of all activities
+   * @return image of the activity
    */
   public byte[] getActivityImage(String ip, String id) {
     return ClientBuilder.newClient(new ClientConfig())
@@ -185,11 +185,10 @@ public class ServerUtils {
   }
 
   /**
-   * Get all activities from the server
+   * Changes the image associated with the activity
    *
    * @param ip the server's IP address
    * @param id the ID of the activity
-   * @return list of all activities
    */
   public void changeActivityImage(String ip, String id, byte[] image) {
     ClientBuilder.newClient(new ClientConfig())

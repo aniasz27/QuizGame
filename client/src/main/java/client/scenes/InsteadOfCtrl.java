@@ -114,6 +114,13 @@ public class InsteadOfCtrl extends QuestionCtrl implements Initializable {
     submit.setDisable(true);
   }
 
+  @Override
+  public void disableButtons() {
+    super.disableButtons();
+    submit.setDisable(true);
+    answer.setDisable(true);
+  }
+
   /**
    * Deletes the text upon mouse click
    */

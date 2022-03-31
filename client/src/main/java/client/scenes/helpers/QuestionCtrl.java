@@ -23,6 +23,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import javafx.util.Pair;
 
 public abstract class QuestionCtrl {
   protected final ServerUtils server;
@@ -204,15 +205,15 @@ public abstract class QuestionCtrl {
    * @param joker to show appropriate text
    * @return Button to show
    */
-  public Button getJokerElement(Joker joker) {
+  public Pair<Button, Double> getJokerElement(Joker joker) {
     switch (joker) {
       case DOUBLE:
-        return doublePts;
+        return new Pair<>(doublePts, -300.0);
       case TIME:
-        return minusTime;
+        return new Pair<>(minusTime, -325.0);
       case HINT:
       default:
-        return hint;
+        return new Pair<>(hint, -275.0);
     }
   }
 
@@ -241,25 +242,23 @@ public abstract class QuestionCtrl {
 
     // set initial position
     movingEmoji.setTranslateX(1920 / 2.0);
-    makeAnimation(movingEmoji);
+    makeAnimation(movingEmoji, -350 + 100 * random.nextDouble());
   }
 
   /**
    * Makes animation for a Label
    *
    * @param movingElement element to animate
+   * @param height        of the element
    */
-  public void makeAnimation(Label movingElement) {
-    movingElement.setTranslateY(-350 + 100 * random.nextDouble()); // vary height slightly
-
+  public void makeAnimation(Label movingElement, double height) {
+    movingElement.setTranslateY(height); // vary height slightly
     // add emoji to scene (in line with the timer)
     root.getChildren().add(movingElement);
-
     Timeline animation = new Timeline(
       new KeyFrame(Duration.seconds(6), new KeyValue(movingElement.translateXProperty(), 0)), // move
       new KeyFrame(Duration.seconds(6), new KeyValue(movingElement.opacityProperty(), 0)) // disappear
     );
-
     animation.setOnFinished(e -> root.getChildren().remove(movingElement)); // remove emoji when finished
     animation.setCycleCount(1);
     animation.play();
@@ -272,10 +271,10 @@ public abstract class QuestionCtrl {
    */
   public void showJoker(Joker joker) {
     System.out.println("SHOWN JOKER");
-    String jokerText = getJokerElement(joker).getText();
-    Label movingJoker = new Label(jokerText);
+    Pair<Button, Double> pair = getJokerElement(joker);
+    Label movingJoker = new Label(pair.getKey().getText());
     movingJoker.setTranslateX(-1920.0 / 2.0);
-    makeAnimation(movingJoker);
+    makeAnimation(movingJoker, pair.getValue());
   }
 
   /**

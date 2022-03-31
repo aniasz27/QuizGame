@@ -117,8 +117,9 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
 
   @Override
   public void disableButtons() {
-    submit.setDisable(true);
     super.disableButtons();
+    submit.setDisable(true);
+    answer.setDisable(true);
   }
 
   public void doublePoints() {

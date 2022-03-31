@@ -270,20 +270,11 @@ public class MainCtrl {
   public void showAnswer() {
     switch (question.type) {
       case MULTICHOICE:
-        Platform.runLater(() -> whatRequiresMoreEnergyCtrl.disableButtons());
-        Platform.runLater(() -> whatRequiresMoreEnergyCtrl.showCorrect());
-        break;
       case ESTIMATE:
-        Platform.runLater(() -> guessCtrl.disableButtons());
-        Platform.runLater(() -> guessCtrl.showCorrect());
-        break;
       case HOWMUCH:
-        Platform.runLater(() -> howMuchCtrl.disableButtons());
-        Platform.runLater(() -> howMuchCtrl.showCorrect());
-        break;
       case INSTEAD:
-        Platform.runLater(() -> insteadOfCtrl.disableButtons());
-        Platform.runLater(() -> insteadOfCtrl.showCorrect());
+        Platform.runLater(() -> currentQuestionCtrl.disableButtons());
+        Platform.runLater(() -> currentQuestionCtrl.showCorrect());
         break;
       case INTERLEADERBOARD:
       case ENDSCREEN:
