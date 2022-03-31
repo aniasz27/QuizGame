@@ -77,14 +77,7 @@ public class ConnectScreenCtrl {
       serverField.getStyleClass().removeAll(Collections.singleton("bad"));
       playButton.getStyleClass().removeAll(Collections.singleton("bad"));
       nameField.getStyleClass().removeAll(Collections.singleton("bad"));
-      Platform.runLater(() -> {
-        try {
-          Thread.sleep(1500);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        }
-        mainCtrl.showSplash();
-      });
+      mainCtrl.showSplash();
     } catch (WebApplicationException e) {
       if (e.getResponse().getStatus() == 409) {
         nameField.getStyleClass().add("bad");
@@ -94,5 +87,12 @@ public class ConnectScreenCtrl {
       serverField.getStyleClass().add("bad");
       playButton.getStyleClass().add("bad");
     }
+  }
+
+  @FXML
+  private void resetBad() {
+    serverField.getStyleClass().removeAll(Collections.singleton("bad"));
+    playButton.getStyleClass().removeAll(Collections.singleton("bad"));
+    nameField.getStyleClass().removeAll(Collections.singleton("bad"));
   }
 }
