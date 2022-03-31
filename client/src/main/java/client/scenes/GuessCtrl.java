@@ -9,7 +9,6 @@ import commons.Question;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.util.Collections;
-import java.util.Random;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -79,7 +78,9 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     answer.setPromptText("Type in your answer");
   }
 
-
+  /**
+   * On clicking the submit button on the screen, the answer gets evaluated
+   */
   public void checkCorrect() {
     int check = super.checkCorrect(answer, question, null, submit);
     if (check != -1) {

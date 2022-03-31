@@ -102,6 +102,9 @@ public class InsteadOfCtrl extends QuestionCtrl implements Initializable {
     answer.setText("Correct answer is: " + question.getFactor());
   }
 
+  /**
+   * On clicking the submit button on the screen, the answer gets evaluated
+   */
   public void checkCorrect() {
     int check = super.checkCorrect(answer, null, question, submit);
     if (check != -1) {
