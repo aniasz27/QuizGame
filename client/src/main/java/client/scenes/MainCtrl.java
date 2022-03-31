@@ -252,8 +252,8 @@ public class MainCtrl {
   public void play() {
     this.usedJokers = new boolean[3];
     System.out.println("session: " + gameId);
-    emojiWebSocket = new EmojiWebSocket(this, serverIp, gameId);
-    jokerWebSocket = new JokerWebSocket(this, serverIp, gameId);
+    emojiWebSocket = new EmojiWebSocket(this, gameId);
+    jokerWebSocket = new JokerWebSocket(this, gameId);
     playerExited = false;
     points = 0;
     questionNumber = 0;
@@ -541,7 +541,7 @@ public class MainCtrl {
 
       } else {
         if (maxScore.get() != 0) {
-          line.setEndX(200 * s.getPoints() / maxScore.get());
+          line.setEndX(200.0 * s.getPoints() / maxScore.get());
         } else {
           line.setEndX(200);
         }

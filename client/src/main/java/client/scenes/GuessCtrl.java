@@ -86,7 +86,7 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     if (answer.getText().equals("")) {
       return;
     }
-    long value = 0;
+    long value;
     try {
       value = Long.parseLong(answer.getText());
     } catch (NumberFormatException nfe) {
