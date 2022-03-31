@@ -225,6 +225,7 @@ public class MainCtrl {
     name = null;
     //players = null;
 
+    connectCtrl.refresh();
     primaryStage.getScene().setRoot(connectParent);
   }
 
