@@ -60,6 +60,7 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     this.question = (EstimateQuestion) question;
     this.activity = this.question.getActivity();
     this.submit.setDisable(false);
+    this.answer.setDisable(false);
     this.answer.getStyleClass().removeAll(Collections.singleton("good"));
     this.answer.getStyleClass().removeAll(Collections.singleton("bad"));
     displayJokers();
@@ -82,7 +83,7 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
    * On clicking the submit button on the screen, the answer gets evaluated
    */
   public void checkCorrect() {
-    int check = super.checkCorrect(answer, question, null, submit);
+    int check = checkCorrect(answer, question, null, submit);
     if (check != -1) {
       point = check;
     }

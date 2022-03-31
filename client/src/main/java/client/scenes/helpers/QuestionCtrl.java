@@ -304,9 +304,9 @@ public abstract class QuestionCtrl {
     mainCtrl.stopPointsTimer();
     submit.setDisable(true);
     if (estimateQuestion == null) {
-      return (int) (insteadOfQuestion.calculateHowClose(value) * mainCtrl.getPointsOffset() / 100);
+      return (int) (insteadOfQuestion.calculateHowClose(value) * mainCtrl.getPointsOffset());
     } else {
-      return (int) (estimateQuestion.calculateHowClose(value) * mainCtrl.getPointsOffset() / 100);
+      return (int) (estimateQuestion.calculateHowClose(value) * mainCtrl.getPointsOffset());
     }
   }
 

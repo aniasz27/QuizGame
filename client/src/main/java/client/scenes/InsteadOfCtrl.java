@@ -87,8 +87,8 @@ public class InsteadOfCtrl extends QuestionCtrl implements Initializable {
     clip2.setArcHeight(20);
     imgContainer2.setClip(clip2);
     imageView2.setImage(new Image(new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity2.id))));
-    answer.setText("Type in your answer up to 2 decimal places");
-    answer.setPromptText("Type in your answer up to 2 decimal places");
+    answer.setText("Type in your answer");
+    answer.setPromptText("Type in your answer");
   }
 
 
