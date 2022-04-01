@@ -259,7 +259,9 @@ public class MainCtrl {
     playerExited = false;
     points = 0;
     questionNumber = 0;
-    server.stopUpdates();
+    if (multiplayer) {
+      server.stopUpdates();
+    }
     nextQuestion();
   }
 
