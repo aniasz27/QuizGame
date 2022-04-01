@@ -58,21 +58,7 @@ public class ConnectScreenCtrl {
 
       mainCtrl.name = server.getClient(mainCtrl.serverIp, mainCtrl.clientId).username;
 
-      mainCtrl.keepAliveExec = Executors.newSingleThreadScheduledExecutor();
-      mainCtrl.keepAliveExec.scheduleAtFixedRate(
-        () -> {
-          try {
-            server.keepAlive(mainCtrl.serverIp, mainCtrl.clientId, mainCtrl.waitingForGame);
-          } catch (Exception e) {
-            e.printStackTrace();
-            Platform.runLater(mainCtrl::showConnect);
-            mainCtrl.reset();
-          }
-        },
-        0,
-        1,
-        TimeUnit.SECONDS
-      );
+      mainCtrl.startKeepAlive();
 
       serverField.getStyleClass().remove("bad");
       nameField.getStyleClass().remove("bad");
@@ -89,4 +75,5 @@ public class ConnectScreenCtrl {
       playButton.getStyleClass().add("bad");
     }
   }
+
 }

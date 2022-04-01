@@ -90,10 +90,7 @@ public abstract class QuestionCtrl {
    */
   @FXML
   private void back(ActionEvent actionEvent) {
-    System.out.println("Exited question!");
-    mainCtrl.playerExited = true;
     mainCtrl.openExitOverlay(false);
-    server.stopQuestionThread();
   }
 
   /**

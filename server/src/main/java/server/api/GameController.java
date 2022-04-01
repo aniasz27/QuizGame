@@ -123,7 +123,6 @@ public class GameController {
   @PutMapping("/play")
   public synchronized String play(@RequestParam("m") boolean multiplayer) {
     String gameID = UUID.randomUUID().toString();
-    System.out.println(gameID + "GAMEMULTI");
     List<Client> waiting = playerController.getPlayers().stream()
       .filter(client -> client.waitingForGame).collect(Collectors.toList());
     games.add(new Game(
@@ -136,8 +135,6 @@ public class GameController {
     for (Client client : waiting) {
       client.waitingForGame = false;
     }
-
-    System.out.println(gameID);
 
     notifyAll();
     try {
@@ -288,7 +285,7 @@ public class GameController {
     @PathVariable String id) {
     var noContent = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     var res =
-      new DeferredResult<ResponseEntity<Question>>(15000L, noContent);  //timeout after 15 seconds
+      new DeferredResult<ResponseEntity<Question>>(4000L, noContent);  //timeout after 4 seconds
 
     Game game = games.stream().filter(g -> g.id.equals(id)).findFirst()
       .orElseThrow(StringIndexOutOfBoundsException::new);
@@ -344,6 +341,20 @@ public class GameController {
       scores.add(toBeAdded);
     }
     return scores;
+  }
+
+  @PutMapping("/removePlayer/{gameId}")
+  public void removePlayer(@PathVariable("gameId") String gameId, @RequestBody String clientId) {
+    Game currentGame = null;
+    for (Game game : games) {
+      if (game.id.equals(gameId)) {
+        currentGame = game;
+      }
+    }
+    if (currentGame == null) {
+      return;
+    }
+    currentGame.removePLayer(clientId);
   }
 }
 

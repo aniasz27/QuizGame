@@ -34,7 +34,9 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -263,10 +265,9 @@ public class MainCtrl {
     emojiWebSocket = new EmojiWebSocket(this, serverIp, gameId);
     jokerWebSocket = new JokerWebSocket(this, serverIp, gameId);
     playerExited = false;
-    this.usedJokers = new boolean[3];
     points = 0;
     questionNumber = 0;
-
+    server.stopUpdates();
     nextQuestion();
   }
 
@@ -306,8 +307,10 @@ public class MainCtrl {
 
   private void nextQuestion() {
     server.nextQuestion(serverIp, gameId, question -> {
-      this.question = question;
-      showCurrentQuestion();
+      if (!playerExited) {
+        this.question = question;
+        showCurrentQuestion();
+      }
     });
   }
 
@@ -422,7 +425,6 @@ public class MainCtrl {
    * Shows the end screen to the user, updates the user points in the game controller
    */
   public void showEndScreen() {
-    server.stopQuestionThread();
     primaryStage.getScene().setRoot(endScreenParent);
     endScreenCtrl.refresh();
     //    Score check = server.updateScore(serverIp, clientId, points);
@@ -604,6 +606,43 @@ public class MainCtrl {
     points = 0;
     question = null;
     keepAliveExec.shutdownNow();
-    keepAliveExec = null;
+  }
+
+  /**
+   * Prepares the client for a new game
+   */
+  public void prepareForNewGame() {
+    server.removePlayer(serverIp, gameId, clientId);
+    gameId = null;
+    waitingForGame = false;
+    questionNumber = 0;
+    points = 0;
+    question = null;
+    server.stopQuestionThread();
+    usedJokers = new boolean[3];
+    stopPointsTimer();
+    startKeepAlive();
+  }
+
+  /**
+   * Initiates and starts the keepAlive Executor Thread
+   */
+  public void startKeepAlive() {
+    keepAliveExec = Executors.newSingleThreadScheduledExecutor();
+    keepAliveExec.scheduleAtFixedRate(
+      () -> {
+        try {
+          server.keepAlive(serverIp, clientId, waitingForGame);
+        } catch (Exception e) {
+          e.printStackTrace();
+          Platform.runLater(this::showConnect);
+          reset();
+        }
+      },
+      0,
+      1,
+      TimeUnit.SECONDS
+    );
+
   }
 }

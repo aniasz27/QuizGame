@@ -46,6 +46,7 @@ public class WaitingRoomCtrl implements Initializable {
   private void back(ActionEvent actionEvent) {
     mainCtrl.waitingForGame = false;
     server.stopUpdates();
+    gameUtils.stopIsActiveThread();
     mainCtrl.showSplash();
   }
 
@@ -57,6 +58,7 @@ public class WaitingRoomCtrl implements Initializable {
   @FXML
   private void play(ActionEvent actionEvent) {
     server.stopUpdates();
+    gameUtils.stopIsActiveThread();
     server.startGame(mainCtrl.serverIp, true);
   }
 
@@ -88,13 +90,13 @@ public class WaitingRoomCtrl implements Initializable {
       playerListDisplay.getChildren().add(l);
     });
 
-    gameUtils.isActive(mainCtrl.serverIp, mainCtrl.clientId);
   }
 
   /**
    * Call long polling method to update the waiting room automatically
    */
   public void listenForNewPlayers() {
+    gameUtils.isActive(mainCtrl.serverIp, mainCtrl.clientId);
     server.registerForPlayerUpdates(mainCtrl.serverIp, np -> Platform.runLater(this::refresh));
   }
 }
