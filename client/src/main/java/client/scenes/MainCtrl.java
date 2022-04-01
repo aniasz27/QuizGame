@@ -254,8 +254,8 @@ public class MainCtrl {
   public void play() {
     this.usedJokers = new boolean[3];
     System.out.println("session: " + gameId);
-    emojiWebSocket = new EmojiWebSocket(this, serverIp, gameId);
-    jokerWebSocket = new JokerWebSocket(this, serverIp, gameId);
+    emojiWebSocket = new EmojiWebSocket(this, gameId);
+    jokerWebSocket = new JokerWebSocket(this, gameId);
     playerExited = false;
     points = 0;
     questionNumber = 0;
@@ -275,20 +275,11 @@ public class MainCtrl {
   public void showAnswer() {
     switch (question.type) {
       case MULTICHOICE:
-        Platform.runLater(() -> whatRequiresMoreEnergyCtrl.disableButtons());
-        Platform.runLater(() -> whatRequiresMoreEnergyCtrl.showCorrect());
-        break;
       case ESTIMATE:
-        Platform.runLater(() -> guessCtrl.disableButtons());
-        Platform.runLater(() -> guessCtrl.showCorrect());
-        break;
       case HOWMUCH:
-        Platform.runLater(() -> howMuchCtrl.disableButtons());
-        Platform.runLater(() -> howMuchCtrl.showCorrect());
-        break;
       case INSTEAD:
-        Platform.runLater(() -> insteadOfCtrl.disableButtons());
-        Platform.runLater(() -> insteadOfCtrl.showCorrect());
+        Platform.runLater(() -> currentQuestionCtrl.disableButtons());
+        Platform.runLater(() -> currentQuestionCtrl.showCorrect());
         break;
       case INTERLEADERBOARD:
       case ENDSCREEN:
@@ -547,7 +538,7 @@ public class MainCtrl {
 
       } else {
         if (maxScore.get() != 0) {
-          line.setEndX(200 * s.getPoints() / maxScore.get());
+          line.setEndX(200.0 * s.getPoints() / maxScore.get());
         } else {
           line.setEndX(200);
         }

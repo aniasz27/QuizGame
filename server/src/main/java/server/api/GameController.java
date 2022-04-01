@@ -61,7 +61,7 @@ public class GameController {
 
     for (int i = 0; i < 21; i++) {
       switch (random.nextInt(4)) {
-        case 0:
+        case 0: //MultipleChoice
           Activity[] activities = activityController.getRandomActivityMultiple();
           List<Activity> list = Arrays.asList(activities);
           Collections.shuffle(list);
@@ -72,13 +72,13 @@ public class GameController {
             activities[2]
           );
           break;
-        case 1:
+        case 1: //Guess
           questions[i] = new EstimateQuestion(activityController.getRandomActivity().getBody());
           break;
-        case 2:
+        case 2: //HowMuch
           questions[i] = new HowMuchQuestion(activityController.getRandomActivity().getBody());
           break;
-        case 3:
+        case 3: //Instead
           Activity activity1 = activityController.getRandomActivity().getBody();
           Activity activity2 = activityController.getRandomActivity().getBody();
           while (activity1.getTitle().length() > 40

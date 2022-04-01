@@ -13,11 +13,9 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -69,10 +67,11 @@ public class InsteadOfCtrl extends QuestionCtrl implements Initializable {
     this.activity1 = ((InsteadOfQuestion) question).getActivity1();
     this.activity2 = ((InsteadOfQuestion) question).getActivity2();
     this.submit.setDisable(false);
+    this.answer.setDisable(false);
     this.answer.getStyleClass().removeAll(Collections.singleton("bad"));
     this.answer.getStyleClass().removeAll(Collections.singleton("good"));
+    this.point = 0;
     displayJokers();
-    this.hint.setDisable(true);
     showPoints();
     Rectangle clip1 = new Rectangle(
       imgContainer1.getWidth(), imgContainer1.getHeight()
@@ -88,7 +87,9 @@ public class InsteadOfCtrl extends QuestionCtrl implements Initializable {
     clip2.setArcHeight(20);
     imgContainer2.setClip(clip2);
     imageView2.setImage(new Image(new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity2.id))));
-    answer.setText("Type in your answer up to 2 decimal places");
+    answer.setText("Type in your answer");
+    answer.setPromptText("Type in your answer");
+    System.out.println(this.question.getFactor());
   }
 
 
@@ -106,14 +107,14 @@ public class InsteadOfCtrl extends QuestionCtrl implements Initializable {
    * On clicking the submit button on the screen, the answer gets evaluated
    */
   public void checkCorrect() {
-    mainCtrl.stopPointsTimer();
-    if (answer.getText().equals("")) {
-      return;
-    }
-    double value = Double.parseDouble(answer.getText());
-    point = (int) (question.calculateHowClose(value) * mainCtrl.getPointsOffset());
-    point = point / 100;
+    point = checkCorrect(answer, question, submit);
+  }
+
+  @Override
+  public void disableButtons() {
+    super.disableButtons();
     submit.setDisable(true);
+    answer.setDisable(true);
   }
 
   /**
@@ -126,6 +127,10 @@ public class InsteadOfCtrl extends QuestionCtrl implements Initializable {
 
   public void doublePoints() {
     dbPoint = doublePointsQ();
+  }
+
+  public void hint() {
+    hintR(answer, question.getFactor());
   }
 }
 

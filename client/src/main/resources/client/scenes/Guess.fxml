@@ -131,7 +131,8 @@
               styleClass="border, rounded, drop-shadow, button"
               text="-50%"
               GridPane.columnIndex="2"/>
-      <Button fx:id="hint" mnemonicParsing="false" styleClass="border, rounded, drop-shadow, button" text="Hint"
+      <Button fx:id="hint" mnemonicParsing="false" onMouseClicked="#hint"
+              styleClass="border, rounded, drop-shadow, button" text="Hint"
               GridPane.columnIndex="4"/>
     </children>
   </GridPane>

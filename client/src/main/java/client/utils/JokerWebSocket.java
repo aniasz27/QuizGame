@@ -1,12 +1,9 @@
 package client.utils;
 
 import client.scenes.MainCtrl;
-import commons.EmojiMessage;
 import commons.Joker;
 import commons.JokerMessage;
-import commons.Question;
 import java.net.URI;
-import java.util.concurrent.ExecutionException;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.web.socket.client.WebSocketClient;
@@ -22,10 +19,9 @@ public class JokerWebSocket {
    * Creates and connects a joker websocket for a given gameSession
    *
    * @param mainCtrl    scene control object
-   * @param ip          of the server
    * @param gameSession of the game to send the emojis through
    */
-  public JokerWebSocket(MainCtrl mainCtrl, String ip, String gameSession) {
+  public JokerWebSocket(MainCtrl mainCtrl, String gameSession) {
     this.mainCtrl = mainCtrl;
     this.gameSession = gameSession;
 

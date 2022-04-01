@@ -91,7 +91,7 @@
       </StackPane>
     </HBox>
     <Region maxHeight="40" styleClass="margin" VBox.vgrow="ALWAYS"/>
-    <TextField fx:id="answer" promptText="Type in your answer up to 2 decimal places"
+    <TextField fx:id="answer" promptText="Type in your answer"
                styleClass="border, rounded, drop-shadow"
                onMouseClicked="#deleteText" maxWidth="800"/>
     <Button fx:id="submit" onAction="#checkCorrect" styleClass="border, rounded, drop-shadow" text="Submit"/>
@@ -149,7 +149,8 @@
               styleClass="border, rounded, drop-shadow, button"
               text="-50%"
               GridPane.columnIndex="2"/>
-      <Button fx:id="hint" mnemonicParsing="false" styleClass="border, rounded, drop-shadow, button" text="Hint"
+      <Button fx:id="hint" mnemonicParsing="false" onMouseClicked="#hint"
+              styleClass="border, rounded, drop-shadow, button" text="Hint"
               GridPane.columnIndex="4"/>
     </children>
   </GridPane>

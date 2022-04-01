@@ -22,10 +22,9 @@ public class EmojiWebSocket {
    * Creates and connects an emoji websocket for a given gameSession
    *
    * @param mainCtrl    scene control object
-   * @param ip          of the server
    * @param gameSession of the game to send the emojis through
    */
-  public EmojiWebSocket(MainCtrl mainCtrl, String ip, String gameSession) {
+  public EmojiWebSocket(MainCtrl mainCtrl, String gameSession) {
     this.mainCtrl = mainCtrl;
     this.gameSession = gameSession;
 

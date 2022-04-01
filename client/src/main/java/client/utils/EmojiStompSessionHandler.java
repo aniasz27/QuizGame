@@ -2,11 +2,9 @@ package client.utils;
 
 import client.scenes.MainCtrl;
 import commons.Emoji;
-import commons.EmojiMessage;
 import java.lang.reflect.Type;
 import javafx.application.Platform;
 import org.springframework.messaging.simp.stomp.StompCommand;
-import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandler;
