@@ -194,13 +194,13 @@ public class MainCtrl {
     this.endScreenCtrl = endScreen.getKey();
     this.endScreenParent = endScreen.getValue();
 
-    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("img/icon16")));
-    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("img/icon32")));
-    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("img/icon64")));
-    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("img/icon128")));
-    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("img/icon256")));
-    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("img/icon512")));
-    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("img/icon1024")));
+    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/img/icon16.png")));
+    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/img/icon32.png")));
+    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/img/icon64.png")));
+    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/img/icon128.png")));
+    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/img/icon256.png")));
+    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/img/icon512.png")));
+    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/img/icon1024.png")));
     primaryStage.setTitle("Quizzzzz");
     // never exit full screen
     primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
