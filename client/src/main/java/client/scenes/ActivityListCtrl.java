@@ -69,11 +69,12 @@ public class ActivityListCtrl implements Initializable {
    * Displays activities matching a query.
    *
    * @param query the conditions an activity has to match to be displayed
+   * @return the activities included in the search
    */
-  public void search(String query) {
+  public List<Activity> search(String query) {
     if (query == null || query.isBlank()) {
       refresh(activities);
-      return;
+      return null;
     }
 
     List<Activity> queryResults = activities;
@@ -185,9 +186,14 @@ public class ActivityListCtrl implements Initializable {
       } catch (NumberFormatException e) {
         // Ignore, users are dum sometimes
       }
-
-      refresh(queryResults);
+      try {
+        refresh(queryResults);
+      } catch (NullPointerException e) {
+        // expected when testing, fxml elements have not been initialised
+      }
     }
+
+    return queryResults;
   }
 
   /**
