@@ -44,6 +44,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -193,6 +194,13 @@ public class MainCtrl {
     this.endScreenCtrl = endScreen.getKey();
     this.endScreenParent = endScreen.getValue();
 
+    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("img/icon16")));
+    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("img/icon32")));
+    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("img/icon64")));
+    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("img/icon128")));
+    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("img/icon256")));
+    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("img/icon512")));
+    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("img/icon1024")));
     primaryStage.setTitle("Quizzzzz");
     // never exit full screen
     primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
