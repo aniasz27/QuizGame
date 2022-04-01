@@ -302,7 +302,7 @@ public abstract class QuestionCtrl {
     mainCtrl.stopPointsTimer();
     submit.setDisable(true);
     answer.setDisable(true);
-    if (question.type.equals(Question.Type.INSTEAD)) {
+    if (question instanceof InsteadOfQuestion) {
       return (int) (((InsteadOfQuestion) question).calculateHowClose(value) * mainCtrl.getPointsOffset());
     }
     return (int) (((EstimateQuestion) question).calculateHowClose(value) * mainCtrl.getPointsOffset());
