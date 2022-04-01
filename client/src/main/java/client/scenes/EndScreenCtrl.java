@@ -43,6 +43,7 @@ public class EndScreenCtrl implements Initializable {
 
   @FXML
   private void playAgain() {
+    mainCtrl.prepareForNewGame();
     if (mainCtrl.multiplayer) {
       mainCtrl.showWaitingRoom();
     } else {
