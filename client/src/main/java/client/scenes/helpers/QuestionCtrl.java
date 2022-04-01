@@ -283,31 +283,29 @@ public abstract class QuestionCtrl {
   /**
    * On clicking the submit button on the screen, the answer gets evaluated
    *
-   * @param answer            textField to get answer from
-   * @param estimateQuestion  EstimateQuestion
-   * @param insteadOfQuestion InsteadOfQuestion
-   * @param submit            Button
+   * @param answer   textField to get answer from
+   * @param question Question (EstimateQuestion or InsteadOfQuestion)
+   * @param submit   Button
    * @return points to add
    */
-  public int checkCorrect(TextField answer, EstimateQuestion estimateQuestion, InsteadOfQuestion insteadOfQuestion,
-                          Button submit) {
+  public int checkCorrect(TextField answer, Question question, Button submit) {
     if (answer.getText().equals("")) {
-      return -1;
+      return 0;
     }
     long value;
     try {
       value = Long.parseLong(answer.getText());
     } catch (NumberFormatException nfe) {
       answer.setText("Not a number");
-      return -1;
+      return 0;
     }
     mainCtrl.stopPointsTimer();
     submit.setDisable(true);
-    if (estimateQuestion == null) {
-      return (int) (insteadOfQuestion.calculateHowClose(value) * mainCtrl.getPointsOffset());
-    } else {
-      return (int) (estimateQuestion.calculateHowClose(value) * mainCtrl.getPointsOffset());
+    answer.setDisable(true);
+    if (question.type.equals(Question.Type.INSTEAD)) {
+      return (int) (((InsteadOfQuestion) question).calculateHowClose(value) * mainCtrl.getPointsOffset());
     }
+    return (int) (((EstimateQuestion) question).calculateHowClose(value) * mainCtrl.getPointsOffset());
   }
 
   /**

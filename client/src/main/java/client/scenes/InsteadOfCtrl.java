@@ -9,7 +9,6 @@ import commons.Question;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.util.Collections;
-import java.util.Random;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -71,6 +70,7 @@ public class InsteadOfCtrl extends QuestionCtrl implements Initializable {
     this.answer.setDisable(false);
     this.answer.getStyleClass().removeAll(Collections.singleton("bad"));
     this.answer.getStyleClass().removeAll(Collections.singleton("good"));
+    this.point = 0;
     displayJokers();
     showPoints();
     Rectangle clip1 = new Rectangle(
@@ -89,6 +89,7 @@ public class InsteadOfCtrl extends QuestionCtrl implements Initializable {
     imageView2.setImage(new Image(new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity2.id))));
     answer.setText("Type in your answer");
     answer.setPromptText("Type in your answer");
+    System.out.println(this.question.getFactor());
   }
 
 
@@ -106,10 +107,7 @@ public class InsteadOfCtrl extends QuestionCtrl implements Initializable {
    * On clicking the submit button on the screen, the answer gets evaluated
    */
   public void checkCorrect() {
-    int check = super.checkCorrect(answer, null, question, submit);
-    if (check != -1) {
-      point = check;
-    }
+    point = checkCorrect(answer, question, submit);
   }
 
   @Override

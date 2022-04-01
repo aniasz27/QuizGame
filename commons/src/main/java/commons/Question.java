@@ -65,4 +65,23 @@ public abstract class Question {
   public Question(Type type) {
     this.type = type;
   }
+
+  /**
+   * Returns how close answer is to correct value
+   *
+   * @param guessedValue value guessed by player
+   * @param correct      value
+   * @return float between 0 and 1:
+   * 0 for more than percentage% away from the correct answer
+   * 1 for correct answer
+   * linearly between them for answers within the percentage boundary
+   */
+  public float calculateHowClose(long guessedValue, long correct) {
+    float percentage = 20;
+    if (guessedValue < 0 || guessedValue < (100 - percentage) / 100 * correct ||
+      (100 + percentage) / 100 * correct < guessedValue) {
+      return 0;
+    }
+    return (float) Math.abs(guessedValue - correct) / (correct * -(percentage / 100.0f)) + 1.0f;
+  }
 }

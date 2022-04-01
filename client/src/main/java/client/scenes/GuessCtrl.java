@@ -34,7 +34,7 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   private Button submit;
 
   private boolean dbPoint;
-  private int point;
+  private int point = 0;
   private EstimateQuestion question;
   private Activity activity;
 
@@ -63,6 +63,7 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     this.answer.setDisable(false);
     this.answer.getStyleClass().removeAll(Collections.singleton("good"));
     this.answer.getStyleClass().removeAll(Collections.singleton("bad"));
+    this.point = 0;
     displayJokers();
 
     Rectangle clip = new Rectangle(
@@ -77,16 +78,14 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     showPoints();
     answer.setText("Type in your answer");
     answer.setPromptText("Type in your answer");
+    System.out.println(this.question.getActivity().consumption_in_wh);
   }
 
   /**
    * On clicking the submit button on the screen, the answer gets evaluated
    */
   public void checkCorrect() {
-    int check = checkCorrect(answer, question, null, submit);
-    if (check != -1) {
-      point = check;
-    }
+    point = checkCorrect(answer, question, submit);
   }
 
   /**
