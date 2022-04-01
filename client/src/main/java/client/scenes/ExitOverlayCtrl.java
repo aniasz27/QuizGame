@@ -29,12 +29,12 @@ public class ExitOverlayCtrl implements Initializable {
 
   @FXML
   public void confirm() {
-    mainCtrl.playerExited = true;
-    mainCtrl.prepareForNewGame();
     mainCtrl.closeExitOverlay();
     if (closeApp) {
       mainCtrl.exit();
     } else {
+      mainCtrl.playerExited = true;
+      mainCtrl.prepareForNewGame();
       mainCtrl.backToMenu();
     }
   }
