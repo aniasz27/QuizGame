@@ -140,11 +140,22 @@ public abstract class QuestionCtrl {
   }
 
   /**
+   * Changes button to clearly indicate that a joker is not used
+   *
+   * @param joker button to change
+   */
+  public void unusedJoker(Button joker) {
+    joker.getStyleClass().add("drop-shadow");
+    joker.getStyleClass().removeAll(Collections.singleton("used"));
+  }
+
+  /**
    * Displays jokers on the question screen
    */
   public void displayJokers() {
     for (int i = 0; i < 3; i++) {
       this.jokers[i].setDisable(false);
+      unusedJoker(this.jokers[i]);
       if (mainCtrl.usedJokers[i]) {
         useJoker(jokers[i]);
       }

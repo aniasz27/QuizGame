@@ -89,7 +89,6 @@ public class InsteadOfCtrl extends QuestionCtrl implements Initializable {
     imageView2.setImage(new Image(new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity2.id))));
     answer.setText("Type in your answer");
     answer.setPromptText("Type in your answer");
-    System.out.println(this.question.getFactor());
   }
 
 

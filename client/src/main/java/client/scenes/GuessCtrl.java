@@ -78,7 +78,6 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     showPoints();
     answer.setText("Type in your answer");
     answer.setPromptText("Type in your answer");
-    System.out.println(this.question.getActivity().consumption_in_wh);
   }
 
   /**
