@@ -147,8 +147,7 @@ public class ServerUtils {
           consumer.accept(res.readEntity(Question.class));
         }
       });
-    } catch (
-      Exception e) {
+    } catch (Exception e) {
       if (!EXECNextQuestion.isShutdown()) {
         nextQuestion(ip, gameId, consumer);
       }
