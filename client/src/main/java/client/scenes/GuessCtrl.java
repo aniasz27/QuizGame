@@ -8,6 +8,7 @@ import commons.EstimateQuestion;
 import commons.Question;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
+import java.util.Collections;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -59,8 +60,8 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     this.question = (EstimateQuestion) question;
     this.activity = this.question.getActivity();
     this.submit.setDisable(false);
-    this.answer.getStyleClass().remove("good");
-    this.answer.getStyleClass().remove("bad");
+    this.answer.getStyleClass().removeAll(Collections.singleton("good"));
+    this.answer.getStyleClass().removeAll(Collections.singleton("bad"));
     displayJokers();
     this.hint.setDisable(true);
 
@@ -85,8 +86,13 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     if (answer.getText().equals("")) {
       return;
     }
-
-    long value = Long.parseLong(answer.getText());
+    long value = 0;
+    try {
+      value = Long.parseLong(answer.getText());
+    } catch (NumberFormatException nfe) {
+      answer.setText("Not a number");
+      return;
+    }
     point = (int) (question.calculateHowClose(value) * mainCtrl.getPointsOffset() / 100);
     submit.setDisable(true);
   }

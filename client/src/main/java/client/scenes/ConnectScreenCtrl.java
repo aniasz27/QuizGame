@@ -4,17 +4,23 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import jakarta.ws.rs.ProcessingException;
 import jakarta.ws.rs.WebApplicationException;
+import java.net.URL;
+import java.util.Collections;
+import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.prefs.Preferences;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
-public class ConnectScreenCtrl {
+public class ConnectScreenCtrl implements Initializable {
   private final ServerUtils server;
   private final MainCtrl mainCtrl;
+  private final Preferences prefs = Preferences.userNodeForPackage(client.scenes.ConnectScreenCtrl.class);
 
   @FXML
   private Button playButton;
@@ -33,6 +39,11 @@ public class ConnectScreenCtrl {
     this.mainCtrl = mainCtrl;
   }
 
+  @Override
+  public void initialize(URL location, ResourceBundle resources) {
+    nameField.setText(prefs.get("name", ""));
+  }
+
   @FXML
   public void exit() {
     mainCtrl.openExitOverlay(true);
@@ -41,6 +52,10 @@ public class ConnectScreenCtrl {
   @FXML
   private void help(ActionEvent actionEvent) {
     mainCtrl.openHelp();
+  }
+
+  public void refresh() {
+    nameField.setText(prefs.get("name", ""));
   }
 
   @FXML
@@ -60,10 +75,11 @@ public class ConnectScreenCtrl {
 
       mainCtrl.startKeepAlive();
 
-      serverField.getStyleClass().remove("bad");
-      nameField.getStyleClass().remove("bad");
-      playButton.getStyleClass().remove("bad");
+      prefs.put("name", nameField.getText());
 
+      serverField.getStyleClass().removeAll(Collections.singleton("bad"));
+      playButton.getStyleClass().removeAll(Collections.singleton("bad"));
+      nameField.getStyleClass().removeAll(Collections.singleton("bad"));
       mainCtrl.showSplash();
     } catch (WebApplicationException e) {
       if (e.getResponse().getStatus() == 409) {
@@ -76,4 +92,10 @@ public class ConnectScreenCtrl {
     }
   }
 
+  @FXML
+  private void resetBad() {
+    serverField.getStyleClass().removeAll(Collections.singleton("bad"));
+    playButton.getStyleClass().removeAll(Collections.singleton("bad"));
+    nameField.getStyleClass().removeAll(Collections.singleton("bad"));
+  }
 }

@@ -111,16 +111,12 @@ public class MainCtrl {
   public String serverIp;
   public String clientId;
   public String gameId;
-  public String previousGameId;
   public ScheduledExecutorService keepAliveExec;
   public boolean waitingForGame;
   public boolean[] usedJokers;
   public int questionNumber = 0;
-
   private int points;
-
   private Question question;
-  public Thread timerThread;
   public boolean playerExited = false;
   private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSS");
   private Date pointsTimer;
@@ -129,17 +125,13 @@ public class MainCtrl {
   public EmojiWebSocket emojiWebSocket;
   //The controller of the question that was last shown (ie currently being shown)
   public QuestionCtrl currentQuestionCtrl;
+  //The user's name in the current game. Null if not in a game.
+  public String name = null;
 
   @Inject
   public MainCtrl(ServerUtils server) {
     this.server = server;
   }
-
-  /**
-   * The user's name in the current game.
-   * Null if not in a game.
-   */
-  public String name = null;
 
   public void initialize(
     Stage primaryStage,
@@ -235,6 +227,7 @@ public class MainCtrl {
     name = null;
     //players = null;
 
+    connectCtrl.refresh();
     primaryStage.getScene().setRoot(connectParent);
   }
 
@@ -255,7 +248,6 @@ public class MainCtrl {
    */
   public void start() {
     gameId = server.startGame(serverIp, this.multiplayer);
-    points = 0;
     play();
   }
 
@@ -338,11 +330,18 @@ public class MainCtrl {
           break;
         case INTERLEADERBOARD:
           System.out.println("Showed Intermediate Leaderboard");
+          if (multiplayer) {
+            server.sendScore(serverIp, new Score(clientId, name, points), gameId);
+          }
           Platform.runLater(this::showIntermediateLeaderboard);
           break;
         case ENDSCREEN:
           System.out.println("Showed end screen");
-          server.addScore(serverIp, new Score(clientId, name, points));
+          if (multiplayer) {
+            server.sendScore(serverIp, new Score(clientId, name, points), gameId);
+          } else {
+            server.addScore(serverIp, new Score(clientId, name, points));
+          }
           Platform.runLater(this::showEndScreen);
           break;
         default:

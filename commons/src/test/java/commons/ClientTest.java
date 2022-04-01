@@ -1,7 +1,7 @@
 package commons;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -37,7 +37,7 @@ public class ClientTest {
   }
 
   @Test
-  public void equalsSameButDifferent() {
+  public void equalsEqual() {
     String id = "ClientID";
     String username = "Username";
     boolean waiting = true;
@@ -46,12 +46,32 @@ public class ClientTest {
   }
 
   @Test
-  public void equalsDifferent() {
+  public void equalsNull() {
+    assertNotEquals(client, null);
+  }
+
+  @Test
+  public void equalsNotClient() {
+    assertNotEquals(client, new Score("ClientID", "Name", 10));
+  }
+
+  @Test
+  public void equalsDifferentId() {
     String id = "ClientD";
     String username = "Username";
     boolean waiting = true;
     Client client2 = new Client(id, username, waiting);
-    assertFalse(client.equals(client2));
+    assertNotEquals(client, client2);
+  }
+
+  @Test
+  public void equalsDifferentUsername() {
+    assertNotEquals(client, new Client("ClientID", "Name", true));
+  }
+
+  @Test
+  public void equalsDifferentWaiting() {
+    assertNotEquals(client, new Client("ClientID", "Username", false));
   }
 
   @Test

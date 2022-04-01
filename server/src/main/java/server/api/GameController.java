@@ -11,6 +11,7 @@ import commons.IntermediateLeaderboardQuestion;
 import commons.MultipleChoiceQuestion;
 import commons.Question;
 import commons.Score;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -78,28 +79,29 @@ public class GameController {
           questions[i] = new HowMuchQuestion(activityController.getRandomActivity().getBody());
           break;
         case 3:
-          Activity[] activities1 = activityController.getRandomActivityMultiple();
-          Activity activity = activityController.getRandomActivity().getBody();
-          boolean more = false;
-          while (!more) {
-            if (activities1[0].getConsumption_in_wh() < activity.getConsumption_in_wh()) {
-              if (activities1[1].getConsumption_in_wh() < activity.getConsumption_in_wh()) {
-                if (activities1[2].getConsumption_in_wh() < activity.getConsumption_in_wh()) {
-                  more = true;
-                }
+          Activity activity1 = activityController.getRandomActivity().getBody();
+          Activity activity2 = activityController.getRandomActivity().getBody();
+          while (activity1.getTitle().length() > 40
+            || activity1.getConsumption_in_wh() <= 0) { //limit so it doesn't run out of the screen
+            activity1 = activityController.getRandomActivity().getBody();
+          }
+          while (activity2.getTitle().length() > 50
+            || activity2.getConsumption_in_wh() <= 0) { //limit so it doesn't run out of the screen
+            activity2 = activityController.getRandomActivity().getBody();
+          }
+          boolean finished = false;
+          while (!finished) {
+            if (activity1.getTitle().contains("ing ")) { //for the right formatting of the question
+              if (activity2.getTitle().contains("ing ")) {
+                finished = true;
+              } else {
+                activity2 = activityController.getRandomActivity().getBody();
               }
             } else {
-              activity = activityController.getRandomActivity().getBody();
+              activity1 = activityController.getRandomActivity().getBody();
             }
           }
-          System.out.println("Activity1:" + activities1[0].getConsumption_in_wh());
-          System.out.println("Activity2:" + activities1[1].getConsumption_in_wh());
-          System.out.println("Activity3:" + activities1[2].getConsumption_in_wh());
-          System.out.println("Activity4:" + activity.getConsumption_in_wh());
-          questions[i] = new InsteadOfQuestion(
-            activities1[0],
-            activities1[1],
-            activities1[2], activity);
+          questions[i] = new InsteadOfQuestion(activity1, activity2);
           break;
         default:
           break;
@@ -131,9 +133,11 @@ public class GameController {
       generateQuestions(),
       multiplayer
     ));
+    Game thisGame = games.get(games.size() - 1);
 
     for (Client client : waiting) {
       client.waitingForGame = false;
+      thisGame.addPlayer(client);
     }
 
     notifyAll();
@@ -181,10 +185,6 @@ public class GameController {
       for (int i = 0; i <= 21; i++) {
         game.playerListeners.forEach((k, l) -> {
           Question question = game.current(false);
-          if (question.type.equals(Question.Type.ENDSCREEN) && !game.isMultiplayer() && game.players.size() == 1) {
-            Client player = (Client) game.players.keySet().toArray()[0];
-            scoreController.addScore(new Score(player.id, player.username, game.players.get(player)));
-          }
           l.accept(question);
         });
         // Question timer

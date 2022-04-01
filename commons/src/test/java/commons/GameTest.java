@@ -2,6 +2,7 @@ package commons;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -33,14 +34,14 @@ public class GameTest {
     Client c1 = new Client("ID1", "US1", true);
     Client c2 = new Client("ID2", "US2", true);
     Client c3 = new Client("ID3", "US3", true);
-    List collection = new LinkedList();
+    List<Client> collection = new LinkedList<>();
     collection.add(c1);
     collection.add(c2);
     collection.add(c3);
     Question q1 = new EstimateQuestion();
     Question q2 = new HowMuchQuestion();
     Question q3 = new MultipleChoiceQuestion();
-    List collectionQuestions = new LinkedList();
+    List<Question> collectionQuestions = new LinkedList<>();
     collectionQuestions.add(q1);
     collectionQuestions.add(q2);
     collectionQuestions.add(q3);
@@ -54,7 +55,7 @@ public class GameTest {
     Client c1 = new Client("ID1", "US1", true);
     Client c2 = new Client("ID2", "US2", true);
     Client c3 = new Client("ID3", "US3", true);
-    List collection = new LinkedList();
+    List<Client> collection = new LinkedList<>();
     collection.add(c1);
     collection.add(c2);
     collection.add(c3);
@@ -82,7 +83,7 @@ public class GameTest {
     Question q1 = new EstimateQuestion();
     Question q2 = new HowMuchQuestion();
     Question q3 = new MultipleChoiceQuestion();
-    List collectionQuestions = new LinkedList();
+    List<Question> collectionQuestions = new LinkedList<>();
     collectionQuestions.add(q1);
     collectionQuestions.add(q2);
     collectionQuestions.add(q3);
@@ -132,7 +133,7 @@ public class GameTest {
     Game game = new Game(id, map, questions, true);
     game.addPlayer(c1);
     game.changeScore(c1, 100);
-    assertTrue(game.players.get(c1) == 100);
+    assertEquals(100, (int) game.players.get(c1));
   }
 
   @Test
@@ -144,7 +145,7 @@ public class GameTest {
     Game game = new Game(id, map, questions, true);
     game.addPlayer(c1);
     game.increaseScore(c1, 50);
-    assertTrue(game.players.get(c1) == 50);
+    assertEquals(50, (int) game.players.get(c1));
   }
 
   @Test
@@ -155,7 +156,7 @@ public class GameTest {
     Question[] questions = new Question[3];
     Game game = new Game(id, map, questions, true);
     game.addPlayer(c1);
-    assertTrue(c1.equals(game.getPlayerById("ID1")));
+    assertEquals(c1, game.getPlayerById("ID1"));
   }
 
   @Test
@@ -261,9 +262,19 @@ public class GameTest {
   }
 
   @Test
-  public void equalsSameTest() {
+  public void equalsSame() {
     Game game = new Game();
     assertEquals(game, game);
+  }
+
+  @Test
+  public void equalsNull() {
+    assertNotEquals(new Game(), null);
+  }
+
+  @Test
+  public void equalsNotGame() {
+    assertNotEquals(new Game(), new Score("ClientID", "Name", 10));
   }
 
   @Test
@@ -308,7 +319,7 @@ public class GameTest {
     Map<Client, Integer> collection1 = new HashMap<>();
     Game game = new Game(id, collection, questions, true);
     Game gameNew = new Game(id, collection1, questions, true);
-    assertFalse(game.equals(gameNew));
+    assertNotEquals(game, gameNew);
   }
 
   @Test
@@ -325,7 +336,7 @@ public class GameTest {
       questions[i] = q1;
     }
     Game game = new Game(id, collection, questions, true);
-    assertTrue(game.hashCode() == Math.floor(game.hashCode()));
+    assertEquals(game.hashCode(), Math.floor(game.hashCode()));
   }
 
   @Test
@@ -333,7 +344,7 @@ public class GameTest {
     Client c1 = new Client("ID1", "US1", true);
     Client c2 = new Client("ID2", "US2", true);
     Client c3 = new Client("ID3", "US3", true);
-    List collection = new LinkedList();
+    List<Client> collection = new LinkedList<>();
     collection.add(c1);
     collection.add(c2);
     collection.add(c3);
@@ -349,5 +360,31 @@ public class GameTest {
     assertTrue(game.isMultiplayer());
     game.setMultiplayer(false);
     assertFalse(game.isMultiplayer());
+  }
+
+  @Test
+  public void getPlayers() {
+    assertEquals(
+      Map.of(
+        new Client("ID1", "US1", true),
+        0,
+        new Client("ID2", "US2", true),
+        0,
+        new Client("ID3", "US3", true),
+        0),
+      new Game(
+        "ID",
+        List.of(
+          new Client("ID1", "US1", true),
+          new Client("ID2", "US2", true),
+          new Client("ID3", "US3", true)
+        ),
+        new Question[] {
+          new EstimateQuestion(),
+          new HowMuchQuestion(),
+          new MultipleChoiceQuestion()
+        }, true
+      ).getPlayers()
+    );
   }
 }

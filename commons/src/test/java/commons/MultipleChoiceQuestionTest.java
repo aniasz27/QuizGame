@@ -58,4 +58,11 @@ class MultipleChoiceQuestionTest {
     boolean[] correct = {true, false, false};
     assertArrayEquals(correct, q.getCorrect());
   }
+
+  @Test
+  void getCorrectOrder3() {
+    MultipleChoiceQuestion q = new MultipleChoiceQuestion(activity2, activity3, activity1);
+    boolean[] correct = {false, true, false};
+    assertArrayEquals(correct, q.getCorrect());
+  }
 }

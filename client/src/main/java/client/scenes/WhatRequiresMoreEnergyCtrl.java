@@ -8,6 +8,7 @@ import commons.MultipleChoiceQuestion;
 import commons.Question;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
+import java.util.Collections;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -53,8 +54,8 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
 
     // reset correct button colors
     for (Button button : buttons) {
-      button.getStyleClass().remove("good");
-      button.getStyleClass().remove("bad");
+      button.getStyleClass().removeAll(Collections.singleton("good"));
+      button.getStyleClass().removeAll(Collections.singleton("bad"));
       button.setDisable(false);
     }
 
