@@ -19,6 +19,14 @@ group members. Add your own name (do not add the names for others!) to the secti
 
 ## How to run it
 
+- Clone the repository
+- Run the server through Gradle
+- Download activities, by going to this URL: localhost:8080/api/activity/importActivities (make sure, you have under _
+  resources_ JSON folder with images and activities)
+- Run the client through Gradle
+
+Done! Now you can play!
+
 ## How to contribute to it
 
 ## Copyright / License (opt.)
