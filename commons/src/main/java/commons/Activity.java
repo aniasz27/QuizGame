@@ -27,7 +27,7 @@ public class Activity {
   /**
    * Empty Activity Constructor
    */
-  private Activity() {
+  public Activity() {
   }
 
   @SuppressWarnings("unused")
