@@ -26,7 +26,11 @@ public class JokerWebSocket {
     this.mainCtrl = mainCtrl;
     this.gameSession = gameSession;
 
-    connectWebSocket();
+    try {
+      connectWebSocket();
+    } catch (Exception e) {
+      System.err.println("Error connecting Joker WebSocket");
+    }
   }
 
   /**
