@@ -38,7 +38,7 @@ public class ActivityController {
 
   private final ActivityRepository repo;
   private final Random random;
-  private List<Activity> sortedActivities;
+  public List<Activity> sortedActivities;
 
   /**
    * Constructor
