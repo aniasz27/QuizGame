@@ -254,8 +254,8 @@ public class MainCtrl {
   public void play() {
     this.usedJokers = new boolean[3];
     System.out.println("session: " + gameId);
-    emojiWebSocket = new EmojiWebSocket(this, serverIp, gameId);
-    jokerWebSocket = new JokerWebSocket(this, serverIp, gameId);
+    emojiWebSocket = new EmojiWebSocket(this, gameId);
+    jokerWebSocket = new JokerWebSocket(this, gameId);
     playerExited = false;
     points = 0;
     questionNumber = 0;

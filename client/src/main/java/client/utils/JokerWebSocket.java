@@ -1,12 +1,10 @@
 package client.utils;
 
 import client.scenes.MainCtrl;
-import commons.EmojiMessage;
 import commons.Joker;
 import commons.JokerMessage;
-import commons.Question;
 import java.net.URI;
-import java.util.concurrent.ExecutionException;
+import java.util.Objects;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.web.socket.client.WebSocketClient;
@@ -22,10 +20,9 @@ public class JokerWebSocket {
    * Creates and connects a joker websocket for a given gameSession
    *
    * @param mainCtrl    scene control object
-   * @param ip          of the server
    * @param gameSession of the game to send the emojis through
    */
-  public JokerWebSocket(MainCtrl mainCtrl, String ip, String gameSession) {
+  public JokerWebSocket(MainCtrl mainCtrl, String gameSession) {
     this.mainCtrl = mainCtrl;
     this.gameSession = gameSession;
 
@@ -63,5 +60,19 @@ public class JokerWebSocket {
   public void sendMessage(Joker joker) {
     System.out.println(joker);
     this.session.send("/app/joker", new JokerMessage(joker, gameSession, mainCtrl.clientId));
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    JokerWebSocket that = (JokerWebSocket) o;
+    return Objects.equals(mainCtrl, that.mainCtrl)
+      && Objects.equals(gameSession, that.gameSession)
+      && Objects.equals(session, that.session);
   }
 }
