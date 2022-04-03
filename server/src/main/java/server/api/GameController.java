@@ -11,7 +11,6 @@ import commons.IntermediateLeaderboardQuestion;
 import commons.MultipleChoiceQuestion;
 import commons.Question;
 import commons.Score;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
