@@ -20,7 +20,6 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -258,19 +257,6 @@ public class GameController {
     return -1;
   }
 
-  /**
-   * TODO: implement actual game sessions and non-global questionCounter
-   * Returns the number of the round the player is in for a given player id
-   *
-   * @param id game id
-   * @return round number of game
-   */
-  @GetMapping("/getRoundNumber/{id}")
-  public int getRoundNumber(@PathVariable String id) {
-    Game game = games.stream().filter(g -> g.id.equals(id)).findFirst()
-      .orElseThrow(StringIndexOutOfBoundsException::new);
-    return game.questionCounter;
-  }
 
   /**
    * Gets the next question or screen in a game
