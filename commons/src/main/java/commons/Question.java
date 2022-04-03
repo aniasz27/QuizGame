@@ -89,17 +89,24 @@ public abstract class Question {
    *
    * @param guessedValue value guessed by player
    * @param correct      value
-   * @return float between 0 and 1:
+   * @return int points to be awarded for the response
    * 0 for more than percentage% away from the correct answer
-   * 1 for correct answer
+   * value between 100 and 75 otherwise
    * linearly between them for answers within the percentage boundary
    */
-  public float calculateHowClose(long guessedValue, long correct) {
+  public int calculateHowClose(long guessedValue, long correct) {
     float percentage = 20;
-    if (guessedValue < 0 || guessedValue < (100 - percentage) / 100 * correct
-      || (100 + percentage) / 100 * correct < guessedValue) {
+    if (guessedValue < 0 || guessedValue < (1 - (percentage / 100)) * correct
+      || guessedValue > (1 + (percentage / 100)) * correct) {
       return 0;
     }
-    return (float) Math.abs(guessedValue - correct) / (correct * -(percentage / 100.0f)) + 1.0f;
+    double ratio = (double) guessedValue / correct;
+    if (guessedValue == correct) {
+      return 100;
+    } else if (guessedValue < correct) {
+      return (int) (ratio * 125 - 25);
+    } else {
+      return (int) (ratio * -125 + 225);
+    }
   }
 }

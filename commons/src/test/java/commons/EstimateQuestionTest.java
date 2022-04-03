@@ -104,7 +104,7 @@ public class EstimateQuestionTest {
   @Test
   public void calculateHowCloseCorrect() {
     long answer = 2900;
-    assertTrue(question.calculateHowClose(answer) > 0);
+    assertTrue(question.calculateHowClose(2900) > 0);
   }
 
   @Test
