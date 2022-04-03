@@ -20,6 +20,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -207,8 +208,6 @@ public class GameController {
   }
 
   /**
-   * TODO: implement long polling
-   * <p>
    * Endpoint to check if a user has been assigned to a game or not
    *
    * @param uid the player's id
