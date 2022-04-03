@@ -26,21 +26,40 @@ public class EndScreenCtrl implements Initializable {
   @FXML
   private Button backToMenuButton;
 
+  /**
+   * Constructor for EndScreenCtrl
+   *
+   * @param server   server we are on
+   * @param mainCtrl controller for the game flow
+   */
   @Inject
   public EndScreenCtrl(ServerUtils server, MainCtrl mainCtrl) {
     this.server = server;
     this.mainCtrl = mainCtrl;
   }
 
+  /**
+   * Initializing the EndScreenCtrl
+   *
+   * @param location  location
+   * @param resources resources we're using
+   */
+
   @Override
   public void initialize(URL location, ResourceBundle resources) {
   }
 
+  /**
+   * Goes back to SplashScreen
+   */
   @FXML
   private void backToMenu() {
     mainCtrl.backToMenu();
   }
 
+  /**
+   * Starts the same game again based on multiplayer boolean
+   */
   @FXML
   private void playAgain() {
     if (mainCtrl.multiplayer) {
@@ -50,6 +69,9 @@ public class EndScreenCtrl implements Initializable {
     }
   }
 
+  /**
+   * Refreshes the leaderboard
+   */
   public void refresh() {
     Iterable<Score> scores;
     if (!mainCtrl.multiplayer) {

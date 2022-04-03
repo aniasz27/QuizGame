@@ -126,11 +126,35 @@ public class MainCtrl {
   //The user's name in the current game. Null if not in a game.
   public String name = null;
 
+  /**
+   * Constructor for the MainCtrl
+   *
+   * @param server we are on
+   */
   @Inject
   public MainCtrl(ServerUtils server) {
     this.server = server;
   }
 
+  /**
+   * Initialising the MainCtrl
+   *
+   * @param primaryStage            primary stage
+   * @param splash                  splash
+   * @param connect                 connect
+   * @param waitingRoom             waiting room
+   * @param spWaitingRoom           spWaitingRoom
+   * @param howMuch                 howMuch
+   * @param insteadOf               insteadOf
+   * @param whatRequiresMoreEnergy  whatRequiresMoreEnergy
+   * @param guess                   guess
+   * @param intermediateLeaderboard intermediateLeaderboard
+   * @param activityList            activityList
+   * @param editActivity            editActivity
+   * @param helpOverlay             helpOverlay
+   * @param exitOverlay             exitOverlay
+   * @param endScreen               endScreen
+   */
   public void initialize(
     Stage primaryStage,
     Pair<SplashCtrl, Parent> splash,
@@ -201,24 +225,37 @@ public class MainCtrl {
     primaryStage.setFullScreen(true);
   }
 
+  /**
+   * Exists the game
+   */
   @FXML
   public void exit() {
     Platform.exit();
     System.exit(0);
   }
 
+  /**
+   * Goes to SplashScreen
+   */
   @FXML
   public void backToMenu() {
     showSplash();
   }
 
-  // instead of swapping entire scene, just swap parent
+  /**
+   * Shows the SplashScreen
+   */
   public void showSplash() {
+    // instead of swapping entire scene, just swap parent
     // reset name and list of players if coming out of a game
     this.points = 0;
     //players = null;
     primaryStage.getScene().setRoot(splashParent);
   }
+
+  /**
+   * Shows the ConnectScreen
+   */
 
   public void showConnect() {
     // reset name and list of players if coming out of a game
@@ -229,6 +266,10 @@ public class MainCtrl {
     primaryStage.getScene().setRoot(connectParent);
   }
 
+  /**
+   * Shows the WaitingRoom
+   */
+
   public void showWaitingRoom() {
     primaryStage.getScene().setRoot(waitingRoomParent);
     waitingRoomCtrl.refresh();
@@ -236,19 +277,25 @@ public class MainCtrl {
     waitingRoomCtrl.listenForNewPlayers();
   }
 
+  /**
+   * Shows the SinglePlayerWaitingRoom
+   */
   public void showSpWaitingRoom() {
     primaryStage.getScene().setRoot(spWaitingRoomParent);
     spWaitingRoomCtrl.refresh();
   }
 
   /**
-   * Starts the game, assigns the points from the game controller
+   * Starts the game,initializes the gameid
    */
   public void start() {
     gameId = server.startGame(serverIp, this.multiplayer);
     play();
   }
 
+  /**
+   * Initializes the jokers, points, questionNumber and asks for nextQuestion
+   */
   public void play() {
     this.usedJokers = new boolean[3];
     System.out.println("session: " + gameId);
@@ -267,6 +314,9 @@ public class MainCtrl {
     return points;
   }
 
+  /**
+   * Disables the buttons and shows the correct answers - question based
+   */
   public void showAnswer() {
     switch (question.type) {
       case MULTICHOICE:
@@ -294,6 +344,9 @@ public class MainCtrl {
     }
   }
 
+  /**
+   * Gets the next Question from the server and calls a method to display it
+   */
   private void nextQuestion() {
     server.nextQuestion(serverIp, gameId, question -> {
       this.question = question;
@@ -301,6 +354,9 @@ public class MainCtrl {
     });
   }
 
+  /**
+   * Shows the Question, which has been sent from the server
+   */
   public void showCurrentQuestion() {
     System.out.println(question.number + " " + question.showCorrect + " " + question.type);
     if (question.showCorrect) {
@@ -346,6 +402,11 @@ public class MainCtrl {
     }
   }
 
+  /**
+   * Shows the Guess Question
+   *
+   * @param question EstimateQuestion
+   */
   public void showGuess(EstimateQuestion question) {
     currentQuestionCtrl = guessCtrl;
     primaryStage.getScene().setRoot(guessParent);
@@ -354,6 +415,11 @@ public class MainCtrl {
     this.startPointsTimer();
   }
 
+  /**
+   * Shows the WhatRequiresMoreEnergy Question
+   *
+   * @param question MultipleChoiceQuestion
+   */
   public void showWhatRequiresMoreEnergy(MultipleChoiceQuestion question) {
     currentQuestionCtrl = whatRequiresMoreEnergyCtrl;
     primaryStage.getScene().setRoot(whatRequiresMoreEnergyParent);
@@ -362,6 +428,11 @@ public class MainCtrl {
     this.startPointsTimer();
   }
 
+  /**
+   * Shows the HowMuch Question
+   *
+   * @param question HowMuchQuestion
+   */
   public void showHowMuch(HowMuchQuestion question) {
     currentQuestionCtrl = howMuchCtrl;
     primaryStage.getScene().setRoot(howMuchParent);
@@ -370,6 +441,11 @@ public class MainCtrl {
     this.startPointsTimer();
   }
 
+  /**
+   * Shows the InsteadOfQuestion
+   *
+   * @param question InsteadOfQuestion
+   */
   public void showInstead(InsteadOfQuestion question) {
     currentQuestionCtrl = insteadOfCtrl;
     primaryStage.getScene().setRoot(insteadOfParent);
@@ -378,12 +454,19 @@ public class MainCtrl {
     this.startPointsTimer();
   }
 
+  /**
+   * Shows the IntermediateLeaderboard
+   */
+
   public void showIntermediateLeaderboard() {
     primaryStage.getScene().setRoot(intermediateLeaderboardParent);
     intermediateLeaderboardCtrl.display();
     intermediateLeaderboardCtrl.refresh();
   }
 
+  /**
+   * Shows the ActivityList
+   */
   public void showActivityList() {
     // reset name and list of players if coming out of a game
     primaryStage.getScene().setRoot(activityListParent);
@@ -391,29 +474,45 @@ public class MainCtrl {
     activityListCtrl.search(activityListCtrl.searchField.getText());
   }
 
+  /**
+   * Shows the EditActivity
+   */
   public void showEditActivity(Activity activity) {
     // reset name and list of players if coming out of a game
     primaryStage.getScene().setRoot(editActivityParent);
     editActivityCtrl.refresh(activity);
   }
 
+  /**
+   * Opens HelpOverlay
+   */
   public void openHelp() {
     ((StackPane) primaryStage.getScene().getRoot()).getChildren().add(helpOverlayParent);
   }
 
+  /**
+   * Closes HelpOverlay
+   */
   public void closeHelp() {
     ((StackPane) primaryStage.getScene().getRoot()).getChildren().remove(helpOverlayParent);
   }
 
+  /**
+   * Opens ExitOverlay
+   *
+   * @param closeApp closeApp
+   */
   public void openExitOverlay(boolean closeApp) {
     exitOverlayCtrl.closeApp = closeApp;
     ((StackPane) primaryStage.getScene().getRoot()).getChildren().add(exitOverlayParent);
   }
 
+  /**
+   * Closes ExitOverlay
+   */
   public void closeExitOverlay() {
     ((StackPane) primaryStage.getScene().getRoot()).getChildren().remove(exitOverlayParent);
   }
-
 
   /**
    * Shows the end screen to the user, updates the user points in the game controller
@@ -422,12 +521,13 @@ public class MainCtrl {
     server.stopQuestionThread();
     primaryStage.getScene().setRoot(endScreenParent);
     endScreenCtrl.refresh();
-    //    Score check = server.updateScore(serverIp, clientId, points);
-    //    if (check == null) {
-    //      System.out.println("Error updating the score");
-    //}
   }
 
+  /**
+   * Adds points
+   *
+   * @param toAdd points to add
+   */
   public void addPoints(int toAdd) {
     points += toAdd;
   }

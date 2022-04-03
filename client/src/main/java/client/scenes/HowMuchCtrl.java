@@ -49,10 +49,24 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
 
   private Button clickedButton;
 
+  /**
+   * Constructor for HowMuchCtrl
+   *
+   * @param server   server we are on
+   * @param mainCtrl controller for the game flow
+   */
+
   @Inject
   public HowMuchCtrl(ServerUtils server, MainCtrl mainCtrl) {
     super(server, mainCtrl);
   }
+
+  /**
+   * Initializing the HowMuchCtrl
+   *
+   * @param location  location
+   * @param resources resources we're using
+   */
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
@@ -60,6 +74,11 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
     buttons = new Button[] {answer_1, answer_2, answer_3};
   }
 
+  /**
+   * Displays the HowMuch question screen
+   *
+   * @param question to show
+   */
   @Override
   public void displayQuestion(Question question) {
     displayEmojis();
@@ -91,6 +110,10 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
     showPoints();
     displayJokers();
   }
+
+  /**
+   * On clicking the submit button on the screen, the answer gets evaluated
+   */
 
   @Override
   public void showCorrect() {
@@ -128,6 +151,10 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
     }
   }
 
+  /**
+   * Disables the buttons
+   */
+
   @Override
   public void disableButtons() {
     super.disableButtons();
@@ -136,10 +163,16 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
     }
   }
 
+  /**
+   * Activates Hint Joker
+   */
   public void hint() {
     hintQ(correct, buttons);
   }
 
+  /**
+   * Activates DoublePoints Joker
+   */
   public void doublePoints() {
     dbPoint = doublePointsQ();
   }

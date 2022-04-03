@@ -25,20 +25,38 @@ public class IntermediateLeaderboardCtrl extends QuestionCtrl implements Initial
   @FXML
   private Button helpButton;
 
+  /**
+   * Constructor for IntermediateLeaderboardCtrl
+   *
+   * @param server   server we are on
+   * @param mainCtrl controller for the game flow
+   */
   @Inject
   public IntermediateLeaderboardCtrl(ServerUtils server, MainCtrl mainCtrl) {
     super(server, mainCtrl);
   }
 
+  /**
+   * Initializing the IntermediateLeaderboardCtrl
+   *
+   * @param location  location
+   * @param resources resources we're using
+   */
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     super.initialize(location, resources);
   }
 
+  /**
+   * Displays the emojis
+   */
   public void display() {
     displayEmojis();
   }
 
+  /**
+   * Refreshes the leaderboard
+   */
   public void refresh() {
     var leaderboard = server.getMultiLeaderboard(mainCtrl.serverIp, mainCtrl.gameId);
     List<Score> list = StreamSupport
@@ -49,11 +67,21 @@ public class IntermediateLeaderboardCtrl extends QuestionCtrl implements Initial
     Platform.runLater(() -> MainCtrl.refreshLeaderboard(leaderboardDisplay, list));
   }
 
+  /**
+   * Goes back to SplashScreen
+   *
+   * @param actionEvent clicking on the back button
+   */
   @FXML
   private void back(ActionEvent actionEvent) {
     mainCtrl.showSplash();
   }
 
+  /**
+   * Displays the HelpOverlay
+   *
+   * @param actionEvent on clicking on the  button
+   */
   @FXML
   private void help(ActionEvent actionEvent) {
     mainCtrl.openHelp();

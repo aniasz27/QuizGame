@@ -47,6 +47,9 @@ public class ActivityListCtrl implements Initializable {
 
   }
 
+  /**
+   * Goes back to the SplashScreen
+   */
   @FXML
   public void back() {
     searchField.setText("");

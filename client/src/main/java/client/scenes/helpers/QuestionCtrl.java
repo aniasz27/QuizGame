@@ -64,6 +64,12 @@ public abstract class QuestionCtrl {
   public Timeline timerAnimation;
   private final Random random = new Random();
 
+  /**
+   * Constructor for QuestionCtrl
+   *
+   * @param server   server we making it on
+   * @param mainCtrl mainCtrl for the questions
+   */
   @Inject
   public QuestionCtrl(ServerUtils server, MainCtrl mainCtrl) {
     this.server = server;

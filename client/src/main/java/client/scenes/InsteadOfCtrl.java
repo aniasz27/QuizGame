@@ -48,15 +48,35 @@ public class InsteadOfCtrl extends QuestionCtrl implements Initializable {
   private Activity activity1;
   private Activity activity2;
 
+  /**
+   * Constructor for InsteadOfCtrl
+   *
+   * @param server   server we are on
+   * @param mainCtrl controller for the game flow
+   */
+
   @Inject
   InsteadOfCtrl(ServerUtils server, MainCtrl mainCtrl) {
     super(server, mainCtrl);
   }
 
+  /**
+   * Initializing the InsteadOfCtrl
+   *
+   * @param location  location
+   * @param resources resources we're using
+   */
+
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     super.initialize(location, resources);
   }
+
+  /**
+   * Displays the InsteadOf question screen
+   *
+   * @param question to show
+   */
 
   @Override
   public void displayQuestion(Question question) {
@@ -91,7 +111,9 @@ public class InsteadOfCtrl extends QuestionCtrl implements Initializable {
     answer.setText("Type in your answer up to 2 decimal places");
   }
 
-
+  /**
+   * Shows the correct answer and adds points
+   */
   public void showCorrect() {
     answer.getStyleClass().add(point != 0 ? "good" : "bad");
     if (dbPoint) {
@@ -123,7 +145,9 @@ public class InsteadOfCtrl extends QuestionCtrl implements Initializable {
     answer.setText("");
   }
 
-
+  /**
+   * Activates DoublePoints Joker
+   */
   public void doublePoints() {
     dbPoint = doublePointsQ();
   }

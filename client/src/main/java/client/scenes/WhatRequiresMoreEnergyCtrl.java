@@ -34,16 +34,34 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
   private MultipleChoiceQuestion question;
   private boolean dbPoint;
 
+  /**
+   * Constructor for WhatRequiresMoreEnergyCtrl
+   *
+   * @param server   server we are on
+   * @param mainCtrl controller for the game flow
+   */
   @Inject
   WhatRequiresMoreEnergyCtrl(ServerUtils server, MainCtrl mainCtrl) {
     super(server, mainCtrl);
   }
 
+  /**
+   * Initializing the WhatRequiresMoreEnergyCtrl
+   *
+   * @param location  location
+   * @param resources resources we're using
+   */
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     super.initialize(location, resources);
     buttons = new Button[] {button0, button1, button2};
   }
+
+  /**
+   * Displays the WhatRequiresMoreEnergy question screen
+   *
+   * @param question to show
+   */
 
   @Override
   public void displayQuestion(Question question) {
@@ -73,12 +91,6 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
       StackPane imgContainer = new StackPane();
       imgContainer.getStyleClass().add("rounded");
       imgContainer.getStyleClass().add("img");
-      //Rectangle clip = new Rectangle(
-      //  imgContainer.getWidth(), imgContainer.getHeight()
-      //);
-      //clip.setArcWidth(20);
-      //clip.setArcHeight(20);
-      //imgContainer.setClip(clip);
 
       ImageView imageView = new ImageView(new Image(
         new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity.id))
@@ -102,6 +114,9 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
     showPoints();
   }
 
+  /**
+   * Shows the correct answer
+   */
   @Override
   public void showCorrect() {
     for (Button button : buttons) {
@@ -112,6 +127,9 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
     }
   }
 
+  /**
+   * Disables the buttons
+   */
   @Override
   public void disableButtons() {
     super.disableButtons();
@@ -120,6 +138,11 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
     }
   }
 
+  /**
+   * Check the correct answer
+   *
+   * @param event on MouseClick
+   */
   @FXML
   public void checkCorrectAnswer(MouseEvent event) {
     mainCtrl.stopPointsTimer();
@@ -129,6 +152,9 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
     }
   }
 
+  /**
+   * Shows the correct answer
+   */
   public void showUserCorrect() {
     int toAdd = mainCtrl.getPointsOffset();
     if (dbPoint) {
@@ -138,10 +164,16 @@ public class WhatRequiresMoreEnergyCtrl extends QuestionCtrl implements Initiali
     showPoints();
   }
 
+  /**
+   * Activates Hint Joker
+   */
   public void hint() {
     hintQ(question.getCorrect(), buttons);
   }
 
+  /**
+   * Activates Double Points Joker
+   */
   public void doublePoints() {
     dbPoint = doublePointsQ();
   }
