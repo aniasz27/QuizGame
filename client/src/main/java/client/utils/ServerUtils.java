@@ -18,7 +18,6 @@ package client.utils;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
-import client.scenes.MainCtrl;
 import commons.Activity;
 import commons.Client;
 import commons.Question;
@@ -28,13 +27,10 @@ import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Consumer;
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.glassfish.jersey.client.ClientConfig;
 
 public class ServerUtils {
@@ -82,7 +78,7 @@ public class ServerUtils {
     EXECUpdate = Executors.newSingleThreadScheduledExecutor();
     try {
       EXECUpdate.submit(() -> {
-        while (!Thread.interrupted()) {
+        while (!EXECUpdate.isShutdown()) {
           var res = ClientBuilder.newClient(new ClientConfig())
             .target(ip).path("api/player/updates")
             .request(APPLICATION_JSON)
@@ -96,7 +92,7 @@ public class ServerUtils {
         consumer.accept(true);
       });
     } catch (Exception e) {
-      if (!Thread.interrupted()) {
+      if (!EXECUpdate.isShutdown()) {
         registerForPlayerUpdates(ip, consumer);
       }
     }
@@ -151,7 +147,7 @@ public class ServerUtils {
     EXECNextQuestion = Executors.newSingleThreadScheduledExecutor();
     try {
       EXECNextQuestion.submit(() -> {
-        while (!Thread.interrupted()) {
+        while (!EXECNextQuestion.isShutdown()) {
           var res = ClientBuilder.newClient(new ClientConfig())
             .target(ip)
             .path("/api/game/next/" + gameId)
@@ -161,14 +157,18 @@ public class ServerUtils {
           if (res.getStatus() == 204) {
             continue;
           }
+          if (EXECNextQuestion.isShutdown()) {
+            break;
+          }
           consumer.accept(res.readEntity(Question.class));
         }
       });
     } catch (Exception e) {
-      if (!Thread.interrupted()) {
+      if (!EXECNextQuestion.isShutdown()) {
         nextQuestion(ip, gameId, consumer);
       }
     }
+
   }
 
   /**
@@ -194,11 +194,11 @@ public class ServerUtils {
   }
 
   /**
-   * Get all activities from the server
+   * Get the activity's image
    *
    * @param ip the server's IP address
    * @param id the ID of the activity
-   * @return list of all activities
+   * @return image of the activity
    */
   public byte[] getActivityImage(String ip, String id) {
     return ClientBuilder.newClient(new ClientConfig())
@@ -208,11 +208,10 @@ public class ServerUtils {
   }
 
   /**
-   * Get all activities from the server
+   * Changes the image associated with the activity
    *
    * @param ip the server's IP address
    * @param id the ID of the activity
-   * @return list of all activities
    */
   public void changeActivityImage(String ip, String id, byte[] image) {
     ClientBuilder.newClient(new ClientConfig())
@@ -354,5 +353,13 @@ public class ServerUtils {
       .request(APPLICATION_JSON)
       .accept(APPLICATION_JSON)
       .post(Entity.json(score), Score.class);
+  }
+
+  public void removePlayer(String ip, String gameId, String clientId) {
+    ClientBuilder.newClient(new ClientConfig())
+      .target(ip).path("api/game/removePlayer/" + gameId)
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
+      .put(Entity.json(clientId), String.class);
   }
 }

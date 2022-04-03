@@ -27,7 +27,6 @@ import org.springframework.web.context.request.async.DeferredResult;
 @RequestMapping("/api/player")
 public class PlayerController {
   public HashMap<String, Client> clients = new HashMap<>();
-  // hopefully
   private int anonymousUsers = 0;
 
   /**
@@ -42,7 +41,6 @@ public class PlayerController {
       anonymousUsers++;
       username = "Player " + anonymousUsers;
     } else {
-      // bullshit to make java happy
       final boolean[] taken = {false};
       String finalUsername = username;
 

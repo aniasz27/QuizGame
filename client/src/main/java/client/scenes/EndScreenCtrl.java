@@ -62,6 +62,7 @@ public class EndScreenCtrl implements Initializable {
    */
   @FXML
   private void playAgain() {
+    mainCtrl.prepareForNewGame();
     if (mainCtrl.multiplayer) {
       mainCtrl.showWaitingRoom();
     } else {
@@ -81,8 +82,8 @@ public class EndScreenCtrl implements Initializable {
     }
     List<Score> list = StreamSupport
       .stream(scores.spliterator(), false)
+      .sorted((Score scoreA, Score scoreB) -> Integer.compare(scoreB.points, scoreA.points))
       .collect(Collectors.toList());
-    list.sort((Score scoreA, Score scoreB) -> Integer.compare(scoreB.points, scoreA.points));
     Platform.runLater(() -> MainCtrl.refreshLeaderboard(leaderboardDisplay, list));
   }
 }

@@ -49,6 +49,8 @@ public class ExitOverlayCtrl implements Initializable {
     if (closeApp) {
       mainCtrl.exit();
     } else {
+      mainCtrl.playerExited = true;
+      mainCtrl.prepareForNewGame();
       mainCtrl.backToMenu();
     }
   }

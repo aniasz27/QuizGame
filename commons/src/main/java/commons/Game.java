@@ -8,7 +8,6 @@ import java.util.Objects;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import javax.persistence.criteria.CriteriaBuilder;
 
 public class Game {
   public String id;
@@ -56,7 +55,6 @@ public class Game {
    * @param players     the players in the game
    * @param questions   the questions in this game
    * @param multiplayer the game type
-   * @param multiplayer the game type
    */
   public Game(String id, Collection<Client> players, Question[] questions, boolean multiplayer) {
     this.id = id;
@@ -102,6 +100,16 @@ public class Game {
    */
   public void addPlayer(Client player) {
     players.put(player, 0);
+  }
+
+  /**
+   * Removes a player from the game list
+   *
+   * @param clientId of the player to be removed
+   */
+  public void removePLayer(String clientId) {
+    var toBeRemoved = players.keySet().stream().filter(c -> c.id.equals(clientId)).findFirst();
+    toBeRemoved.ifPresent(client -> players.remove(client));
   }
 
   /**
@@ -167,8 +175,6 @@ public class Game {
 
   /**
    * Gets the next question.
-   *
-   * @return the next question
    */
   public void increaseQuestionCounter() {
     questionCounter++;

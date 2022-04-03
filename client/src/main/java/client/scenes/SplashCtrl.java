@@ -73,7 +73,6 @@ public class SplashCtrl implements Initializable {
   @FXML
   public void back() {
     mainCtrl.keepAliveExec.shutdownNow();
-    mainCtrl.keepAliveExec = null;
     mainCtrl.showConnect();
   }
 

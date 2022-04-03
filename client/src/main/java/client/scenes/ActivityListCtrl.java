@@ -44,7 +44,6 @@ public class ActivityListCtrl implements Initializable {
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     searchField.textProperty().addListener(((observable, oldValue, newValue) -> search(newValue)));
-
   }
 
   /**
@@ -56,12 +55,18 @@ public class ActivityListCtrl implements Initializable {
     mainCtrl.showSplash();
   }
 
+  /**
+   * Opens search help
+   */
   @FXML
   public void help() {
     searchHelp.setVisible(true);
     searchHelp.setManaged(true);
   }
 
+  /**
+   * Closes search help
+   */
   @FXML
   public void closeHelp() {
     searchHelp.setVisible(false);
@@ -188,13 +193,15 @@ public class ActivityListCtrl implements Initializable {
       } catch (NumberFormatException e) {
         // Ignore, users are dum sometimes
       }
-
-      refresh(queryResults);
     }
+
+    refresh(queryResults);
   }
 
   /**
-   * Displays activities retrieved from the server.
+   * Displays activities from a list.
+   *
+   * @param activityList the list of activities to be displayed
    */
   public void refresh(List<Activity> activityList) {
     activityListDisplay.getChildren().removeAll(activityListDisplay.getChildren());

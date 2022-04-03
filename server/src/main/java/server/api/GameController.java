@@ -74,7 +74,7 @@ public class GameController {
 
     for (int i = 0; i < 21; i++) {
       switch (random.nextInt(4)) {
-        case 0:
+        case 0: //MultipleChoice
           Activity[] activities = activityController.getRandomActivityMultiple();
           List<Activity> list = Arrays.asList(activities);
           Collections.shuffle(list);
@@ -85,13 +85,13 @@ public class GameController {
             activities[2]
           );
           break;
-        case 1:
+        case 1: //Guess
           questions[i] = new EstimateQuestion(activityController.getRandomActivity().getBody());
           break;
-        case 2:
+        case 2: //HowMuch
           questions[i] = new HowMuchQuestion(activityController.getRandomActivity().getBody());
           break;
-        case 3:
+        case 3: //Instead
           Activity activity1 = activityController.getRandomActivity().getBody();
           Activity activity2 = activityController.getRandomActivity().getBody();
           while (activity1.getTitle().length() > 40
@@ -138,7 +138,6 @@ public class GameController {
   @PutMapping("/play")
   public synchronized String play(@RequestParam("m") boolean multiplayer) {
     String gameID = UUID.randomUUID().toString();
-    System.out.println(gameID + "GAMEMULTI");
     List<Client> waiting = playerController.getPlayers().stream()
       .filter(client -> client.waitingForGame).collect(Collectors.toList());
     games.add(new Game(
@@ -153,8 +152,6 @@ public class GameController {
       client.waitingForGame = false;
       thisGame.addPlayer(client);
     }
-
-    System.out.println(gameID);
 
     notifyAll();
     try {
@@ -306,7 +303,7 @@ public class GameController {
     @PathVariable String id) {
     var noContent = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     var res =
-      new DeferredResult<ResponseEntity<Question>>(15000L, noContent);  //timeout after 15 seconds
+      new DeferredResult<ResponseEntity<Question>>(4000L, noContent);  //timeout after 4 seconds
 
     Game game = games.stream().filter(g -> g.id.equals(id)).findFirst()
       .orElseThrow(StringIndexOutOfBoundsException::new);
@@ -374,6 +371,20 @@ public class GameController {
       scores.add(toBeAdded);
     }
     return scores;
+  }
+
+  @PutMapping("/removePlayer/{gameId}")
+  public void removePlayer(@PathVariable("gameId") String gameId, @RequestBody String clientId) {
+    Game currentGame = null;
+    for (Game game : games) {
+      if (game.id.equals(gameId)) {
+        currentGame = game;
+      }
+    }
+    if (currentGame == null) {
+      return;
+    }
+    currentGame.removePLayer(clientId);
   }
 }
 

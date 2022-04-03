@@ -61,8 +61,8 @@ public class IntermediateLeaderboardCtrl extends QuestionCtrl implements Initial
     var leaderboard = server.getMultiLeaderboard(mainCtrl.serverIp, mainCtrl.gameId);
     List<Score> list = StreamSupport
       .stream(leaderboard.spliterator(), false)
+      .sorted((Score scoreA, Score scoreB) -> Integer.compare(scoreB.points, scoreA.points))
       .collect(Collectors.toList());
-    list.sort((Score scoreA, Score scoreB) -> Integer.compare(scoreB.points, scoreA.points));
 
     Platform.runLater(() -> MainCtrl.refreshLeaderboard(leaderboardDisplay, list));
   }

@@ -34,7 +34,9 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -42,6 +44,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -215,6 +218,13 @@ public class MainCtrl {
     this.endScreenCtrl = endScreen.getKey();
     this.endScreenParent = endScreen.getValue();
 
+    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/img/icon16.png")));
+    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/img/icon32.png")));
+    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/img/icon64.png")));
+    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/img/icon128.png")));
+    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/img/icon256.png")));
+    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/img/icon512.png")));
+    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/img/icon1024.png")));
     primaryStage.setTitle("Quizzzzz");
     // never exit full screen
     primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
@@ -299,11 +309,14 @@ public class MainCtrl {
   public void play() {
     this.usedJokers = new boolean[3];
     System.out.println("session: " + gameId);
-    emojiWebSocket = new EmojiWebSocket(this, serverIp, gameId);
-    jokerWebSocket = new JokerWebSocket(this, serverIp, gameId);
+    emojiWebSocket = new EmojiWebSocket(this, gameId);
+    jokerWebSocket = new JokerWebSocket(this, gameId);
     playerExited = false;
     points = 0;
     questionNumber = 0;
+    if (multiplayer) {
+      server.stopUpdates();
+    }
     nextQuestion();
   }
 
@@ -320,20 +333,11 @@ public class MainCtrl {
   public void showAnswer() {
     switch (question.type) {
       case MULTICHOICE:
-        Platform.runLater(() -> whatRequiresMoreEnergyCtrl.disableButtons());
-        Platform.runLater(() -> whatRequiresMoreEnergyCtrl.showCorrect());
-        break;
       case ESTIMATE:
-        Platform.runLater(() -> guessCtrl.disableButtons());
-        Platform.runLater(() -> guessCtrl.showCorrect());
-        break;
       case HOWMUCH:
-        Platform.runLater(() -> howMuchCtrl.disableButtons());
-        Platform.runLater(() -> howMuchCtrl.showCorrect());
-        break;
       case INSTEAD:
-        Platform.runLater(() -> insteadOfCtrl.disableButtons());
-        Platform.runLater(() -> insteadOfCtrl.showCorrect());
+        Platform.runLater(() -> currentQuestionCtrl.disableButtons());
+        Platform.runLater(() -> currentQuestionCtrl.showCorrect());
         break;
       case INTERLEADERBOARD:
       case ENDSCREEN:
@@ -349,8 +353,10 @@ public class MainCtrl {
    */
   private void nextQuestion() {
     server.nextQuestion(serverIp, gameId, question -> {
-      this.question = question;
-      showCurrentQuestion();
+      if (!playerExited) {
+        this.question = question;
+        showCurrentQuestion();
+      }
     });
   }
 
@@ -518,7 +524,6 @@ public class MainCtrl {
    * Shows the end screen to the user, updates the user points in the game controller
    */
   public void showEndScreen() {
-    server.stopQuestionThread();
     primaryStage.getScene().setRoot(endScreenParent);
     endScreenCtrl.refresh();
   }
@@ -641,7 +646,7 @@ public class MainCtrl {
 
       } else {
         if (maxScore.get() != 0) {
-          line.setEndX(200 * s.getPoints() / maxScore.get());
+          line.setEndX(200.0 * s.getPoints() / maxScore.get());
         } else {
           line.setEndX(200);
         }
@@ -701,6 +706,43 @@ public class MainCtrl {
     points = 0;
     question = null;
     keepAliveExec.shutdownNow();
-    keepAliveExec = null;
+  }
+
+  /**
+   * Prepares the client for a new game
+   */
+  public void prepareForNewGame() {
+    server.removePlayer(serverIp, gameId, clientId);
+    gameId = null;
+    waitingForGame = false;
+    questionNumber = 0;
+    points = 0;
+    question = null;
+    server.stopQuestionThread();
+    usedJokers = new boolean[3];
+    stopPointsTimer();
+    startKeepAlive();
+  }
+
+  /**
+   * Initiates and starts the keepAlive Executor Thread
+   */
+  public void startKeepAlive() {
+    keepAliveExec = Executors.newSingleThreadScheduledExecutor();
+    keepAliveExec.scheduleAtFixedRate(
+      () -> {
+        try {
+          server.keepAlive(serverIp, clientId, waitingForGame);
+        } catch (Exception e) {
+          e.printStackTrace();
+          Platform.runLater(this::showConnect);
+          reset();
+        }
+      },
+      0,
+      1,
+      TimeUnit.SECONDS
+    );
+
   }
 }

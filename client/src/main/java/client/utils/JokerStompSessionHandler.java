@@ -1,7 +1,6 @@
 package client.utils;
 
 import client.scenes.MainCtrl;
-import commons.Joker;
 import commons.JokerMessage;
 import java.lang.reflect.Type;
 import javafx.application.Platform;
