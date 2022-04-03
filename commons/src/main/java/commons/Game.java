@@ -190,10 +190,20 @@ public class Game {
     return question;
   }
 
+  /**
+   * Getter for Players
+   *
+   * @return map of Clients, Integers
+   */
   public Map<Client, Integer> getPlayers() {
     return this.players;
   }
 
+  /**
+   * Textual representation of EstimateQuestion
+   *
+   * @return String description of EstimateQuestion
+   */
   @Override
   public String toString() {
     return "Game{"
@@ -203,6 +213,13 @@ public class Game {
       + ", questions=" + Arrays.toString(questions)
       + '}';
   }
+
+  /**
+   * Equals method
+   *
+   * @param o object we're comparing to
+   * @return true if equal, false otherwise
+   */
 
   @Override
   public boolean equals(Object o) {
@@ -219,6 +236,12 @@ public class Game {
       && Objects.equals(playerListeners, game.playerListeners);
   }
 
+  /**
+   * Hash function
+   *
+   * @return hashcode
+   */
+
   @Override
   public int hashCode() {
     int result = Objects.hash(id, players, questionCounter, multiplayer, playerListeners);
@@ -226,6 +249,9 @@ public class Game {
     return result;
   }
 
+  /**
+   * Stops timing
+   */
   public void stopExecTiming() {
     execTiming.shutdownNow();
   }
