@@ -8,179 +8,152 @@ import commons.InsteadOfQuestion;
 import commons.Question;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
+import java.util.Collections;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 public class InsteadOfCtrl extends QuestionCtrl implements Initializable {
 
   @FXML
-  private Button button0;
+  public StackPane imgContainer1;
   @FXML
-  private Button button1;
+  private ImageView imageView1;
   @FXML
-  private Button button2;
+  public StackPane imgContainer2;
   @FXML
-  private Text points;
+  private ImageView imageView2;
   @FXML
-  private Circle circle;
+  private Text title1;
   @FXML
-  private Label emoji1;
+  private Text title2;
   @FXML
-  private Label emoji2;
+  private Text title3;
   @FXML
-  private Label emoji3;
+  private TextField answer;
   @FXML
-  private Label emoji4;
-  @FXML
-  private Label emoji5;
-  @FXML
-  private GridPane emojiGrid;
-  @FXML
-  private Button emojiButton;
-  @FXML
-  private StackPane pane;
-  @FXML
-  private Button doublePts;
-  @FXML
-  private Button hint;
-  @FXML
-  private Button minusTime;
-  @FXML
-  private Text title;
-
-  private Button[] buttons;
-  private Label[] emojis;
-  private Button[] jokers;
-
-  private Button clickedButton;
+  private Button submit;
+  private int point;
   private InsteadOfQuestion question;
   private boolean dbPoint;
+  private Activity activity1;
+  private Activity activity2;
+
+  /**
+   * Constructor for InsteadOfCtrl
+   *
+   * @param server   server we are on
+   * @param mainCtrl controller for the game flow
+   */
 
   @Inject
   InsteadOfCtrl(ServerUtils server, MainCtrl mainCtrl) {
     super(server, mainCtrl);
   }
 
+  /**
+   * Initializing the InsteadOfCtrl
+   *
+   * @param location  location
+   * @param resources resources we're using
+   */
+
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    buttons = new Button[] {button0, button1, button2};
-    emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
-    jokers = new Button[] {doublePts, minusTime, hint};
-    hoverEffect(circle, emojiGrid, emojiButton, pane);
+    super.initialize(location, resources);
   }
+
+  /**
+   * Displays the InsteadOf question screen
+   *
+   * @param question to show
+   */
 
   @Override
   public void displayQuestion(Question question) {
-    displayEmojis(circle, emojiGrid, pane);
+    displayEmojis();
     this.question = (InsteadOfQuestion) question;
-    this.title.setText(((InsteadOfQuestion) question).getQuestion());
-    this.clickedButton = null;
-
-    // reset correct button colors
-    for (Button button : buttons) {
-      button.getStyleClass().remove("good");
-      button.getStyleClass().remove("bad");
-      button.setDisable(false);
-    }
-
-    Activity[] activities = {
-      this.question.getActivity1(),
-      this.question.getActivity2(),
-      this.question.getActivity3()
-    };
-
-    boolean[] correctAnswers = this.question.getCorrect();
-    for (int i = 0; i < buttons.length; i++) {
-      Activity activity = activities[i];
-
-      // get image
-      StackPane imgContainer = new StackPane();
-      imgContainer.getStyleClass().add("rounded");
-      imgContainer.getStyleClass().add("img");
-      //Rectangle clip = new Rectangle(
-      //  imgContainer.getWidth(), imgContainer.getHeight()
-      //);
-      //clip.setArcWidth(20);
-      //clip.setArcHeight(20);
-      //imgContainer.setClip(clip);
-
-      ImageView imageView = new ImageView(new Image(
-        new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity.id))
-      ));
-
-      // resize image
-      imageView.setFitWidth(1140 / 3.0);
-      imageView.setFitHeight(1140 / 3.0);
-
-      imgContainer.getChildren().add(imageView);
-
-      //set image
-      buttons[i].setGraphic(imgContainer);
-
-      // image is displayed on top of text
-      buttons[i].setContentDisplay(ContentDisplay.TOP);
-      buttons[i].setText(activity.getTitle());
-      buttons[i].setUserData(correctAnswers[i]);
-    }
-    displayJokers(jokers);
-    showPoints(points);
+    this.title1.setText(((InsteadOfQuestion) question).getTitle1());
+    this.title2.setText("how many times could you be");
+    this.title3.setText(((InsteadOfQuestion) question).getTitle2());
+    this.dbPoint = false;
+    this.activity1 = ((InsteadOfQuestion) question).getActivity1();
+    this.activity2 = ((InsteadOfQuestion) question).getActivity2();
+    this.submit.setDisable(false);
+    this.answer.setDisable(false);
+    this.answer.getStyleClass().removeAll(Collections.singleton("bad"));
+    this.answer.getStyleClass().removeAll(Collections.singleton("good"));
+    this.point = 0;
+    displayJokers();
+    showPoints();
+    Rectangle clip1 = new Rectangle(
+      imgContainer1.getWidth(), imgContainer1.getHeight()
+    );
+    clip1.setArcWidth(20);
+    clip1.setArcHeight(20);
+    imgContainer1.setClip(clip1);
+    imageView1.setImage(new Image(new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity1.id))));
+    Rectangle clip2 = new Rectangle(
+      imgContainer2.getWidth(), imgContainer2.getHeight()
+    );
+    clip2.setArcWidth(20);
+    clip2.setArcHeight(20);
+    imgContainer2.setClip(clip2);
+    imageView2.setImage(new Image(new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity2.id))));
+    answer.setText("Type in your answer");
+    answer.setPromptText("Type in your answer");
   }
 
-  @Override
+  /**
+   * Shows the correct answer and adds points
+   */
   public void showCorrect() {
-    for (Button button : buttons) {
-      button.getStyleClass().add((boolean) button.getUserData() ? "good" : "bad");
+    answer.getStyleClass().add(point != 0 ? "good" : "bad");
+    if (dbPoint) {
+      point *= 2;
     }
-    if (clickedButton != null && (boolean) clickedButton.getUserData()) {
-      showUserCorrect();
-    }
+    mainCtrl.addPoints(point);
+    showPoints();
+    answer.setText("Correct answer is: " + question.getFactor());
+  }
+
+  /**
+   * On clicking the submit button on the screen, the answer gets evaluated
+   */
+  public void checkCorrect() {
+    point = checkCorrect(answer, question, submit);
   }
 
   @Override
   public void disableButtons() {
-    for (Button button : buttons) {
-      button.setDisable(true);
-    }
-    for (Button joker : jokers) {
-      joker.setDisable(true);
-    }
+    super.disableButtons();
+    submit.setDisable(true);
+    answer.setDisable(true);
   }
 
-  @FXML
-  public void checkCorrectAnswer(MouseEvent event) {
-    mainCtrl.stopPointsTimer();
-    this.clickedButton = (Button) event.getSource();
-    for (Button button : buttons) {
-      button.setDisable(true);
-    }
+  /**
+   * Deletes the text upon mouse click
+   */
+  public void deleteText() {
+    answer.setText("");
   }
 
-  public void showUserCorrect() {
-    int toAdd = mainCtrl.getPointsOffset();
-    if (dbPoint) {
-      toAdd *= 2;
-    }
-    mainCtrl.addPoints(toAdd);
-    showPoints(points);
+  /**
+   * Activates DoublePoints Joker
+   */
+  public void doublePoints() {
+    dbPoint = doublePointsQ();
   }
 
   public void hint() {
-    hintQ(question.getCorrect(), buttons, hint);
-  }
-
-  public void doublePoints() {
-    dbPoint = doublePoints(doublePts);
+    hintR(answer, question.getFactor());
   }
 }
 

@@ -43,6 +43,14 @@ public class GameController {
 
   public List<Game> games = new ArrayList<>();
 
+  /**
+   * Constructor for GameController
+   *
+   * @param activityController access to activities
+   * @param random             random generator
+   * @param playerController   access to players
+   * @param scoreController    access to scores
+   */
   public GameController(
     ActivityController activityController,
     Random random,
@@ -55,12 +63,17 @@ public class GameController {
     this.scoreController = scoreController;
   }
 
+  /**
+   * Generates 20 questions for a new game
+   *
+   * @return Question array filled with random questions
+   */
   private Question[] generateQuestions() {
     Question[] questions = new Question[22];
 
     for (int i = 0; i < 21; i++) {
       switch (random.nextInt(4)) {
-        case 0:
+        case 0: //MultipleChoice
           Activity[] activities = activityController.getRandomActivityMultiple();
           List<Activity> list = Arrays.asList(activities);
           Collections.shuffle(list);
@@ -71,35 +84,36 @@ public class GameController {
             activities[2]
           );
           break;
-        case 1:
+        case 1: //Guess
           questions[i] = new EstimateQuestion(activityController.getRandomActivity().getBody());
           break;
-        case 2:
+        case 2: //HowMuch
           questions[i] = new HowMuchQuestion(activityController.getRandomActivity().getBody());
           break;
-        case 3:
-          Activity[] activities1 = activityController.getRandomActivityMultiple();
-          Activity activity = activityController.getRandomActivity().getBody();
-          boolean more = false;
-          while (!more) {
-            if (activities1[0].getConsumption_in_wh() < activity.getConsumption_in_wh()) {
-              if (activities1[1].getConsumption_in_wh() < activity.getConsumption_in_wh()) {
-                if (activities1[2].getConsumption_in_wh() < activity.getConsumption_in_wh()) {
-                  more = true;
-                }
+        case 3: //Instead
+          Activity activity1 = activityController.getRandomActivity().getBody();
+          Activity activity2 = activityController.getRandomActivity().getBody();
+          while (activity1.getTitle().length() > 40
+            || activity1.getConsumption_in_wh() <= 0) { //limit so it doesn't run out of the screen
+            activity1 = activityController.getRandomActivity().getBody();
+          }
+          while (activity2.getTitle().length() > 50
+            || activity2.getConsumption_in_wh() <= 0) { //limit so it doesn't run out of the screen
+            activity2 = activityController.getRandomActivity().getBody();
+          }
+          boolean finished = false;
+          while (!finished) {
+            if (activity1.getTitle().contains("ing ")) { //for the right formatting of the question
+              if (activity2.getTitle().contains("ing ")) {
+                finished = true;
+              } else {
+                activity2 = activityController.getRandomActivity().getBody();
               }
             } else {
-              activity = activityController.getRandomActivity().getBody();
+              activity1 = activityController.getRandomActivity().getBody();
             }
           }
-          System.out.println("Activity1:" + activities1[0].getConsumption_in_wh());
-          System.out.println("Activity2:" + activities1[1].getConsumption_in_wh());
-          System.out.println("Activity3:" + activities1[2].getConsumption_in_wh());
-          System.out.println("Activity4:" + activity.getConsumption_in_wh());
-          questions[i] = new InsteadOfQuestion(
-            activities1[0],
-            activities1[1],
-            activities1[2], activity);
+          questions[i] = new InsteadOfQuestion(activity1, activity2);
           break;
         default:
           break;
@@ -123,7 +137,6 @@ public class GameController {
   @PutMapping("/play")
   public synchronized String play(@RequestParam("m") boolean multiplayer) {
     String gameID = UUID.randomUUID().toString();
-    System.out.println(gameID + "GAMEMULTI");
     List<Client> waiting = playerController.getPlayers().stream()
       .filter(client -> client.waitingForGame).collect(Collectors.toList());
     games.add(new Game(
@@ -132,12 +145,12 @@ public class GameController {
       generateQuestions(),
       multiplayer
     ));
+    Game thisGame = games.get(games.size() - 1);
 
     for (Client client : waiting) {
       client.waitingForGame = false;
+      thisGame.addPlayer(client);
     }
-
-    System.out.println(gameID);
 
     notifyAll();
     try {
@@ -168,6 +181,11 @@ public class GameController {
     return gameID;
   }
 
+  /**
+   * Sends questions to the client
+   *
+   * @param id game id
+   */
   private void initiateGame(String id) {
     Game game = games.stream().filter(g -> g.id.equals(id)).findFirst()
       .orElseThrow(StringIndexOutOfBoundsException::new);
@@ -184,10 +202,6 @@ public class GameController {
       for (int i = 0; i <= 21; i++) {
         game.playerListeners.forEach((k, l) -> {
           Question question = game.current(false);
-          if (question.type.equals(Question.Type.ENDSCREEN) && !game.isMultiplayer() && game.players.size() == 1) {
-            Client player = (Client) game.players.keySet().toArray()[0];
-            scoreController.addScore(new Score(player.id, player.username, game.players.get(player)));
-          }
           l.accept(question);
         });
         // Question timer
@@ -211,8 +225,6 @@ public class GameController {
   }
 
   /**
-   * TODO: implement long polling
-   * <p>
    * Endpoint to check if a user has been assigned to a game or not
    *
    * @param uid the player's id
@@ -263,19 +275,6 @@ public class GameController {
     return -1;
   }
 
-  /**
-   * TODO: implement actual game sessions and non-global questionCounter
-   * Returns the number of the round the player is in for a given player id
-   *
-   * @param id game id
-   * @return round number of game
-   */
-  @GetMapping("/getRoundNumber/{id}")
-  public int getRoundNumber(@PathVariable String id) {
-    Game game = games.stream().filter(g -> g.id.equals(id)).findFirst()
-      .orElseThrow(StringIndexOutOfBoundsException::new);
-    return game.questionCounter;
-  }
 
   /**
    * Gets the next question or screen in a game
@@ -288,7 +287,7 @@ public class GameController {
     @PathVariable String id) {
     var noContent = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     var res =
-      new DeferredResult<ResponseEntity<Question>>(15000L, noContent);  //timeout after 15 seconds
+      new DeferredResult<ResponseEntity<Question>>(4000L, noContent);  //timeout after 4 seconds
 
     Game game = games.stream().filter(g -> g.id.equals(id)).findFirst()
       .orElseThrow(StringIndexOutOfBoundsException::new);
@@ -301,6 +300,12 @@ public class GameController {
     return res;
   }
 
+  /**
+   * Endpoint for accepting and updating a score of the player in a game
+   *
+   * @param gameId game id
+   * @param score  new score
+   */
   @PostMapping("/score/send/{gameId}")
   public void playerScoreSend(@PathVariable("gameId") String gameId, @RequestBody Score score) {
     Game thisGame = null;
@@ -325,6 +330,12 @@ public class GameController {
 
   }
 
+  /**
+   * Returns a list of score for a multiplayer leaderboard for one game
+   *
+   * @param gameId specific game
+   * @return list of scores
+   */
   @GetMapping("/multiLeaderboard/{gameId}")
   public Iterable<Score> getMultiLeaderboard(@PathVariable("gameId") String gameId) {
     Game currentGame = null;
@@ -344,6 +355,20 @@ public class GameController {
       scores.add(toBeAdded);
     }
     return scores;
+  }
+
+  @PutMapping("/removePlayer/{gameId}")
+  public void removePlayer(@PathVariable("gameId") String gameId, @RequestBody String clientId) {
+    Game currentGame = null;
+    for (Game game : games) {
+      if (game.id.equals(gameId)) {
+        currentGame = game;
+      }
+    }
+    if (currentGame == null) {
+      return;
+    }
+    currentGame.removePLayer(clientId);
   }
 }
 

@@ -4,45 +4,40 @@ import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Emoji;
+import commons.EstimateQuestion;
+import commons.InsteadOfQuestion;
 import commons.Joker;
 import commons.Question;
 import java.net.URL;
-import java.util.Optional;
+import java.util.Collections;
 import java.util.Random;
 import java.util.ResourceBundle;
-import java.util.Stack;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import javafx.util.Pair;
 
 public abstract class QuestionCtrl {
   protected final ServerUtils server;
   protected final MainCtrl mainCtrl;
 
-
   @FXML
   private StackPane root;
-
   @FXML
-  public Line timer;
-
-  public Timeline timerAnimation;
+  private Line timer;
+  @FXML
+  private Text points;
   @FXML
   private Circle circle;
   @FXML
@@ -61,10 +56,24 @@ public abstract class QuestionCtrl {
   private Label emoji4;
   @FXML
   private Label emoji5;
+  @FXML
+  protected Button doublePts;
+  @FXML
+  protected Button hint;
+  @FXML
+  protected Button minusTime;
+
   private Label[] emojis;
+  private Button[] jokers;
+  public Timeline timerAnimation;
+  private final Random random = new Random();
 
-  private final Random notificationRandomiser = new Random();
-
+  /**
+   * Constructor for QuestionCtrl
+   *
+   * @param server   server we making it on
+   * @param mainCtrl mainCtrl for the questions
+   */
   @Inject
   public QuestionCtrl(ServerUtils server, MainCtrl mainCtrl) {
     this.server = server;
@@ -92,10 +101,7 @@ public abstract class QuestionCtrl {
    */
   @FXML
   private void back(ActionEvent actionEvent) {
-    System.out.println("Exited question!");
-    mainCtrl.playerExited = true;
     mainCtrl.openExitOverlay(false);
-    server.stopQuestionThread();
   }
 
   /**
@@ -123,7 +129,11 @@ public abstract class QuestionCtrl {
   /**
    * Disables buttons after time runs out
    */
-  public abstract void disableButtons();
+  public void disableButtons() {
+    for (Button joker : jokers) {
+      joker.setDisable(true);
+    }
+  }
 
   /**
    * Changes button to clearly indicate that a joker is used
@@ -132,17 +142,26 @@ public abstract class QuestionCtrl {
    */
   public void useJoker(Button joker) {
     joker.getStyleClass().add("used");
-    joker.getStyleClass().remove("drop-shadow");
+    joker.getStyleClass().removeAll(Collections.singleton("drop-shadow"));
+  }
+
+  /**
+   * Changes button to clearly indicate that a joker is not used
+   *
+   * @param joker button to change
+   */
+  public void unusedJoker(Button joker) {
+    joker.getStyleClass().add("drop-shadow");
+    joker.getStyleClass().removeAll(Collections.singleton("used"));
   }
 
   /**
    * Displays jokers on the question screen
-   *
-   * @param jokers Buttons to change
    */
-  public void displayJokers(Button[] jokers) {
+  public void displayJokers() {
     for (int i = 0; i < 3; i++) {
-      jokers[i].setDisable(false);
+      this.jokers[i].setDisable(false);
+      unusedJoker(this.jokers[i]);
       if (mainCtrl.usedJokers[i]) {
         useJoker(jokers[i]);
       }
@@ -155,28 +174,23 @@ public abstract class QuestionCtrl {
   /**
    * Displays user's points on the screen
    */
-  public void showPoints(Text points) {
-    points.setText("Points: " + mainCtrl.getPoints());
+  public void showPoints() {
+    this.points.setText("Points: " + mainCtrl.getPoints());
   }
 
   /**
    * Set hover effect on emojis
-   *
-   * @param circle      of emojis
-   * @param emojiGrid   of emojis
-   * @param emojiButton of emojis
-   * @param pane        of emojis
    */
-  public static void hoverEffect(Circle circle, GridPane emojiGrid, Button emojiButton, StackPane pane) {
-    emojiButton.setOnMouseEntered(event -> {
-      pane.setVisible(true);
-      circle.setVisible(true);
-      emojiGrid.setVisible(true);
+  public void hoverEffect() {
+    this.emojiButton.setOnMouseEntered(event -> {
+      this.pane.setVisible(true);
+      this.circle.setVisible(true);
+      this.emojiGrid.setVisible(true);
     });
-    pane.setOnMouseExited(event -> {
-      pane.setVisible(false);
-      circle.setVisible(false);
-      emojiGrid.setVisible(false);
+    this.pane.setOnMouseExited(event -> {
+      this.pane.setVisible(false);
+      this.circle.setVisible(false);
+      this.emojiGrid.setVisible(false);
     });
   }
 
@@ -203,69 +217,161 @@ public abstract class QuestionCtrl {
   }
 
   /**
+   * Return text on the joker to show
+   *
+   * @param joker to show appropriate text
+   * @return Button to show
+   */
+  public Pair<Button, Double> getJokerElement(Joker joker) {
+    switch (joker) {
+      case DOUBLE:
+        return new Pair<>(doublePts, -300.0);
+      case TIME:
+        return new Pair<>(minusTime, -325.0);
+      case HINT:
+      default:
+        return new Pair<>(hint, -275.0);
+    }
+  }
+
+  /**
    * Initializes what emoji value should be sent via websockets for every emoji label clicked
    */
   public void initializeEmojiEvents() {
     for (Emoji emojiValue : Emoji.values()) {
       Label emojiElement = getEmojiElement(emojiValue);
-
-      emojiElement.setOnMouseClicked((e) -> {
-          mainCtrl.emojiWebSocket.sendMessage(emojiValue);
-        }
+      emojiElement.setOnMouseClicked((e) -> mainCtrl.emojiWebSocket.sendMessage(emojiValue)
       );
     }
   }
 
+  /**
+   * Shows emoji on the screen
+   *
+   * @param emoji to show
+   */
   public void showEmoji(Emoji emoji) {
-    System.out.println("SHOWN EMOJIL ");
+    System.out.println("SHOWN EMOJI ");
     // create emoji label
     String emojiText = getEmojiElement(emoji).getText();
     Label movingEmoji = new Label(emojiText);
     movingEmoji.getStyleClass().addAll("icon", "emoji");
 
-
     // set initial position
     movingEmoji.setTranslateX(1920 / 2.0);
-    movingEmoji.setTranslateY(-350 + 100 * notificationRandomiser.nextDouble()); // vary height slightly
-
-    // add emoji to scene (in line with the timer)
-    root.getChildren().add(movingEmoji);
-
-    Timeline emojiAnimation = new Timeline(
-      new KeyFrame(Duration.seconds(6), new KeyValue(movingEmoji.translateXProperty(), 0)), // move
-      new KeyFrame(Duration.seconds(6), new KeyValue(movingEmoji.opacityProperty(), 0)) // disappear
-    );
-
-    emojiAnimation.setOnFinished(e -> root.getChildren().remove(movingEmoji)); // remove emoji when finished
-    emojiAnimation.setCycleCount(1);
-    emojiAnimation.play();
+    makeAnimation(movingEmoji, -350 + 100 * random.nextDouble());
   }
+
+  /**
+   * Makes animation for a Label
+   *
+   * @param movingElement element to animate
+   * @param height        of the element
+   */
+  public void makeAnimation(Label movingElement, double height) {
+    movingElement.setTranslateY(height); // vary height slightly
+    // add emoji to scene (in line with the timer)
+    root.getChildren().add(movingElement);
+    Timeline animation = new Timeline(
+      new KeyFrame(Duration.seconds(6), new KeyValue(movingElement.translateXProperty(), 0)), // move
+      new KeyFrame(Duration.seconds(6), new KeyValue(movingElement.opacityProperty(), 0)) // disappear
+    );
+    animation.setOnFinished(e -> root.getChildren().remove(movingElement)); // remove emoji when finished
+    animation.setCycleCount(1);
+    animation.play();
+  }
+
+  /**
+   * Shows joker on the screen
+   *
+   * @param joker to show
+   */
+  public void showJoker(Joker joker) {
+    System.out.println("SHOWN JOKER");
+    Pair<Button, Double> pair = getJokerElement(joker);
+    Label movingJoker = new Label(pair.getKey().getText());
+    movingJoker.setTranslateX(-1920.0 / 2.0);
+    makeAnimation(movingJoker, pair.getValue());
+  }
+
+  /**
+   * On clicking the submit button on the screen, the answer gets evaluated
+   *
+   * @param answer   textField to get answer from
+   * @param question Question (EstimateQuestion or InsteadOfQuestion)
+   * @param submit   Button
+   * @return points to add
+   */
+  public int checkCorrect(TextField answer, Question question, Button submit) {
+    if (answer.getText().equals("")) {
+      return 0;
+    }
+    long value;
+    try {
+      value = Long.parseLong(answer.getText());
+    } catch (NumberFormatException nfe) {
+      answer.setText("Not a number");
+      return 0;
+    }
+    mainCtrl.stopPointsTimer();
+    submit.setDisable(true);
+    answer.setDisable(true);
+    int correct;
+    if (question instanceof InsteadOfQuestion) {
+      correct = ((InsteadOfQuestion) question).calculateHowClose(value);
+    } else {
+      correct = ((EstimateQuestion) question).calculateHowClose(value);
+    }
+    if (correct > 0) {
+      return (correct + mainCtrl.getPointsOffset()) / 2;
+    }
+    return 0;
+  }
+
 
   /**
    * Hides emojis on the screen
-   *
-   * @param circle    of emojis
-   * @param emojiGrid of emojis
-   * @param pane      of emojis
    */
-  public static void displayEmojis(Circle circle, GridPane emojiGrid, StackPane pane) {
-    pane.setVisible(false);
-    circle.setVisible(false);
-    emojiGrid.setVisible(false);
+  public void displayEmojis() {
+    if (!mainCtrl.multiplayer) {
+      emojiButton.setVisible(false);
+    }
+    this.pane.setVisible(false);
+    this.circle.setVisible(false);
+    this.emojiGrid.setVisible(false);
   }
 
   /**
-   * Gives a hint to the user
+   * Shows the user the range in which the answer is
    *
-   * @param correct answer
-   * @param buttons answers
-   * @param hint    button
+   * @param field  in which range is indicated
+   * @param answer correct answer
    */
-  public void hintQ(boolean[] correct, Button[] buttons, Button hint) {
+  public void hintR(TextField field, long answer) {
     if (mainCtrl.usedJokers[2]) {
       return;
     }
-    Random random = new Random();
+    int range = random.nextInt(50);
+    long leftBound = (long) (answer * (1 - range / 100.0));
+    range = random.nextInt(50);
+    long rightBound = (long) (answer * (1 + range / 100.0));
+    field.setText("Range: " + leftBound + " - " + rightBound);
+    field.setPromptText("Range: " + leftBound + " - " + rightBound);
+    useJoker(hint);
+    mainCtrl.usedJokers[2] = true;
+    mainCtrl.jokerWebSocket.sendMessage(Joker.HINT);
+  }
+
+  /**
+   * Disables wrong answer
+   *
+   * @param correct answer
+   * @param buttons answers
+   */
+  public void hintQ(boolean[] correct, Button[] buttons) {
+    if (mainCtrl.usedJokers[2]) {
+      return;
+    }
     int guess;
     do {
       guess = random.nextInt(3);
@@ -279,10 +385,9 @@ public abstract class QuestionCtrl {
   /**
    * Gives double Points to the user
    *
-   * @param doublePts button
-   * @return boolean
+   * @return boolean to double points
    */
-  public boolean doublePoints(Button doublePts) {
+  public boolean doublePointsQ() {
     if (mainCtrl.usedJokers[0]) {
       return false;
     }
@@ -294,10 +399,8 @@ public abstract class QuestionCtrl {
 
   /**
    * Sends message to other users to reduce time
-   *
-   * @param minusTime button
    */
-  public void decreaseTimeQ(Button minusTime) {
+  public void decreaseTime() {
     if (mainCtrl.usedJokers[1]) {
       return;
     }
@@ -331,9 +434,16 @@ public abstract class QuestionCtrl {
     thread.start();
   }
 
+  /**
+   * Initializes question screen
+   *
+   * @param location  URL
+   * @param resources ResourceBundle
+   */
   public void initialize(URL location, ResourceBundle resources) {
     emojis = new Label[] {emoji1, emoji2, emoji3, emoji4, emoji5};
+    jokers = new Button[] {doublePts, minusTime, hint};
     initializeEmojiEvents();
-    hoverEffect(circle, emojiGrid, emojiButton, pane);
+    hoverEffect();
   }
 }

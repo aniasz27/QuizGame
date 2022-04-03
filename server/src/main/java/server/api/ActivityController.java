@@ -38,7 +38,7 @@ public class ActivityController {
 
   private final ActivityRepository repo;
   private final Random random;
-  private List<Activity> sortedActivities;
+  public List<Activity> sortedActivities;
 
   /**
    * Constructor
@@ -201,6 +201,12 @@ public class ActivityController {
     }
   }
 
+  /**
+   * Imports the activities from the specific file
+   *
+   * @param filePath to the file
+   * @return String depending on the result
+   */
   @PostMapping("/importActivitiesFromFile")
   public ResponseEntity<String> importAllActivitiesFromFile(@RequestBody String filePath) {
 
@@ -219,6 +225,12 @@ public class ActivityController {
     return ResponseEntity.ok("Activities imported successfully!");
   }
 
+  /**
+   * Gets the image based on the activity id
+   *
+   * @param id activity id
+   * @return byte array
+   */
   @GetMapping(path = "/image/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
   public ResponseEntity<byte[]> getImage(@PathVariable String id) {
     try {

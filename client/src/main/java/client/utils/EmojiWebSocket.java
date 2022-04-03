@@ -4,6 +4,7 @@ import client.scenes.MainCtrl;
 import commons.Emoji;
 import commons.EmojiMessage;
 import java.net.URI;
+import java.util.Objects;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.web.socket.client.WebSocketClient;
@@ -22,14 +23,17 @@ public class EmojiWebSocket {
    * Creates and connects an emoji websocket for a given gameSession
    *
    * @param mainCtrl    scene control object
-   * @param ip          of the server
    * @param gameSession of the game to send the emojis through
    */
-  public EmojiWebSocket(MainCtrl mainCtrl, String ip, String gameSession) {
+  public EmojiWebSocket(MainCtrl mainCtrl, String gameSession) {
     this.mainCtrl = mainCtrl;
     this.gameSession = gameSession;
 
-    connectWebSocket();
+    try {
+      connectWebSocket();
+    } catch (Exception e) {
+      System.err.println("Error connecting Emoji WebSocket");
+    }
   }
 
   /**
@@ -65,4 +69,17 @@ public class EmojiWebSocket {
     this.session.send("/app/emoji", new EmojiMessage(emoji, gameSession));
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    EmojiWebSocket that = (EmojiWebSocket) o;
+    return Objects.equals(mainCtrl, that.mainCtrl)
+      && Objects.equals(gameSession, that.gameSession)
+      && Objects.equals(session, that.session);
+  }
 }

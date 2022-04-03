@@ -25,31 +25,61 @@ public class SpWaitingRoomCtrl implements Initializable {
   @FXML
   private Button startButton;
 
+  /**
+   * Constructor for SpWaitingRoomCtrl
+   *
+   * @param server   server we are on
+   * @param mainCtrl controller for the game flow
+   */
   @Inject
   public SpWaitingRoomCtrl(ServerUtils server, MainCtrl mainCtrl) {
     this.server = server;
     this.mainCtrl = mainCtrl;
   }
 
+  /**
+   * Initializing the SpWaitingRoomCtrl
+   *
+   * @param location  location
+   * @param resources resources we're using
+   */
   @Override
   public void initialize(URL location, ResourceBundle resources) {
   }
 
+  /**
+   * Refreshes the Leaderboard
+   */
   public void refresh() {
     Iterable<Score> scores = server.getSingleLeaderboard(mainCtrl.serverIp);
     Platform.runLater(() -> MainCtrl.refreshLeaderboard(leaderboardDisplay, scores));
   }
 
+  /**
+   * Goes back to SplashScreen
+   *
+   * @param actionEvent on Button Click
+   */
   @FXML
   private void back(ActionEvent actionEvent) {
     mainCtrl.showSplash();
   }
 
+  /**
+   * Starts the game
+   *
+   * @param actionEvent on Button Click
+   */
   @FXML
   public void start(ActionEvent actionEvent) {
     mainCtrl.start();
   }
 
+  /**
+   * Opens HelpOverlay
+   *
+   * @param actionEvent on Button Click
+   */
   @FXML
   private void help(ActionEvent actionEvent) {
     mainCtrl.openHelp();

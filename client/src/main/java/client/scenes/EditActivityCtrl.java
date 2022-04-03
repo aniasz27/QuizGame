@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -47,11 +48,24 @@ public class EditActivityCtrl implements Initializable {
 
   FileChooser fileChooser = new FileChooser();
 
+  /**
+   * Constructor for EditActivityCtrl
+   *
+   * @param server   server we are on
+   * @param mainCtrl controller for the game flow
+   */
   @Inject
   public EditActivityCtrl(ServerUtils server, MainCtrl mainCtrl) {
     this.server = server;
     this.mainCtrl = mainCtrl;
   }
+
+  /**
+   * Initializing the EditActivityCtrl
+   *
+   * @param location  location
+   * @param resources resources we're using
+   */
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
@@ -81,32 +95,45 @@ public class EditActivityCtrl implements Initializable {
     imageView.setImage(new Image(new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity.id))));
 
     consumptionField.onMouseClickedProperty().set(event -> {
-      consumptionField.getStyleClass().remove("bad");
-      saveButton.getStyleClass().remove("bad");
+      consumptionField.getStyleClass().removeAll(Collections.singleton("bad"));
+      saveButton.getStyleClass().removeAll(Collections.singleton("bad"));
     });
   }
 
+  /**
+   * Goes back to the overview of activities
+   */
   @FXML
   public void back() {
     mainCtrl.showActivityList();
   }
 
+  /**
+   * Allows the user to add an image from their computer to replace the previous activity image
+   */
   @FXML
   public void changeImage() {
     File file = fileChooser.showOpenDialog(mainCtrl.primaryStage);
 
-    byte[] bytes = new byte[(int) file.length()];
-    try (FileInputStream fis = new FileInputStream(file)) {
-      fis.read(bytes);
-    } catch (IOException e) {
-      e.printStackTrace();
+    try {
+      byte[] bytes = new byte[(int) file.length()];
+      try (FileInputStream fis = new FileInputStream(file)) {
+        fis.read(bytes);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+
+      server.changeActivityImage(mainCtrl.serverIp, activity.id, bytes);
+
+      imageView.setImage(new Image(new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity.id))));
+    } catch (NullPointerException e) {
+      // Ignore, user didn't choose an image
     }
-
-    server.changeActivityImage(mainCtrl.serverIp, activity.id, bytes);
-
-    imageView.setImage(new Image(new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity.id))));
   }
 
+  /**
+   * Updates the changes made to  activity details
+   */
   @FXML
   public void save() {
     if (activity == null) {

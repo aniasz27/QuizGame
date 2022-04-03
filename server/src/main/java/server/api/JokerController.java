@@ -1,6 +1,5 @@
 package server.api;
 
-import commons.Joker;
 import commons.JokerMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -13,11 +12,14 @@ public class JokerController {
   @Autowired
   SimpMessagingTemplate messagingTemplate;
 
+  /**
+   * Sends a joker
+   *
+   * @param jokerMessage joker will be extracted from
+   */
   @MessageMapping("/joker")
   public void sendJoker(@Payload JokerMessage jokerMessage) {
     System.out.println("Sent joker");
-    Joker joker = jokerMessage.joker;
-    String gameSession = jokerMessage.gameSession;
-    this.messagingTemplate.convertAndSend("/queue/jokerChat/" + gameSession, joker);
+    this.messagingTemplate.convertAndSend("/queue/jokerChat/" + jokerMessage.gameSession, jokerMessage);
   }
 }

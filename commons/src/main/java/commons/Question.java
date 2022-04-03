@@ -49,20 +49,64 @@ public abstract class Question {
       type = t;
     }
 
+    /**
+     * Equals method
+     *
+     * @param type we're comparing with
+     * @return true if same, false otherwise
+     */
     public boolean equals(Type type) {
       return this.type == type.type;
     }
   }
 
+  /**
+   * Getter for type
+   *
+   * @return type
+   */
   public Type getType() {
     return type;
   }
 
-
+  /**
+   * Empty Question Constructor
+   */
   public Question() {
   }
 
+  /**
+   * Type constructor
+   *
+   * @param type type of question
+   */
   public Question(Type type) {
     this.type = type;
+  }
+
+  /**
+   * Returns how close answer is to correct value
+   *
+   * @param guessedValue value guessed by player
+   * @param correct      value
+   * @return int points to be awarded for the response
+   * 0 for more than percentage% away from the correct answer
+   * value between 100 and 75 otherwise
+   * linearly between them for answers within the percentage boundary
+   */
+  public int calculateHowClose(long guessedValue, long correct) {
+    float percentage = 20;
+    if (guessedValue < 0 || guessedValue < (1 - (percentage / 100)) * correct
+      || guessedValue > (1 + (percentage / 100)) * correct) {
+      return 0;
+    }
+    double ratio = (double) guessedValue / correct;
+    if (guessedValue == correct) {
+      return 100;
+    } else if (guessedValue < correct) {
+      return (int) (ratio * 125 - 25);
+    } else {
+      return (int) (ratio * -125 + 225);
+    }
   }
 }

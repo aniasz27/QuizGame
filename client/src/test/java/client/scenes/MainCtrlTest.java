@@ -16,7 +16,12 @@
 
 package client.scenes;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import client.utils.ServerUtils;
+import java.util.concurrent.Executors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,8 +36,44 @@ public class MainCtrlTest {
   }
 
   @Test
-  public void writeSomeTests() {
-    // TODO create replacement objects and write some tests
-    // sut.initialize(null, null, null);
+  public void getPointsTest() {
+    assertEquals(0, sut.getPoints());
   }
+
+  @Test
+  public void addPointsTest() {
+    int initial = sut.getPoints();
+    int toAdd = 100;
+    sut.addPoints(toAdd);
+    assertEquals(initial + toAdd, sut.getPoints());
+  }
+
+  @Test
+  public void getPointsOffsetTest() {
+    assertEquals(0, sut.getPoints());
+  }
+
+  @Test
+  public void pointsTimerTest() {
+    assertDoesNotThrow(() -> sut.startPointsTimer());
+    assertDoesNotThrow(() -> sut.stopPointsTimer());
+  }
+
+  @Test
+  public void resetTest() {
+    sut.keepAliveExec = Executors.newSingleThreadScheduledExecutor();
+    sut.reset();
+
+    assertTrue(
+      sut.serverIp == null
+        && sut.clientId == null
+        && sut.gameId == null
+        && !sut.waitingForGame
+        && sut.questionNumber == 0
+        && sut.getPoints() == 0
+        && sut.keepAliveExec.isShutdown()
+    );
+  }
+
+
 }

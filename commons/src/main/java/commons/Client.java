@@ -12,20 +12,41 @@ public class Client {
   public LocalDateTime lastSeen = LocalDateTime.now();
   public boolean waitingForGame;
 
+  /**
+   * Empty Constructor for Client
+   */
   public Client() {
   }
 
+  /**
+   * Client Constructor
+   *
+   * @param id             client id
+   * @param username       client username
+   * @param waitingForGame true if waiting, false otherwise
+   */
   public Client(String id, String username, boolean waitingForGame) {
     this.id = id;
     this.username = username;
     this.waitingForGame = waitingForGame;
   }
 
+  /**
+   * Initializes lastSeen
+   *
+   * @return this Client
+   */
   public Client observe() {
     lastSeen = LocalDateTime.now();
     return this;
   }
 
+  /**
+   * Equals method for Client
+   *
+   * @param o object we're comparing to
+   * @return true if equal, false otherwise
+   */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -41,18 +62,14 @@ public class Client {
       && client.waitingForGame == waitingForGame;
   }
 
+  /**
+   * Hash function for Client
+   *
+   * @return hashcode
+   */
   @Override
   public int hashCode() {
     return id != null ? id.hashCode() : 0;
   }
 
-  // i'm leaving this in bc it's kinda funny and gitinspector doesn't count comments anyway
-  // this is really stupid hence the stupid name
-  // i dare yall to try saying this really fast even once
-  // Oxford Dictionary:
-  // Serializablize
-  // 1. to make serializable
-  //public SerializableClient serializablize() {
-  //  return new SerializableClient(id, username, waiting);
-  //}
 }

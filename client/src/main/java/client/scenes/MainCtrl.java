@@ -22,7 +22,6 @@ import client.utils.JokerWebSocket;
 import client.utils.ServerUtils;
 import commons.Activity;
 import commons.Emoji;
-import commons.EmojiMessage;
 import commons.EstimateQuestion;
 import commons.HowMuchQuestion;
 import commons.InsteadOfQuestion;
@@ -35,7 +34,9 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -43,6 +44,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -110,55 +112,52 @@ public class MainCtrl {
   public String serverIp;
   public String clientId;
   public String gameId;
-  public String previousGameId;
   public ScheduledExecutorService keepAliveExec;
   public boolean waitingForGame;
   public boolean[] usedJokers;
   public int questionNumber = 0;
-
   private int points;
-
   private Question question;
-  public Thread timerThread;
   public boolean playerExited = false;
   private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSS");
   private Date pointsTimer;
   private int pointsOffset;
   public JokerWebSocket jokerWebSocket;
+  public EmojiWebSocket emojiWebSocket;
+  //The controller of the question that was last shown (ie currently being shown)
+  public QuestionCtrl currentQuestionCtrl;
+  //The user's name in the current game. Null if not in a game.
+  public String name = null;
 
   /**
-   * The controller of the question that was last shown (ie currently being shown)
+   * Constructor for the MainCtrl
+   *
+   * @param server we are on
    */
-  public QuestionCtrl currentQuestionCtrl;
-
-  // Emoji WebSockets
-  public EmojiWebSocket emojiWebSocket;
-
   @Inject
   public MainCtrl(ServerUtils server) {
     this.server = server;
   }
 
-  public enum Mode {
-    MULTI(0),
-    SINGLE(1),
-    ADMIN(2);
-
-    private final int mode;
-
-    private Mode(int m) {
-      mode = m;
-    }
-  }
-
-  public Mode mode;
-
   /**
-   * The user's name in the current game.
-   * Null if not in a game.
+   * Initialising the MainCtrl
+   *
+   * @param primaryStage            primary stage
+   * @param splash                  splash
+   * @param connect                 connect
+   * @param waitingRoom             waiting room
+   * @param spWaitingRoom           spWaitingRoom
+   * @param howMuch                 howMuch
+   * @param insteadOf               insteadOf
+   * @param whatRequiresMoreEnergy  whatRequiresMoreEnergy
+   * @param guess                   guess
+   * @param intermediateLeaderboard intermediateLeaderboard
+   * @param activityList            activityList
+   * @param editActivity            editActivity
+   * @param helpOverlay             helpOverlay
+   * @param exitOverlay             exitOverlay
+   * @param endScreen               endScreen
    */
-  public String name = null;
-
   public void initialize(
     Stage primaryStage,
     Pair<SplashCtrl, Parent> splash,
@@ -219,6 +218,13 @@ public class MainCtrl {
     this.endScreenCtrl = endScreen.getKey();
     this.endScreenParent = endScreen.getValue();
 
+    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/img/icon16.png")));
+    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/img/icon32.png")));
+    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/img/icon64.png")));
+    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/img/icon128.png")));
+    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/img/icon256.png")));
+    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/img/icon512.png")));
+    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/client/img/icon1024.png")));
     primaryStage.setTitle("Quizzzzz");
     // never exit full screen
     primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
@@ -229,32 +235,50 @@ public class MainCtrl {
     primaryStage.setFullScreen(true);
   }
 
+  /**
+   * Exists the game
+   */
   @FXML
   public void exit() {
     Platform.exit();
     System.exit(0);
   }
 
+  /**
+   * Goes to SplashScreen
+   */
   @FXML
   public void backToMenu() {
     showSplash();
   }
 
-  // instead of swapping entire scene, just swap parent
+  /**
+   * Shows the SplashScreen
+   */
   public void showSplash() {
+    // instead of swapping entire scene, just swap parent
     // reset name and list of players if coming out of a game
     this.points = 0;
     //players = null;
     primaryStage.getScene().setRoot(splashParent);
   }
 
+  /**
+   * Shows the ConnectScreen
+   */
+
   public void showConnect() {
     // reset name and list of players if coming out of a game
     name = null;
     //players = null;
 
+    connectCtrl.refresh();
     primaryStage.getScene().setRoot(connectParent);
   }
+
+  /**
+   * Shows the WaitingRoom
+   */
 
   public void showWaitingRoom() {
     primaryStage.getScene().setRoot(waitingRoomParent);
@@ -263,30 +287,36 @@ public class MainCtrl {
     waitingRoomCtrl.listenForNewPlayers();
   }
 
+  /**
+   * Shows the SinglePlayerWaitingRoom
+   */
   public void showSpWaitingRoom() {
     primaryStage.getScene().setRoot(spWaitingRoomParent);
     spWaitingRoomCtrl.refresh();
   }
 
   /**
-   * Starts the game, assigns the points from the game controller
+   * Starts the game,initializes the gameid
    */
   public void start() {
     gameId = server.startGame(serverIp, this.multiplayer);
-    jokerWebSocket = new JokerWebSocket(this, serverIp, gameId);
-    points = 0;
     play();
   }
 
+  /**
+   * Initializes the jokers, points, questionNumber and asks for nextQuestion
+   */
   public void play() {
     this.usedJokers = new boolean[3];
     System.out.println("session: " + gameId);
-    emojiWebSocket = new EmojiWebSocket(this, serverIp, gameId);
+    emojiWebSocket = new EmojiWebSocket(this, gameId);
+    jokerWebSocket = new JokerWebSocket(this, gameId);
     playerExited = false;
-    this.usedJokers = new boolean[3];
     points = 0;
     questionNumber = 0;
-
+    if (multiplayer) {
+      server.stopUpdates();
+    }
     nextQuestion();
   }
 
@@ -297,23 +327,17 @@ public class MainCtrl {
     return points;
   }
 
+  /**
+   * Disables the buttons and shows the correct answers - question based
+   */
   public void showAnswer() {
     switch (question.type) {
       case MULTICHOICE:
-        Platform.runLater(() -> whatRequiresMoreEnergyCtrl.disableButtons());
-        Platform.runLater(() -> whatRequiresMoreEnergyCtrl.showCorrect());
-        break;
       case ESTIMATE:
-        Platform.runLater(() -> guessCtrl.disableButtons());
-        Platform.runLater(() -> guessCtrl.showCorrect());
-        break;
       case HOWMUCH:
-        Platform.runLater(() -> howMuchCtrl.disableButtons());
-        Platform.runLater(() -> howMuchCtrl.showCorrect());
-        break;
       case INSTEAD:
-        Platform.runLater(() -> insteadOfCtrl.disableButtons());
-        Platform.runLater(() -> insteadOfCtrl.showCorrect());
+        Platform.runLater(() -> currentQuestionCtrl.disableButtons());
+        Platform.runLater(() -> currentQuestionCtrl.showCorrect());
         break;
       case INTERLEADERBOARD:
       case ENDSCREEN:
@@ -324,13 +348,21 @@ public class MainCtrl {
     }
   }
 
+  /**
+   * Gets the next Question from the server and calls a method to display it
+   */
   private void nextQuestion() {
     server.nextQuestion(serverIp, gameId, question -> {
-      this.question = question;
-      showCurrentQuestion();
+      if (!playerExited) {
+        this.question = question;
+        showCurrentQuestion();
+      }
     });
   }
 
+  /**
+   * Shows the Question, which has been sent from the server
+   */
   public void showCurrentQuestion() {
     System.out.println(question.number + " " + question.showCorrect + " " + question.type);
     if (question.showCorrect) {
@@ -355,11 +387,18 @@ public class MainCtrl {
           break;
         case INTERLEADERBOARD:
           System.out.println("Showed Intermediate Leaderboard");
+          if (multiplayer) {
+            server.sendScore(serverIp, new Score(clientId, name, points), gameId);
+          }
           Platform.runLater(this::showIntermediateLeaderboard);
           break;
         case ENDSCREEN:
           System.out.println("Showed end screen");
-          server.addScore(serverIp, new Score(clientId, name, points));
+          if (multiplayer) {
+            server.sendScore(serverIp, new Score(clientId, name, points), gameId);
+          } else {
+            server.addScore(serverIp, new Score(clientId, name, points));
+          }
           Platform.runLater(this::showEndScreen);
           break;
         default:
@@ -369,6 +408,11 @@ public class MainCtrl {
     }
   }
 
+  /**
+   * Shows the Guess Question
+   *
+   * @param question EstimateQuestion
+   */
   public void showGuess(EstimateQuestion question) {
     currentQuestionCtrl = guessCtrl;
     primaryStage.getScene().setRoot(guessParent);
@@ -377,6 +421,11 @@ public class MainCtrl {
     this.startPointsTimer();
   }
 
+  /**
+   * Shows the WhatRequiresMoreEnergy Question
+   *
+   * @param question MultipleChoiceQuestion
+   */
   public void showWhatRequiresMoreEnergy(MultipleChoiceQuestion question) {
     currentQuestionCtrl = whatRequiresMoreEnergyCtrl;
     primaryStage.getScene().setRoot(whatRequiresMoreEnergyParent);
@@ -385,6 +434,11 @@ public class MainCtrl {
     this.startPointsTimer();
   }
 
+  /**
+   * Shows the HowMuch Question
+   *
+   * @param question HowMuchQuestion
+   */
   public void showHowMuch(HowMuchQuestion question) {
     currentQuestionCtrl = howMuchCtrl;
     primaryStage.getScene().setRoot(howMuchParent);
@@ -393,12 +447,22 @@ public class MainCtrl {
     this.startPointsTimer();
   }
 
+  /**
+   * Shows the InsteadOfQuestion
+   *
+   * @param question InsteadOfQuestion
+   */
   public void showInstead(InsteadOfQuestion question) {
+    currentQuestionCtrl = insteadOfCtrl;
     primaryStage.getScene().setRoot(insteadOfParent);
     insteadOfCtrl.displayQuestion(question);
     insteadOfCtrl.startTimer();
     this.startPointsTimer();
   }
+
+  /**
+   * Shows the IntermediateLeaderboard
+   */
 
   public void showIntermediateLeaderboard() {
     primaryStage.getScene().setRoot(intermediateLeaderboardParent);
@@ -406,49 +470,69 @@ public class MainCtrl {
     intermediateLeaderboardCtrl.refresh();
   }
 
+  /**
+   * Shows the ActivityList
+   */
   public void showActivityList() {
     // reset name and list of players if coming out of a game
     primaryStage.getScene().setRoot(activityListParent);
-    activityListCtrl.refresh();
+    activityListCtrl.activities = server.getActivities(serverIp);
+    activityListCtrl.search(activityListCtrl.searchField.getText());
   }
 
+  /**
+   * Shows the EditActivity
+   */
   public void showEditActivity(Activity activity) {
     // reset name and list of players if coming out of a game
     primaryStage.getScene().setRoot(editActivityParent);
     editActivityCtrl.refresh(activity);
   }
 
+  /**
+   * Opens HelpOverlay
+   */
   public void openHelp() {
     ((StackPane) primaryStage.getScene().getRoot()).getChildren().add(helpOverlayParent);
   }
 
+  /**
+   * Closes HelpOverlay
+   */
   public void closeHelp() {
     ((StackPane) primaryStage.getScene().getRoot()).getChildren().remove(helpOverlayParent);
   }
 
+  /**
+   * Opens ExitOverlay
+   *
+   * @param closeApp closeApp
+   */
   public void openExitOverlay(boolean closeApp) {
     exitOverlayCtrl.closeApp = closeApp;
     ((StackPane) primaryStage.getScene().getRoot()).getChildren().add(exitOverlayParent);
   }
 
+  /**
+   * Closes ExitOverlay
+   */
   public void closeExitOverlay() {
     ((StackPane) primaryStage.getScene().getRoot()).getChildren().remove(exitOverlayParent);
   }
-
 
   /**
    * Shows the end screen to the user, updates the user points in the game controller
    */
   public void showEndScreen() {
-    server.stopQuestionThread();
     primaryStage.getScene().setRoot(endScreenParent);
     endScreenCtrl.refresh();
-    //    Score check = server.updateScore(serverIp, clientId, points);
-    //    if (check == null) {
-    //      System.out.println("Error updating the score");
-    //}
   }
 
+  /**
+   * Adds points
+   *
+   * @param toAdd points to add
+   */
   public void addPoints(int toAdd) {
     points += toAdd;
   }
@@ -562,7 +646,7 @@ public class MainCtrl {
 
       } else {
         if (maxScore.get() != 0) {
-          line.setEndX(200 * s.getPoints() / maxScore.get());
+          line.setEndX(200.0 * s.getPoints() / maxScore.get());
         } else {
           line.setEndX(200);
         }
@@ -591,36 +675,28 @@ public class MainCtrl {
   /**
    * Shows joker on the screen
    */
-  public void showJoker(Joker joker) {
-    //TODO: show jokers on the screen
-    System.out.println(joker);
-    if (joker.equals(Joker.TIME)) {
-      switch (question.type) {
-        case MULTICHOICE:
-          System.out.println("Showed multiple choice - joker");
-          Platform.runLater(() -> whatRequiresMoreEnergyCtrl.reduceTime());
-          break;
-        case ESTIMATE:
-          System.out.println("Showed guess - joker");
-          Platform.runLater(() -> guessCtrl.reduceTime());
-          break;
-        case HOWMUCH:
-          System.out.println("Showed how much - joker");
-          Platform.runLater(() -> howMuchCtrl.reduceTime());
-          break;
-        default:
-          System.out.println("Wrong question type - joker");
-          break;
-      }
+  public void showJoker(Joker joker, String playerId) {
+    System.out.println("Shown joker: " + joker + " in controller: " + currentQuestionCtrl);
+    currentQuestionCtrl.showJoker(joker);
+    if (joker == Joker.TIME && !clientId.equals(playerId)) {
+      currentQuestionCtrl.reduceTime();
     }
   }
 
+  /**
+   * Shows emoji on the screen
+   *
+   * @param emoji to show
+   */
   public void showEmoji(Emoji emoji) {
     // TODO: show emojis per screen
     System.out.println("Shown emoji: " + emoji + " in controller: " + currentQuestionCtrl);
     currentQuestionCtrl.showEmoji(emoji);
   }
 
+  /**
+   * Resets the game session
+   */
   public void reset() {
     serverIp = null;
     clientId = null;
@@ -630,6 +706,43 @@ public class MainCtrl {
     points = 0;
     question = null;
     keepAliveExec.shutdownNow();
-    keepAliveExec = null;
+  }
+
+  /**
+   * Prepares the client for a new game
+   */
+  public void prepareForNewGame() {
+    server.removePlayer(serverIp, gameId, clientId);
+    gameId = null;
+    waitingForGame = false;
+    questionNumber = 0;
+    points = 0;
+    question = null;
+    server.stopQuestionThread();
+    usedJokers = new boolean[3];
+    stopPointsTimer();
+    startKeepAlive();
+  }
+
+  /**
+   * Initiates and starts the keepAlive Executor Thread
+   */
+  public void startKeepAlive() {
+    keepAliveExec = Executors.newSingleThreadScheduledExecutor();
+    keepAliveExec.scheduleAtFixedRate(
+      () -> {
+        try {
+          server.keepAlive(serverIp, clientId, waitingForGame);
+        } catch (Exception e) {
+          e.printStackTrace();
+          Platform.runLater(this::showConnect);
+          reset();
+        }
+      },
+      0,
+      1,
+      TimeUnit.SECONDS
+    );
+
   }
 }

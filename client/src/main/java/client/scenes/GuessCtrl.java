@@ -8,17 +8,15 @@ import commons.EstimateQuestion;
 import commons.Question;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
+import java.util.Collections;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
@@ -34,36 +32,32 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   private TextField answer;
   @FXML
   private Button submit;
-  @FXML
-  private Text points;
-  @FXML
-  private Circle circle;
-  @FXML
-  private GridPane emojiGrid;
-  @FXML
-  private StackPane pane;
-  @FXML
-  private Button doublePts;
-  @FXML
-  private Button hint;
-  @FXML
-  private Button minusTime;
 
   private boolean dbPoint;
-  private Button[] jokers;
-  private int point;
+  private int point = 0;
   private EstimateQuestion question;
   private Activity activity;
 
+  /**
+   * Constructor for GuessCtrl
+   *
+   * @param server   server we are on
+   * @param mainCtrl controller for the game flow
+   */
   @Inject
   GuessCtrl(ServerUtils server, MainCtrl mainCtrl) {
     super(server, mainCtrl);
   }
 
+  /**
+   * Initializing the GuessCtrl
+   *
+   * @param location  location
+   * @param resources resources we're using
+   */
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     super.initialize(location, resources);
-    jokers = new Button[] {doublePts, minusTime, hint};
   }
 
   /**
@@ -73,15 +67,16 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
    */
   @Override
   public void displayQuestion(Question question) {
-    displayEmojis(circle, emojiGrid, pane);
+    displayEmojis();
     this.dbPoint = false;
     this.question = (EstimateQuestion) question;
     this.activity = this.question.getActivity();
     this.submit.setDisable(false);
-    this.answer.getStyleClass().remove("good");
-    this.answer.getStyleClass().remove("bad");
-    displayJokers(jokers);
-    this.hint.setDisable(true);
+    this.answer.setDisable(false);
+    this.answer.getStyleClass().removeAll(Collections.singleton("good"));
+    this.answer.getStyleClass().removeAll(Collections.singleton("bad"));
+    this.point = 0;
+    displayJokers();
 
     Rectangle clip = new Rectangle(
       imgContainer.getWidth(), imgContainer.getHeight()
@@ -92,22 +87,16 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     imageView.setImage(new Image(new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity.id))));
 
     description.setText(activity.getTitle());
-    showPoints(points);
+    showPoints();
     answer.setText("Type in your answer");
+    answer.setPromptText("Type in your answer");
   }
 
   /**
    * On clicking the submit button on the screen, the answer gets evaluated
    */
   public void checkCorrect() {
-    mainCtrl.stopPointsTimer();
-    if (answer.getText().equals("")) {
-      return;
-    }
-
-    long value = Long.parseLong(answer.getText());
-    point = (int) (question.calculateHowClose(value) * mainCtrl.getPointsOffset() / 100);
-    submit.setDisable(true);
+    point = checkCorrect(answer, question, submit);
   }
 
   /**
@@ -117,6 +106,9 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     answer.setText("");
   }
 
+  /**
+   * Shows the correct answer and adds points
+   */
   @Override
   public void showCorrect() {
     answer.getStyleClass().add(point != 0 ? "good" : "bad");
@@ -124,23 +116,28 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
       point *= 2;
     }
     mainCtrl.addPoints(point);
-    showPoints(points);
+    showPoints();
     answer.setText("Correct answer is: " + question.getAnswer());
   }
 
+  /**
+   * Disables the buttons
+   */
   @Override
   public void disableButtons() {
+    super.disableButtons();
     submit.setDisable(true);
-    for (Button joker : jokers) {
-      joker.setDisable(true);
-    }
+    answer.setDisable(true);
   }
 
+  /**
+   * Double points joker
+   */
   public void doublePoints() {
-    dbPoint = doublePoints(doublePts);
+    dbPoint = doublePointsQ();
   }
 
-  public void decreaseTime() {
-    decreaseTimeQ(minusTime);
+  public void hint() {
+    hintR(answer, this.activity.consumption_in_wh);
   }
 }

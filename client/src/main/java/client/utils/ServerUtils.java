@@ -18,7 +18,6 @@ package client.utils;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
-import client.scenes.MainCtrl;
 import commons.Activity;
 import commons.Client;
 import commons.Question;
@@ -28,13 +27,10 @@ import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Consumer;
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.glassfish.jersey.client.ClientConfig;
 
 public class ServerUtils {
@@ -71,12 +67,18 @@ public class ServerUtils {
 
   private static ScheduledExecutorService EXECUpdate;
 
+  /**
+   * Player Updates
+   *
+   * @param ip       ip
+   * @param consumer consumer
+   */
   public void registerForPlayerUpdates(String ip, Consumer<Boolean> consumer) {
 
     EXECUpdate = Executors.newSingleThreadScheduledExecutor();
     try {
       EXECUpdate.submit(() -> {
-        while (!Thread.interrupted()) {
+        while (!EXECUpdate.isShutdown()) {
           var res = ClientBuilder.newClient(new ClientConfig())
             .target(ip).path("api/player/updates")
             .request(APPLICATION_JSON)
@@ -90,12 +92,15 @@ public class ServerUtils {
         consumer.accept(true);
       });
     } catch (Exception e) {
-      if (!Thread.interrupted()) {
+      if (!EXECUpdate.isShutdown()) {
         registerForPlayerUpdates(ip, consumer);
       }
     }
   }
 
+  /**
+   * Stops updates
+   */
   public void stopUpdates() {
     EXECUpdate.shutdownNow();
   }
@@ -114,6 +119,13 @@ public class ServerUtils {
       .put(Entity.json("START GAME"), String.class);
   }
 
+  /**
+   * Starts a SinglePLayer game
+   *
+   * @param ip  server ip
+   * @param uid userid
+   * @return String
+   */
   public String startSingleGame(String ip, String uid) {
     return ClientBuilder.newClient(new ClientConfig())
       .target(ip)
@@ -135,7 +147,7 @@ public class ServerUtils {
     EXECNextQuestion = Executors.newSingleThreadScheduledExecutor();
     try {
       EXECNextQuestion.submit(() -> {
-        while (!Thread.interrupted()) {
+        while (!EXECNextQuestion.isShutdown()) {
           var res = ClientBuilder.newClient(new ClientConfig())
             .target(ip)
             .path("/api/game/next/" + gameId)
@@ -145,16 +157,23 @@ public class ServerUtils {
           if (res.getStatus() == 204) {
             continue;
           }
+          if (EXECNextQuestion.isShutdown()) {
+            break;
+          }
           consumer.accept(res.readEntity(Question.class));
         }
       });
     } catch (Exception e) {
-      if (!Thread.interrupted()) {
+      if (!EXECNextQuestion.isShutdown()) {
         nextQuestion(ip, gameId, consumer);
       }
     }
+
   }
 
+  /**
+   * Stops QuestionThread
+   */
   public void stopQuestionThread() {
     EXECNextQuestion.shutdownNow();
   }
@@ -175,11 +194,11 @@ public class ServerUtils {
   }
 
   /**
-   * Get all activities from the server
+   * Get the activity's image
    *
    * @param ip the server's IP address
    * @param id the ID of the activity
-   * @return list of all activities
+   * @return image of the activity
    */
   public byte[] getActivityImage(String ip, String id) {
     return ClientBuilder.newClient(new ClientConfig())
@@ -189,11 +208,10 @@ public class ServerUtils {
   }
 
   /**
-   * Get all activities from the server
+   * Changes the image associated with the activity
    *
    * @param ip the server's IP address
    * @param id the ID of the activity
-   * @return list of all activities
    */
   public void changeActivityImage(String ip, String id, byte[] image) {
     ClientBuilder.newClient(new ClientConfig())
@@ -202,6 +220,13 @@ public class ServerUtils {
       .put(Entity.entity(image, MediaType.APPLICATION_OCTET_STREAM));
   }
 
+  /**
+   * Updates the activity
+   *
+   * @param ip       server ip
+   * @param activity we're updating
+   * @return Activity
+   */
   public Activity updateActivity(String ip, Activity activity) {
     return ClientBuilder.newClient(new ClientConfig())
       .target(ip).path("api/activity/update")
@@ -210,6 +235,12 @@ public class ServerUtils {
       .put(Entity.json(activity), Activity.class);
   }
 
+  /**
+   * Returns the list of Clients
+   *
+   * @param ip server ip
+   * @return List of Clients
+   */
   public List<Client> getPlayers(String ip) {
     return ClientBuilder.newClient(new ClientConfig())
       .target(ip).path("api/player/list")
@@ -219,6 +250,13 @@ public class ServerUtils {
       });
   }
 
+  /**
+   * Gets a client by id
+   *
+   * @param ip server id
+   * @param id client id
+   * @return Client
+   */
   public Client getClient(String ip, String id) {
     return ClientBuilder.newClient(new ClientConfig())
       .target(ip).path("api/player/" + id)
@@ -227,6 +265,13 @@ public class ServerUtils {
       .get(Client.class);
   }
 
+  /**
+   * Adds a score to the database
+   *
+   * @param ip    server ip
+   * @param score we're adding
+   * @return Score
+   */
   public Score addScore(String ip, Score score) {
     return ClientBuilder.newClient(new ClientConfig())
       .target(ip).path("api/score/add")
@@ -235,6 +280,12 @@ public class ServerUtils {
       .post(Entity.json(score), Score.class);
   }
 
+  /**
+   * Returns a list of Scores for the SinglePlayerLeaderboard from the database
+   *
+   * @param ip server ip
+   * @return List of Scores
+   */
   public Iterable<Score> getSingleLeaderboard(String ip) {
     return ClientBuilder.newClient(new ClientConfig())
       .target(ip).path("api/score/leaderboard")
@@ -246,7 +297,6 @@ public class ServerUtils {
 
   /**
    * Gets the multiplayer leaderboard at the time for a given game
-   * TODO: implement sessions and make this work for different games
    *
    * @param ip     of the server
    * @param gameId of the game the client is in
@@ -254,7 +304,7 @@ public class ServerUtils {
    */
   public Iterable<Score> getMultiLeaderboard(String ip, String gameId) {
     return ClientBuilder.newClient(new ClientConfig())
-      .target(ip).path("api/score/multiLeaderboard/" + gameId)
+      .target(ip).path("api/game/multiLeaderboard/" + gameId)
       .request(APPLICATION_JSON)
       .accept(APPLICATION_JSON)
       .get(new GenericType<>() {
@@ -303,5 +353,13 @@ public class ServerUtils {
       .request(APPLICATION_JSON)
       .accept(APPLICATION_JSON)
       .post(Entity.json(score), Score.class);
+  }
+
+  public void removePlayer(String ip, String gameId, String clientId) {
+    ClientBuilder.newClient(new ClientConfig())
+      .target(ip).path("api/game/removePlayer/" + gameId)
+      .request(APPLICATION_JSON)
+      .accept(APPLICATION_JSON)
+      .put(Entity.json(clientId), String.class);
   }
 }

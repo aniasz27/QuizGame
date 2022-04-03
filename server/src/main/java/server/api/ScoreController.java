@@ -19,6 +19,11 @@ public class ScoreController {
 
   private final ScoreRepository repo;
 
+  /**
+   * Constructor
+   *
+   * @param repo repository of scores
+   */
   @Autowired
   public ScoreController(ScoreRepository repo) {
     this.repo = repo;
@@ -44,12 +49,6 @@ public class ScoreController {
     return repo.getLeaderboard();
   }
 
-  // TODO: implement actual multiplayer leaderboard by game session id
-  @GetMapping("/multiLeaderboard/{gameId}")
-  public Iterable<Score> getMultiLeaderboard(@PathVariable("gameId") String gameId) {
-    return getLeaderboard();
-  }
-
   /**
    * Adds a score to the database
    *
@@ -61,6 +60,11 @@ public class ScoreController {
     return ResponseEntity.ok(repo.save(score));
   }
 
+  /**
+   * Deletes all the scores in the repo
+   *
+   * @return result
+   */
   @DeleteMapping("/deleteAll")
   public ResponseEntity<String> clear() {
     repo.deleteAll();
