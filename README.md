@@ -19,11 +19,30 @@ group members. Add your own name (do not add the names for others!) to the secti
 
 ## How to run it
 
+### To start the server
+
 - Clone the repository
-- Run the server through Gradle
-- Download activities, by going to this URL: localhost:8080/api/activity/importActivities (make sure, you have under _
-  resources_ JSON folder with images and activities)
-- Run the client through Gradle
+  from [GitLab](https://gitlab.ewi.tudelft.nl/cse1105/2021-2022/team-repositories/oopp-group-13/repository-template)
+- Download activities, by going to this URL: localhost:8080/api/activity/importActivities (make sure you have the JSON
+  folder under `server\src\main\resources`. You can download the JSON folder
+  from [here](https://gitlab.ewi.tudelft.nl/cse1105/2021-2022/activity-bank))
+- Open the terminal on the machine hosting the server and go to the folder which contains the parent folder
+- Run the server through Gradle (type `.\gradlew bootRun`)
+
+#### Play with someone playing from another computer
+
+- Other players do **not** need to run the server, just the client. See the section below
+- You need to be on the same Wi-Fi network and give them your IPv4 Address which you can find in the Terminal by
+  typing `ipconfig`
+- The server the other players need to enter in the server field is `your IPv4` + `:8080`
+
+### To start the client
+
+- Clone the repository
+  from [GitLab](https://gitlab.ewi.tudelft.nl/cse1105/2021-2022/team-repositories/oopp-group-13/repository-template)
+- Open the terminal (another instance if you are running the server on the same machine) and go to the folder which
+  contains the parent folder. You can do this by typing `cd <file location>`
+- Run the client through Gradle (type `.\gradlew run`)
 
 Done! Now you can play!
 
