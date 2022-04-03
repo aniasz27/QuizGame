@@ -43,7 +43,7 @@ public class InsteadOfQuestion extends Question {
    * 1 for correct answer
    * linearly between them for answers within the percentage boundary
    */
-  public float calculateHowClose(long guessedValue) {
+  public int calculateHowClose(long guessedValue) {
     return calculateHowClose(guessedValue, factor);
   }
 

@@ -311,9 +311,19 @@ public abstract class QuestionCtrl {
     submit.setDisable(true);
     answer.setDisable(true);
     if (question instanceof InsteadOfQuestion) {
-      return (int) (((InsteadOfQuestion) question).calculateHowClose(value) * mainCtrl.getPointsOffset());
+      int correct = ((InsteadOfQuestion) question).calculateHowClose(value);
+      if (correct > 0) {
+        return (correct + mainCtrl.getPointsOffset()) / 2;
+      } else {
+        return 0;
+      }
     }
-    return (int) (((EstimateQuestion) question).calculateHowClose(value) * mainCtrl.getPointsOffset());
+    int correct = ((EstimateQuestion) question).calculateHowClose(value);
+    if (correct > 0) {
+      return (correct + mainCtrl.getPointsOffset()) / 2;
+    } else {
+      return 0;
+    }
   }
 
   /**
