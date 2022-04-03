@@ -44,6 +44,14 @@ public class GameController {
 
   public List<Game> games = new ArrayList<>();
 
+  /**
+   * Constructor for GameController
+   *
+   * @param activityController access to activities
+   * @param random             random generator
+   * @param playerController   access to players
+   * @param scoreController    access to scores
+   */
   public GameController(
     ActivityController activityController,
     Random random,
@@ -56,6 +64,11 @@ public class GameController {
     this.scoreController = scoreController;
   }
 
+  /**
+   * Generates 20 questions for a new game
+   *
+   * @return Question array filled with random questions
+   */
   private Question[] generateQuestions() {
     Question[] questions = new Question[22];
 
@@ -172,6 +185,11 @@ public class GameController {
     return gameID;
   }
 
+  /**
+   * Sends questions to the client
+   *
+   * @param id game id
+   */
   private void initiateGame(String id) {
     Game game = games.stream().filter(g -> g.id.equals(id)).findFirst()
       .orElseThrow(StringIndexOutOfBoundsException::new);
@@ -301,6 +319,12 @@ public class GameController {
     return res;
   }
 
+  /**
+   * Endpoint for accepting and updating a score of the player in a game
+   *
+   * @param gameId game id
+   * @param score  new score
+   */
   @PostMapping("/score/send/{gameId}")
   public void playerScoreSend(@PathVariable("gameId") String gameId, @RequestBody Score score) {
     Game thisGame = null;
@@ -325,6 +349,12 @@ public class GameController {
 
   }
 
+  /**
+   * Returns a list of score for a multiplayer leaderboard for one game
+   *
+   * @param gameId specific game
+   * @return list of scores
+   */
   @GetMapping("/multiLeaderboard/{gameId}")
   public Iterable<Score> getMultiLeaderboard(@PathVariable("gameId") String gameId) {
     Game currentGame = null;
