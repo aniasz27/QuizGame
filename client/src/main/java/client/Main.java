@@ -45,10 +45,23 @@ public class Main extends Application {
   private static final Injector INJECTOR = createInjector(new MyModule());
   private static final MyFXML FXML = new MyFXML(INJECTOR);
 
+  /**
+   * Calls launch
+   *
+   * @param args provided
+   * @throws URISyntaxException URISyntaxException
+   * @throws IOException        IOException
+   */
   public static void main(String[] args) throws URISyntaxException, IOException {
     launch();
   }
 
+  /**
+   * Initializes all the pairs, injects
+   *
+   * @param primaryStage we're using
+   * @throws IOException IOException
+   */
   @Override
   public void start(Stage primaryStage) throws IOException {
     var splash = FXML.load(

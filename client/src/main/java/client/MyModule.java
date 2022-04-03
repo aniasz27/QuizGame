@@ -27,6 +27,11 @@ import com.google.inject.Scopes;
 
 public class MyModule implements Module {
 
+  /**
+   * Configurations
+   *
+   * @param binder binder
+   */
   @Override
   public void configure(Binder binder) {
     binder.bind(MainCtrl.class).in(Scopes.SINGLETON);

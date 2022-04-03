@@ -71,6 +71,12 @@ public class ServerUtils {
 
   private static ScheduledExecutorService EXECUpdate;
 
+  /**
+   * Player Updates
+   *
+   * @param ip       ip
+   * @param consumer consumer
+   */
   public void registerForPlayerUpdates(String ip, Consumer<Boolean> consumer) {
 
     EXECUpdate = Executors.newSingleThreadScheduledExecutor();
@@ -96,6 +102,9 @@ public class ServerUtils {
     }
   }
 
+  /**
+   * Stops updates
+   */
   public void stopUpdates() {
     EXECUpdate.shutdownNow();
   }
@@ -114,6 +123,13 @@ public class ServerUtils {
       .put(Entity.json("START GAME"), String.class);
   }
 
+  /**
+   * Starts a SinglePLayer game
+   *
+   * @param ip  server ip
+   * @param uid userid
+   * @return String
+   */
   public String startSingleGame(String ip, String uid) {
     return ClientBuilder.newClient(new ClientConfig())
       .target(ip)
@@ -155,6 +171,9 @@ public class ServerUtils {
     }
   }
 
+  /**
+   * Stops QuestionThread
+   */
   public void stopQuestionThread() {
     EXECNextQuestion.shutdownNow();
   }
@@ -202,6 +221,13 @@ public class ServerUtils {
       .put(Entity.entity(image, MediaType.APPLICATION_OCTET_STREAM));
   }
 
+  /**
+   * Updates the activity
+   *
+   * @param ip       server ip
+   * @param activity we're updating
+   * @return Activity
+   */
   public Activity updateActivity(String ip, Activity activity) {
     return ClientBuilder.newClient(new ClientConfig())
       .target(ip).path("api/activity/update")
@@ -210,6 +236,12 @@ public class ServerUtils {
       .put(Entity.json(activity), Activity.class);
   }
 
+  /**
+   * Returns the list of Clients
+   *
+   * @param ip server ip
+   * @return List of Clients
+   */
   public List<Client> getPlayers(String ip) {
     return ClientBuilder.newClient(new ClientConfig())
       .target(ip).path("api/player/list")
@@ -219,6 +251,13 @@ public class ServerUtils {
       });
   }
 
+  /**
+   * Gets a client by id
+   *
+   * @param ip server id
+   * @param id client id
+   * @return Client
+   */
   public Client getClient(String ip, String id) {
     return ClientBuilder.newClient(new ClientConfig())
       .target(ip).path("api/player/" + id)
@@ -227,6 +266,13 @@ public class ServerUtils {
       .get(Client.class);
   }
 
+  /**
+   * Adds a score to the database
+   *
+   * @param ip    server ip
+   * @param score we're adding
+   * @return Score
+   */
   public Score addScore(String ip, Score score) {
     return ClientBuilder.newClient(new ClientConfig())
       .target(ip).path("api/score/add")
@@ -235,6 +281,12 @@ public class ServerUtils {
       .post(Entity.json(score), Score.class);
   }
 
+  /**
+   * Returns a list of Scores for the SinglePlayerLeaderboard from the database
+   *
+   * @param ip server ip
+   * @return List of Scores
+   */
   public Iterable<Score> getSingleLeaderboard(String ip) {
     return ClientBuilder.newClient(new ClientConfig())
       .target(ip).path("api/score/leaderboard")
@@ -246,7 +298,6 @@ public class ServerUtils {
 
   /**
    * Gets the multiplayer leaderboard at the time for a given game
-   * TODO: implement sessions and make this work for different games
    *
    * @param ip     of the server
    * @param gameId of the game the client is in
