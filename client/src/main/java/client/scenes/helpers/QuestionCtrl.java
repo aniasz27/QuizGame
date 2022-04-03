@@ -310,19 +310,17 @@ public abstract class QuestionCtrl {
     mainCtrl.stopPointsTimer();
     submit.setDisable(true);
     answer.setDisable(true);
+int correct;
     if (question instanceof InsteadOfQuestion) {
-      int correct = ((InsteadOfQuestion) question).calculateHowClose(value);
-      if (correct > 0) {
-        return (correct + mainCtrl.getPointsOffset()) / 2;
-      } else {
-        return 0;
-      }
+      correct = ((InsteadOfQuestion) question).calculateHowClose(value);
     }
-    int correct = ((EstimateQuestion) question).calculateHowClose(value);
+else{
+correct = ((EstimateQuestion) question).calculateHowClose(value);
+}
     if (correct > 0) {
       return (correct + mainCtrl.getPointsOffset()) / 2;
-    } else {
-      return 0;
+    }
+     return 0;
     }
   }
 
