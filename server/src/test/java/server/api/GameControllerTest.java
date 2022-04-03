@@ -29,7 +29,8 @@ public class GameControllerTest {
 
   @BeforeEach
   public void init() {
-    TestActivityRepository repoActivity = new TestActivityRepository();
+    TestActivityRepository repoActivity;
+    repoActivity = new TestActivityRepository();
     List<Activity> activities = new ArrayList<>();
     for (int i = 0; i < 25; i++) {
       activities.add(new Activity("00-test" + i,
