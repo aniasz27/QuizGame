@@ -78,16 +78,17 @@ public abstract class Question {
    */
   public int calculateHowClose(long guessedValue, long correct) {
     float percentage = 20;
-    if (guessedValue < 0 || guessedValue < (100 - percentage) / 100 * correct
-      || (100 + percentage) / 100 * correct < guessedValue) {
+    if (guessedValue < 0 || guessedValue < (1 - (percentage / 100)) * correct
+      || guessedValue > (1 + (percentage / 100)) * correct) {
       return 0;
     }
+    double ratio = (double) guessedValue / correct;
     if (guessedValue == correct) {
       return 100;
     } else if (guessedValue < correct) {
-      return (int) (guessedValue * 125 - 25);
+      return (int) (ratio * 125 - 25);
     } else {
-      return (int) (guessedValue * -125 + 225);
+      return (int) (ratio * -125 + 225);
     }
   }
 }
