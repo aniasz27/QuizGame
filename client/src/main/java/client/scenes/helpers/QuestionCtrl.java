@@ -4,6 +4,8 @@ import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Emoji;
+import commons.EstimateQuestion;
+import commons.InsteadOfQuestion;
 import commons.Joker;
 import commons.Question;
 import java.net.URL;
@@ -17,12 +19,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import javafx.util.Pair;
 
 public abstract class QuestionCtrl {
   protected final ServerUtils server;
@@ -136,11 +140,22 @@ public abstract class QuestionCtrl {
   }
 
   /**
+   * Changes button to clearly indicate that a joker is not used
+   *
+   * @param joker button to change
+   */
+  public void unusedJoker(Button joker) {
+    joker.getStyleClass().add("drop-shadow");
+    joker.getStyleClass().removeAll(Collections.singleton("used"));
+  }
+
+  /**
    * Displays jokers on the question screen
    */
   public void displayJokers() {
     for (int i = 0; i < 3; i++) {
       this.jokers[i].setDisable(false);
+      unusedJoker(this.jokers[i]);
       if (mainCtrl.usedJokers[i]) {
         useJoker(jokers[i]);
       }
@@ -201,15 +216,15 @@ public abstract class QuestionCtrl {
    * @param joker to show appropriate text
    * @return Button to show
    */
-  public Button getJokerElement(Joker joker) {
+  public Pair<Button, Double> getJokerElement(Joker joker) {
     switch (joker) {
       case DOUBLE:
-        return doublePts;
+        return new Pair<>(doublePts, -300.0);
       case TIME:
-        return minusTime;
+        return new Pair<>(minusTime, -325.0);
       case HINT:
       default:
-        return hint;
+        return new Pair<>(hint, -275.0);
     }
   }
 
@@ -238,25 +253,23 @@ public abstract class QuestionCtrl {
 
     // set initial position
     movingEmoji.setTranslateX(1920 / 2.0);
-    makeAnimation(movingEmoji);
+    makeAnimation(movingEmoji, -350 + 100 * random.nextDouble());
   }
 
   /**
    * Makes animation for a Label
    *
    * @param movingElement element to animate
+   * @param height        of the element
    */
-  public void makeAnimation(Label movingElement) {
-    movingElement.setTranslateY(-350 + 100 * random.nextDouble()); // vary height slightly
-
+  public void makeAnimation(Label movingElement, double height) {
+    movingElement.setTranslateY(height); // vary height slightly
     // add emoji to scene (in line with the timer)
     root.getChildren().add(movingElement);
-
     Timeline animation = new Timeline(
       new KeyFrame(Duration.seconds(6), new KeyValue(movingElement.translateXProperty(), 0)), // move
       new KeyFrame(Duration.seconds(6), new KeyValue(movingElement.opacityProperty(), 0)) // disappear
     );
-
     animation.setOnFinished(e -> root.getChildren().remove(movingElement)); // remove emoji when finished
     animation.setCycleCount(1);
     animation.play();
@@ -269,10 +282,38 @@ public abstract class QuestionCtrl {
    */
   public void showJoker(Joker joker) {
     System.out.println("SHOWN JOKER");
-    String jokerText = getJokerElement(joker).getText();
-    Label movingJoker = new Label(jokerText);
+    Pair<Button, Double> pair = getJokerElement(joker);
+    Label movingJoker = new Label(pair.getKey().getText());
     movingJoker.setTranslateX(-1920.0 / 2.0);
-    makeAnimation(movingJoker);
+    makeAnimation(movingJoker, pair.getValue());
+  }
+
+  /**
+   * On clicking the submit button on the screen, the answer gets evaluated
+   *
+   * @param answer   textField to get answer from
+   * @param question Question (EstimateQuestion or InsteadOfQuestion)
+   * @param submit   Button
+   * @return points to add
+   */
+  public int checkCorrect(TextField answer, Question question, Button submit) {
+    if (answer.getText().equals("")) {
+      return 0;
+    }
+    long value;
+    try {
+      value = Long.parseLong(answer.getText());
+    } catch (NumberFormatException nfe) {
+      answer.setText("Not a number");
+      return 0;
+    }
+    mainCtrl.stopPointsTimer();
+    submit.setDisable(true);
+    answer.setDisable(true);
+    if (question instanceof InsteadOfQuestion) {
+      return (int) (((InsteadOfQuestion) question).calculateHowClose(value) * mainCtrl.getPointsOffset());
+    }
+    return (int) (((EstimateQuestion) question).calculateHowClose(value) * mainCtrl.getPointsOffset());
   }
 
   /**
@@ -288,7 +329,28 @@ public abstract class QuestionCtrl {
   }
 
   /**
-   * Gives a hint to the user
+   * Shows the user the range in which the answer is
+   *
+   * @param field  in which range is indicated
+   * @param answer correct answer
+   */
+  public void hintR(TextField field, long answer) {
+    if (mainCtrl.usedJokers[2]) {
+      return;
+    }
+    int range = random.nextInt(50);
+    long leftBound = (long) (answer * (1 - range / 100.0));
+    range = random.nextInt(50);
+    long rightBound = (long) (answer * (1 + range / 100.0));
+    field.setText("Range: " + leftBound + " - " + rightBound);
+    field.setPromptText("Range: " + leftBound + " - " + rightBound);
+    useJoker(hint);
+    mainCtrl.usedJokers[2] = true;
+    mainCtrl.jokerWebSocket.sendMessage(Joker.HINT);
+  }
+
+  /**
+   * Disables wrong answer
    *
    * @param correct answer
    * @param buttons answers
@@ -297,7 +359,6 @@ public abstract class QuestionCtrl {
     if (mainCtrl.usedJokers[2]) {
       return;
     }
-    Random random = new Random();
     int guess;
     do {
       guess = random.nextInt(3);

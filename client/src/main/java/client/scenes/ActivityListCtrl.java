@@ -44,21 +44,29 @@ public class ActivityListCtrl implements Initializable {
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     searchField.textProperty().addListener(((observable, oldValue, newValue) -> search(newValue)));
-
   }
 
+  /**
+   * Goes back to the splash screen
+   */
   @FXML
   public void back() {
     searchField.setText("");
     mainCtrl.showSplash();
   }
 
+  /**
+   * Opens search help
+   */
   @FXML
   public void help() {
     searchHelp.setVisible(true);
     searchHelp.setManaged(true);
   }
 
+  /**
+   * Closes search help
+   */
   @FXML
   public void closeHelp() {
     searchHelp.setVisible(false);
@@ -197,7 +205,9 @@ public class ActivityListCtrl implements Initializable {
   }
 
   /**
-   * Displays activities retrieved from the server.
+   * Displays activities from a list.
+   *
+   * @param activityList the list of activities to be displayed
    */
   public void refresh(List<Activity> activityList) {
     activityListDisplay.getChildren().removeAll(activityListDisplay.getChildren());

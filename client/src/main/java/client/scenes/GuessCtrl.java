@@ -34,7 +34,7 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   private Button submit;
 
   private boolean dbPoint;
-  private int point;
+  private int point = 0;
   private EstimateQuestion question;
   private Activity activity;
 
@@ -60,10 +60,11 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     this.question = (EstimateQuestion) question;
     this.activity = this.question.getActivity();
     this.submit.setDisable(false);
+    this.answer.setDisable(false);
     this.answer.getStyleClass().removeAll(Collections.singleton("good"));
     this.answer.getStyleClass().removeAll(Collections.singleton("bad"));
+    this.point = 0;
     displayJokers();
-    this.hint.setDisable(true);
 
     Rectangle clip = new Rectangle(
       imgContainer.getWidth(), imgContainer.getHeight()
@@ -76,25 +77,14 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     description.setText(activity.getTitle());
     showPoints();
     answer.setText("Type in your answer");
+    answer.setPromptText("Type in your answer");
   }
 
   /**
    * On clicking the submit button on the screen, the answer gets evaluated
    */
   public void checkCorrect() {
-    mainCtrl.stopPointsTimer();
-    if (answer.getText().equals("")) {
-      return;
-    }
-    long value = 0;
-    try {
-      value = Long.parseLong(answer.getText());
-    } catch (NumberFormatException nfe) {
-      answer.setText("Not a number");
-      return;
-    }
-    point = (int) (question.calculateHowClose(value) * mainCtrl.getPointsOffset() / 100);
-    submit.setDisable(true);
+    point = checkCorrect(answer, question, submit);
   }
 
   /**
@@ -117,11 +107,16 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
 
   @Override
   public void disableButtons() {
-    submit.setDisable(true);
     super.disableButtons();
+    submit.setDisable(true);
+    answer.setDisable(true);
   }
 
   public void doublePoints() {
     dbPoint = doublePointsQ();
+  }
+
+  public void hint() {
+    hintR(answer, this.activity.consumption_in_wh);
   }
 }

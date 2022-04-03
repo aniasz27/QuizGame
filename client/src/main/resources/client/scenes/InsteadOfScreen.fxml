@@ -3,7 +3,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -73,7 +72,6 @@
           preserveRatio="true"
           styleClass="rounded, img"
         >
-          <Image url="@../img/sample.jpg"/>
         </ImageView>
       </StackPane>
       <Region styleClass="margin" HBox.hgrow="ALWAYS"/>
@@ -86,12 +84,11 @@
           preserveRatio="true"
           styleClass="rounded, img"
         >
-          <Image url="@../img/sample.jpg"/>
         </ImageView>
       </StackPane>
     </HBox>
     <Region maxHeight="40" styleClass="margin" VBox.vgrow="ALWAYS"/>
-    <TextField fx:id="answer" promptText="Type in your answer up to 2 decimal places"
+    <TextField fx:id="answer" promptText="Type in your answer"
                styleClass="border, rounded, drop-shadow"
                onMouseClicked="#deleteText" maxWidth="800"/>
     <Button fx:id="submit" onAction="#checkCorrect" styleClass="border, rounded, drop-shadow" text="Submit"/>
@@ -149,7 +146,8 @@
               styleClass="border, rounded, drop-shadow, button"
               text="-50%"
               GridPane.columnIndex="2"/>
-      <Button fx:id="hint" mnemonicParsing="false" styleClass="border, rounded, drop-shadow, button" text="Hint"
+      <Button fx:id="hint" mnemonicParsing="false" onMouseClicked="#hint"
+              styleClass="border, rounded, drop-shadow, button" text="Hint"
               GridPane.columnIndex="4"/>
     </children>
   </GridPane>

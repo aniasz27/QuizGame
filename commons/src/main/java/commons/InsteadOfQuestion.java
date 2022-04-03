@@ -1,7 +1,6 @@
 package commons;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import java.util.Random;
 
 @SuppressWarnings("unused")
 @JsonTypeName("INSTEAD")
@@ -11,24 +10,20 @@ public class InsteadOfQuestion extends Question {
   private String title2;
   private Activity activity1; //X
   private Activity activity2; //Y
-  private double factor; //correct answer
+  private long factor; //correct answer
 
   public InsteadOfQuestion() {
     super(Type.INSTEAD);
   }
 
   public InsteadOfQuestion(Activity activity1, Activity activity2) {
-
     super(Type.INSTEAD);
     if (activity1.getConsumption_in_wh() <= activity2.getConsumption_in_wh()) { // factor is never smaller than 1
-      factor = ((double) activity2.getConsumption_in_wh()) / activity1.getConsumption_in_wh();
       Activity holder = activity1;
       activity1 = activity2;
       activity2 = holder;
-    } else {
-      factor = ((double) activity1.getConsumption_in_wh()) / activity2.getConsumption_in_wh();
     }
-    factor = Math.round(factor * 100.0) / 100.0;
+    factor = Math.round(activity1.getConsumption_in_wh() * 1.0 / activity2.getConsumption_in_wh());
     String titleMock = activity1.getTitle().replace(".", "");
     titleMock = Character.toLowerCase(titleMock.charAt(0)) + titleMock.substring(1);
     this.title1 = "Instead of " + titleMock + ", ";
@@ -48,17 +43,8 @@ public class InsteadOfQuestion extends Question {
    * 1 for correct answer
    * linearly between them for answers within the percentage boundary
    */
-  public float calculateHowClose(double guessedValue) {
-    if (guessedValue < 0) {
-      return 0;
-    }
-    double min = factor * 0.8;
-    double max = factor * 1.2;
-    if (guessedValue > max || guessedValue < min) {
-      return 0;
-    } else {
-      return 100;
-    }
+  public float calculateHowClose(long guessedValue) {
+    return calculateHowClose(guessedValue, factor);
   }
 
 
@@ -101,9 +87,9 @@ public class InsteadOfQuestion extends Question {
   /**
    * getter for the factor
    *
-   * @return factor  -
+   * @return factor correct answer
    */
-  public double getFactor() {
+  public long getFactor() {
     return factor;
   }
 
