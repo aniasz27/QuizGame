@@ -11,7 +11,6 @@ import commons.IntermediateLeaderboardQuestion;
 import commons.MultipleChoiceQuestion;
 import commons.Question;
 import commons.Score;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -226,8 +225,6 @@ public class GameController {
   }
 
   /**
-   * TODO: implement long polling
-   * <p>
    * Endpoint to check if a user has been assigned to a game or not
    *
    * @param uid the player's id
@@ -278,19 +275,6 @@ public class GameController {
     return -1;
   }
 
-  /**
-   * TODO: implement actual game sessions and non-global questionCounter
-   * Returns the number of the round the player is in for a given player id
-   *
-   * @param id game id
-   * @return round number of game
-   */
-  @GetMapping("/getRoundNumber/{id}")
-  public int getRoundNumber(@PathVariable String id) {
-    Game game = games.stream().filter(g -> g.id.equals(id)).findFirst()
-      .orElseThrow(StringIndexOutOfBoundsException::new);
-    return game.questionCounter;
-  }
 
   /**
    * Gets the next question or screen in a game
