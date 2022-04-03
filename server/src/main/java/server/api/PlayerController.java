@@ -91,12 +91,22 @@ public class PlayerController {
     return clients.size();
   }
 
+  /**
+   * Returns a list of clients
+   *
+   * @return list of clients
+   */
   @GetMapping("/list")
   public List<Client> getPlayers() {
     prunePlayers();
     return new ArrayList<>(clients.values());
   }
 
+  /**
+   * Returns the names of all client connected
+   *
+   * @return list of names
+   */
   @GetMapping("/names")
   public List<String> getPlayerNames() {
     prunePlayers();
@@ -113,6 +123,9 @@ public class PlayerController {
     return clients.get(id);
   }
 
+  /**
+   * Gets rid of players who haven't responded
+   */
   private void prunePlayers() {
     clients = (HashMap<String, Client>) clients.entrySet().stream().filter(
       x -> Duration.between(x.getValue().lastSeen, LocalDateTime.now()).getSeconds() <= 1
@@ -121,6 +134,11 @@ public class PlayerController {
 
   private Map<Object, Consumer<Boolean>> listeners = new HashMap<>();
 
+  /**
+   * Player updates
+   *
+   * @return updates
+   */
   @GetMapping("/updates")
   public DeferredResult<ResponseEntity<Boolean>> getPlayerUpdates() {
 
@@ -139,6 +157,11 @@ public class PlayerController {
     return res;
   }
 
+  /**
+   * Removes all clients
+   *
+   * @return result
+   */
   @DeleteMapping("/removeAll")
   public ResponseEntity<String> removeAll() {
     clients = new HashMap<>();

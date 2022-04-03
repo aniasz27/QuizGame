@@ -12,10 +12,20 @@ public class MultipleChoiceQuestion extends Question {
   private Activity activity3;
   private boolean[] correct;
 
+  /**
+   * Empty Constructor
+   */
   public MultipleChoiceQuestion() {
     super(Type.MULTICHOICE);
   }
 
+  /**
+   * Constructor
+   *
+   * @param activity1 activity1
+   * @param activity2 activity2
+   * @param activity3 activity3
+   */
   public MultipleChoiceQuestion(Activity activity1, Activity activity2, Activity activity3) {
     super(Type.MULTICHOICE);
     this.question = "Which of the following activities consumes the most energy?";
@@ -40,7 +50,7 @@ public class MultipleChoiceQuestion extends Question {
   }
 
   /**
-   * getter for the question text
+   * Getter for the question text
    *
    * @return String - said question
    */
@@ -49,7 +59,7 @@ public class MultipleChoiceQuestion extends Question {
   }
 
   /**
-   * getter for activity 1
+   * Getter for activity 1
    *
    * @return Activity - the 1st activity
    */
@@ -58,7 +68,7 @@ public class MultipleChoiceQuestion extends Question {
   }
 
   /**
-   * getter for activity 32
+   * Getter for activity 32
    *
    * @return Activity - the 2nd activity
    */
@@ -67,7 +77,7 @@ public class MultipleChoiceQuestion extends Question {
   }
 
   /**
-   * getter for activity 3
+   * Getter for activity 3
    *
    * @return Activity - the 3rd activity
    */

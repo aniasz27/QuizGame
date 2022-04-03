@@ -33,31 +33,59 @@ public class ConnectScreenCtrl implements Initializable {
   @FXML
   private TextField serverField;
 
+  /**
+   * Constructor for ConnectScreenCtrl
+   *
+   * @param server   server we are on
+   * @param mainCtrl controller for the game flow
+   */
   @Inject
   ConnectScreenCtrl(ServerUtils server, MainCtrl mainCtrl) {
     this.server = server;
     this.mainCtrl = mainCtrl;
   }
 
+  /**
+   * Initializing the ConnectScreenCtrl
+   *
+   * @param location  location
+   * @param resources resources we're using
+   */
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     nameField.setText(prefs.get("name", ""));
   }
 
+  /**
+   * Opens the ExitOverlay
+   */
   @FXML
   public void exit() {
     mainCtrl.openExitOverlay(true);
   }
 
+  /**
+   * Opens the help window
+   *
+   * @param actionEvent on MouseClick
+   */
   @FXML
   private void help(ActionEvent actionEvent) {
     mainCtrl.openHelp();
   }
 
+  /**
+   * Refreshes the name in the textfield
+   */
   public void refresh() {
     nameField.setText(prefs.get("name", ""));
   }
 
+  /**
+   * Connects to the server
+   *
+   * @param actionEvent on clicking connect button
+   */
   @FXML
   private void connect(ActionEvent actionEvent) {
     try {
@@ -92,6 +120,9 @@ public class ConnectScreenCtrl implements Initializable {
     }
   }
 
+  /**
+   * Gets rid of red border for input fields and play button
+   */
   @FXML
   private void resetBad() {
     serverField.getStyleClass().removeAll(Collections.singleton("bad"));

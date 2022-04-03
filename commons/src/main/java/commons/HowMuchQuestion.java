@@ -16,11 +16,19 @@ public class HowMuchQuestion extends Question {
 
   private final Random random;
 
+  /**
+   * Empty Constructor
+   */
   public HowMuchQuestion() {
     super(Type.HOWMUCH);
     this.random = new Random();
   }
 
+  /**
+   * Constructor for HowMuchQuestion
+   *
+   * @param activity we're basing the question on
+   */
   public HowMuchQuestion(Activity activity) {
     super(Type.HOWMUCH);
     this.activity = activity;
@@ -32,6 +40,9 @@ public class HowMuchQuestion extends Question {
     setRandomAnswers();
   }
 
+  /**
+   * Computes wrong answers
+   */
   private void computeWrong() {
     long correct = this.activity.consumption_in_wh;
     int factor = 0;
@@ -59,6 +70,9 @@ public class HowMuchQuestion extends Question {
     }
   }
 
+  /**
+   * Sets the answers to random places
+   */
   public void setRandomAnswers() {
     int place = random.nextInt(3);
     answers[place] = this.activity.consumption_in_wh;
@@ -67,41 +81,93 @@ public class HowMuchQuestion extends Question {
     correct[place] = true;
   }
 
+  /**
+   * Getter for correct
+   *
+   * @return boolean array
+   */
   public boolean[] getCorrect() {
     return correct;
   }
 
+  /**
+   * Getter for answers
+   *
+   * @return long array
+   */
   public long[] getAnswers() {
     return answers;
   }
 
+  /**
+   * Getter for Question
+   *
+   * @return question
+   */
   public String getQuestion() {
     return question;
   }
 
+  /**
+   * Setter for Question
+   *
+   * @param question new question
+   */
   public void setQuestion(String question) {
     this.question = question;
   }
 
+  /**
+   * Getter for Activity
+   *
+   * @return activity
+   */
   public Activity getActivity() {
     return activity;
   }
 
+  /**
+   * Setter for activity
+   *
+   * @param activity new Activity
+   */
   public void setActivity(Activity activity) {
     this.activity = activity;
   }
 
+  /**
+   * Getter for wrong answer 1
+   *
+   * @return wrong answer
+   */
   public long getWrong1() {
     return wrong1;
   }
 
+  /**
+   * Setter for wrong answer 1
+   *
+   * @param wrong1 new wrong answer
+   */
   public void setWrong1(long wrong1) {
     this.wrong1 = wrong1;
   }
 
+  /**
+   * Getter for wrong answer 2
+   *
+   * @return wrong answer
+   */
+
   public long getWrong2() {
     return wrong2;
   }
+
+  /**
+   * Setter for wrong answer 2
+   *
+   * @param wrong2 new wrong answer
+   */
 
   public void setWrong2(long wrong2) {
     this.wrong2 = wrong2;

@@ -7,6 +7,13 @@ public class JokerMessage {
   public String gameSession;
   public String clientId;
 
+  /**
+   * Constructor
+   *
+   * @param joker       joker
+   * @param gameSession session
+   * @param clientId    client id
+   */
   public JokerMessage(@JsonProperty("joker") Joker joker,
                       @JsonProperty("gameSession") String gameSession, @JsonProperty("clientId") String clientId) {
     this.joker = joker;

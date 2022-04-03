@@ -49,19 +49,37 @@ public abstract class Question {
       type = t;
     }
 
+    /**
+     * Equals method
+     *
+     * @param type we're comparing with
+     * @return true if same, false otherwise
+     */
     public boolean equals(Type type) {
       return this.type == type.type;
     }
   }
 
+  /**
+   * Getter for type
+   *
+   * @return type
+   */
   public Type getType() {
     return type;
   }
 
-
+  /**
+   * Empty Question Constructor
+   */
   public Question() {
   }
 
+  /**
+   * Type constructor
+   *
+   * @param type type of question
+   */
   public Question(Type type) {
     this.type = type;
   }

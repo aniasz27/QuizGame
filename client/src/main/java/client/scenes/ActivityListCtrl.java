@@ -47,7 +47,7 @@ public class ActivityListCtrl implements Initializable {
   }
 
   /**
-   * Goes back to the splash screen
+   * Goes back to the SplashScreen
    */
   @FXML
   public void back() {

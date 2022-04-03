@@ -12,10 +12,19 @@ public class InsteadOfQuestion extends Question {
   private Activity activity2; //Y
   private long factor; //correct answer
 
+  /**
+   * Empty Constructor
+   */
   public InsteadOfQuestion() {
     super(Type.INSTEAD);
   }
 
+  /**
+   * Constructor
+   *
+   * @param activity1 X
+   * @param activity2 Y
+   */
   public InsteadOfQuestion(Activity activity1, Activity activity2) {
     super(Type.INSTEAD);
     if (activity1.getConsumption_in_wh() <= activity2.getConsumption_in_wh()) { // factor is never smaller than 1

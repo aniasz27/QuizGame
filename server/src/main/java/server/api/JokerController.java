@@ -12,6 +12,11 @@ public class JokerController {
   @Autowired
   SimpMessagingTemplate messagingTemplate;
 
+  /**
+   * Sends a joker
+   *
+   * @param jokerMessage joker will be extracted from
+   */
   @MessageMapping("/joker")
   public void sendJoker(@Payload JokerMessage jokerMessage) {
     System.out.println("Sent joker");

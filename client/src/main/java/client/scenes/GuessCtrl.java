@@ -38,11 +38,23 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
   private EstimateQuestion question;
   private Activity activity;
 
+  /**
+   * Constructor for GuessCtrl
+   *
+   * @param server   server we are on
+   * @param mainCtrl controller for the game flow
+   */
   @Inject
   GuessCtrl(ServerUtils server, MainCtrl mainCtrl) {
     super(server, mainCtrl);
   }
 
+  /**
+   * Initializing the GuessCtrl
+   *
+   * @param location  location
+   * @param resources resources we're using
+   */
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     super.initialize(location, resources);
@@ -94,6 +106,9 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     answer.setText("");
   }
 
+  /**
+   * Shows the correct answer and adds points
+   */
   @Override
   public void showCorrect() {
     answer.getStyleClass().add(point != 0 ? "good" : "bad");
@@ -105,6 +120,9 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     answer.setText("Correct answer is: " + question.getAnswer());
   }
 
+  /**
+   * Disables the buttons
+   */
   @Override
   public void disableButtons() {
     super.disableButtons();
@@ -112,6 +130,9 @@ public class GuessCtrl extends QuestionCtrl implements Initializable {
     answer.setDisable(true);
   }
 
+  /**
+   * Double points joker
+   */
   public void doublePoints() {
     dbPoint = doublePointsQ();
   }

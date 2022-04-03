@@ -48,11 +48,24 @@ public class EditActivityCtrl implements Initializable {
 
   FileChooser fileChooser = new FileChooser();
 
+  /**
+   * Constructor for EditActivityCtrl
+   *
+   * @param server   server we are on
+   * @param mainCtrl controller for the game flow
+   */
   @Inject
   public EditActivityCtrl(ServerUtils server, MainCtrl mainCtrl) {
     this.server = server;
     this.mainCtrl = mainCtrl;
   }
+
+  /**
+   * Initializing the EditActivityCtrl
+   *
+   * @param location  location
+   * @param resources resources we're using
+   */
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
@@ -87,11 +100,17 @@ public class EditActivityCtrl implements Initializable {
     });
   }
 
+  /**
+   * Goes back to the overview of activities
+   */
   @FXML
   public void back() {
     mainCtrl.showActivityList();
   }
 
+  /**
+   * Allows the user to add an image from their computer to replace the previous activity image
+   */
   @FXML
   public void changeImage() {
     File file = fileChooser.showOpenDialog(mainCtrl.primaryStage);
@@ -112,6 +131,9 @@ public class EditActivityCtrl implements Initializable {
     }
   }
 
+  /**
+   * Updates the changes made to  activity details
+   */
   @FXML
   public void save() {
     if (activity == null) {

@@ -15,6 +15,11 @@ public class GameUtils {
 
   MainCtrl mainCtrl;
 
+  /**
+   * Constructor for GameUtils
+   *
+   * @param mainCtrl we're using
+   */
   @Inject
   public GameUtils(MainCtrl mainCtrl) {
     this.mainCtrl = mainCtrl;

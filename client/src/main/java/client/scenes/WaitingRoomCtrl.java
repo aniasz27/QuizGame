@@ -31,6 +31,13 @@ public class WaitingRoomCtrl implements Initializable {
   @FXML
   private Text playerCounterField;
 
+  /**
+   * Constructor for WaitingRoomCtrl
+   *
+   * @param server    server we are on
+   * @param gameUtils gameUtils
+   * @param mainCtrl  controller for the game flow
+   */
   @Inject
   public WaitingRoomCtrl(ServerUtils server, GameUtils gameUtils, MainCtrl mainCtrl) {
     this.server = server;
@@ -38,9 +45,21 @@ public class WaitingRoomCtrl implements Initializable {
     this.mainCtrl = mainCtrl;
   }
 
+  /**
+   * Initializing the WaitingRoomCtrl
+   *
+   * @param location  location
+   * @param resources resources we're using
+   */
   @Override
   public void initialize(URL location, ResourceBundle resources) {
   }
+
+  /**
+   * Goes back to SplashScreen
+   *
+   * @param actionEvent on Button Click
+   */
 
   @FXML
   private void back(ActionEvent actionEvent) {
@@ -50,11 +69,21 @@ public class WaitingRoomCtrl implements Initializable {
     mainCtrl.showSplash();
   }
 
+  /**
+   * Opens HelpOverlay
+   *
+   * @param actionEvent on Button Click
+   */
   @FXML
   private void help(ActionEvent actionEvent) {
     mainCtrl.openHelp();
   }
 
+  /**
+   * Starts the game
+   *
+   * @param actionEvent on Button Click
+   */
   @FXML
   private void play(ActionEvent actionEvent) {
     server.stopUpdates();
