@@ -1,9 +1,12 @@
 package client.utils;
 
 import client.scenes.MainCtrl;
+import commons.EmojiMessage;
 import commons.Joker;
 import commons.JokerMessage;
+import commons.Question;
 import java.net.URI;
+import java.util.Objects;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.web.socket.client.WebSocketClient;
@@ -25,7 +28,11 @@ public class JokerWebSocket {
     this.mainCtrl = mainCtrl;
     this.gameSession = gameSession;
 
-    connectWebSocket();
+    try {
+      connectWebSocket();
+    } catch (Exception e) {
+      System.err.println("Error connecting Joker WebSocket");
+    }
   }
 
   /**
@@ -59,5 +66,19 @@ public class JokerWebSocket {
   public void sendMessage(Joker joker) {
     System.out.println(joker);
     this.session.send("/app/joker", new JokerMessage(joker, gameSession, mainCtrl.clientId));
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    JokerWebSocket that = (JokerWebSocket) o;
+    return Objects.equals(mainCtrl, that.mainCtrl)
+      && Objects.equals(gameSession, that.gameSession)
+      && Objects.equals(session, that.session);
   }
 }
