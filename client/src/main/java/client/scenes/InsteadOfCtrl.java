@@ -93,20 +93,11 @@ public class InsteadOfCtrl extends QuestionCtrl implements Initializable {
     this.point = 0;
     displayJokers();
     showPoints();
-    Rectangle clip1 = new Rectangle(
-      imgContainer1.getWidth(), imgContainer1.getHeight()
-    );
-    clip1.setArcWidth(20);
-    clip1.setArcHeight(20);
-    imgContainer1.setClip(clip1);
+
     imageView1.setImage(new Image(new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity1.id))));
-    Rectangle clip2 = new Rectangle(
-      imgContainer2.getWidth(), imgContainer2.getHeight()
-    );
-    clip2.setArcWidth(20);
-    clip2.setArcHeight(20);
-    imgContainer2.setClip(clip2);
+
     imageView2.setImage(new Image(new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity2.id))));
+
     answer.setText("Type in your answer");
     answer.setPromptText("Type in your answer");
   }

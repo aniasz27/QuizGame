@@ -89,12 +89,6 @@ public class HowMuchCtrl extends QuestionCtrl implements Initializable {
     this.correct = this.question.getCorrect();
     this.answers = this.question.getAnswers();
 
-    Rectangle clip = new Rectangle(
-      imgContainer.getWidth(), imgContainer.getHeight()
-    );
-    clip.setArcWidth(20);
-    clip.setArcHeight(20);
-    imgContainer.setClip(clip);
     imageView.setImage(new Image(new ByteArrayInputStream(server.getActivityImage(mainCtrl.serverIp, activity.id))));
 
     description.setText(activity.getTitle());
