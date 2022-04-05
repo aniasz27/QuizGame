@@ -47,9 +47,9 @@ public class InsteadOfQuestion extends Question {
    * Returns how close answer is to correct value
    *
    * @param guessedValue value guessed by player
-   * @return float between 0 and 1:
+   * @return int points to be awarded for the response
    * 0 for more than percentage% away from the correct answer
-   * 1 for correct answer
+   * value between 100 and 75 otherwise
    * linearly between them for answers within the percentage boundary
    */
   public int calculateHowClose(long guessedValue) {
