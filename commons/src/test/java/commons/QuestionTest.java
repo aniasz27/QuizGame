@@ -25,4 +25,18 @@ class QuestionTest {
     Question q1 = new EstimateQuestion();
     assertFalse(q1.getType().equals(Question.Type.HOWMUCH));
   }
+
+  @Test
+  public void calculateHowCloseTest1() {
+    Question question = new EstimateQuestion();
+    int value = 3;
+    assertEquals(100, question.calculateHowClose(value, 3));
+  }
+
+  @Test
+  public void calculateHowCloseTest2() {
+    Question question = new EstimateQuestion();
+    int value = 9;
+    assertEquals(0, question.calculateHowClose(value, 3));
+  }
 }
