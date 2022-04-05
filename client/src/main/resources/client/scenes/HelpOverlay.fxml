@@ -31,6 +31,7 @@
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text=" * Multiple Choice Question,"/>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text=" * Estimate Question"/>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text=" * What Requires More Energy Question"/>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text=" * Instead of X, how much Y Question"/>
             <Region styleClass="margin" minHeight="10" VBox.vgrow="ALWAYS"/>
             <Text strokeType="OUTSIDE" strokeWidth="0.0"
                   text="Depending on the type of the question, the player can either: "/>
