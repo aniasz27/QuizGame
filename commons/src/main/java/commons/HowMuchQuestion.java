@@ -68,6 +68,9 @@ public class HowMuchQuestion extends Question {
     } else {
       wrong2 = correct + correct * (100 - factor) / 100L;
     }
+    while (wrong1 == wrong2 || wrong1 == correct) {
+      wrong1 += wrong1 / 10;
+    }
   }
 
   /**
