@@ -31,6 +31,7 @@
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text=" * Multiple Choice Question,"/>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text=" * Estimate Question"/>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text=" * What Requires More Energy Question"/>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text=" * Instead of X, how much Y Question"/>
             <Region styleClass="margin" minHeight="10" VBox.vgrow="ALWAYS"/>
             <Text strokeType="OUTSIDE" strokeWidth="0.0"
                   text="Depending on the type of the question, the player can either: "/>
@@ -53,6 +54,9 @@
                   text="*Joker that shows a hint"/>
             <Text strokeType="OUTSIDE" strokeWidth="0.0"
                   text="*Joker that decreases other player's time by 50% -(only available in MultiPlayer mode)"/>
+            <Region styleClass="margin" minHeight="10" VBox.vgrow="ALWAYS"/>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0"
+                  text="The player can express their emotions with emojis at bottom right corner"/>
             <Region styleClass="margin" minHeight="10" VBox.vgrow="ALWAYS"/>
             <Text strokeType="OUTSIDE" strokeWidth="0.0"
                   text="After the game has ended, a leaderboard is shown comparing the players"/>

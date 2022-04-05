@@ -37,7 +37,6 @@ import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -48,7 +47,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
@@ -596,79 +594,66 @@ public class MainCtrl {
     }
     leaderboardDisplay.getChildren().removeAll(leaderboardDisplay.getChildren());
 
-    final boolean[] first = {true};
-
-    AtomicInteger maxScore;
-    maxScore = new AtomicInteger();
-    AtomicInteger rowCounter = new AtomicInteger();
-    rowCounter.set(0);
     GridPane gridpane = new GridPane();
-    gridpane.setMaxWidth(640);
     gridpane.setAlignment(Pos.CENTER);
-    ColumnConstraints name = new ColumnConstraints(290);
+    ColumnConstraints name = new ColumnConstraints(270);
     ColumnConstraints bar = new ColumnConstraints(240);
-    ColumnConstraints points = new ColumnConstraints(100);
-    name.setHgrow(Priority.SOMETIMES);
-    bar.setHgrow(Priority.SOMETIMES);
-    points.setHgrow(Priority.SOMETIMES);
+    ColumnConstraints points = new ColumnConstraints(120);
     gridpane.getColumnConstraints().addAll(name, bar, points);
 
     leaderboardDisplay.getChildren().removeAll();
-    scores.forEach(s -> {
+
+    int maxScore = 0;
+    int rowCounter = 0;
+    for (Score s : scores) {
       Label label = new Label();
       label.getStyleClass().add("expand");
       label.getStyleClass().add("list-item");
       label.getStyleClass().add("border-bottom");
       label.setText(s.getName());
-      if (first[0]) {
+      if (rowCounter == 0) {
         label.getStyleClass().add("list-item-top-left");
       }
-      gridpane.add(label, 0, rowCounter.get());
+      gridpane.add(label, 0, rowCounter);
 
       StackPane stackPane = new StackPane();
       stackPane.setAlignment(Pos.CENTER_LEFT);
       stackPane.getStyleClass().add("list-item");
       stackPane.getStyleClass().add("border-bottom");
+
       Line line = new Line();
       line.setEndX(200);
       line.setStrokeLineCap(StrokeLineCap.ROUND);
       line.setStrokeWidth(20);
       line.setStroke(Paint.valueOf("#553794"));
-
       stackPane.getChildren().add(line);
+
       line = new Line();
       line.setStrokeLineCap(StrokeLineCap.ROUND);
       line.setStrokeWidth(20);
       line.setStroke(Paint.valueOf("#0586e3"));
-      if (first[0]) {
+      if (rowCounter == 0 || maxScore <= 0) {
         line.setEndX(200);
-        maxScore.set(s.getPoints());
-
+        maxScore = s.getPoints();
       } else {
-        if (maxScore.get() != 0) {
-          line.setEndX(200.0 * s.getPoints() / maxScore.get());
-        } else {
-          line.setEndX(200);
-        }
+        line.setEndX(200.0 * s.getPoints() / maxScore);
       }
       line.getStyleClass().add("timer-bar");
-
       stackPane.getChildren().add(line);
 
-      gridpane.add(stackPane, 1, rowCounter.get());
+      gridpane.add(stackPane, 1, rowCounter);
 
       label = new Label();
       label.setText(String.valueOf(s.getPoints()));
       label.getStyleClass().add("expand");
       label.getStyleClass().add("list-item");
       label.getStyleClass().add("border-bottom");
-      if (first[0]) {
+      if (rowCounter == 0) {
         label.getStyleClass().add("list-item-top-right");
-        first[0] = false;
       }
-      gridpane.add(label, 2, rowCounter.get());
-      rowCounter.getAndIncrement();
-    });
+      gridpane.add(label, 2, rowCounter++);
+    }
+
     leaderboardDisplay.getChildren().add(gridpane);
   }
 
