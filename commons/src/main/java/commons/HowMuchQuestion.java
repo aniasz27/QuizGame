@@ -68,6 +68,12 @@ public class HowMuchQuestion extends Question {
     } else {
       wrong2 = correct + correct * (100 - factor) / 100L;
     }
+    while (wrong1 == wrong2 || wrong1 == correct) {
+      wrong1 += Math.max(wrong1 / 10, 1);
+    }
+    while (wrong1 == wrong2 || wrong2 == correct) {
+      wrong2 += Math.max(wrong2 / 10, 2);
+    }
   }
 
   /**
