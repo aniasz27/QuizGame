@@ -56,6 +56,9 @@
                   text="*Joker that decreases other player's time by 50% -(only available in MultiPlayer mode)"/>
             <Region styleClass="margin" minHeight="10" VBox.vgrow="ALWAYS"/>
             <Text strokeType="OUTSIDE" strokeWidth="0.0"
+                  text="The player can express their emotions with emojis at bottom right corner"/>
+            <Region styleClass="margin" minHeight="10" VBox.vgrow="ALWAYS"/>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0"
                   text="After the game has ended, a leaderboard is shown comparing the players"/>
             <Text strokeType="OUTSIDE" strokeWidth="0.0"
                   text="The player can choose to enter a new game or exit the application"/>
