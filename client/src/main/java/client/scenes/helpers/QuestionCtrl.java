@@ -333,9 +333,7 @@ public abstract class QuestionCtrl {
    * Hides emojis on the screen
    */
   public void displayEmojis() {
-    if (!mainCtrl.multiplayer) {
-      emojiButton.setVisible(false);
-    }
+    emojiButton.setVisible(mainCtrl.multiplayer);
     this.pane.setVisible(false);
     this.circle.setVisible(false);
     this.emojiGrid.setVisible(false);
