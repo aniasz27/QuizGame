@@ -464,6 +464,7 @@ public class MainCtrl {
 
   public void showIntermediateLeaderboard() {
     primaryStage.getScene().setRoot(intermediateLeaderboardParent);
+    currentQuestionCtrl = intermediateLeaderboardCtrl;
     intermediateLeaderboardCtrl.display();
     intermediateLeaderboardCtrl.refresh();
   }
