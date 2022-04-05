@@ -1,10 +1,13 @@
-# Starting template
-
-This README will need to contain a description of your project, how to run it, how to set up the development
-environment, and who worked on it. This information can be added throughout the course, except for the names of the
-group members. Add your own name (do not add the names for others!) to the section below.
+# Quizzzzz
 
 ## Description of project
+
+This is a quiz consisting of 20 questions including Multiple Choice, Estimate, What Requires More Energy and Instead Of.
+The game can be played either singleplayer or multiplayer. Depending on the type of the question, the player can either
+click a button or enter the answer in the answer box. Each question must be answered within the 10 seconds time limit
+indicated by the bar at the top of the screen. After the time runs out, the correct answer is displayed to the player.
+For each correct answer, the player earns points depending on how fast they answered or if applicable, how close the
+answer was. To make the game more engaging you can use the Jokers and Emoji reactions.
 
 ## Group members
 
@@ -46,4 +49,5 @@ Done! Now you can play!
 
 ## How to contribute to it
 
-## Copyright / License (opt.)
+- You can fork the project from GitLab and work on that to implement your changes.
+- If you find any issues, you can open them in our project directly.
