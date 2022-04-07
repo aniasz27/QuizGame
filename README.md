@@ -26,10 +26,10 @@ answer was. To make the game more engaging you can use the Jokers and Emoji reac
 
 - Clone the repository
 - Open the terminal on the machine hosting the server and go to the folder which contains the parent folder
+- Make sure you have the JSON folder under `server\src\main\resources`. You can download the JSON folder
+  from [here](https://gitlab.ewi.tudelft.nl/cse1105/2021-2022/activity-bank)
 - Run the server through Gradle (type `.\gradlew bootRun`)
-- Import the activities, by going to this URL: localhost:8080/api/activity/importActivities (make sure you have the JSON
-  folder under `server\src\main\resources`. You can download the JSON folder
-  from [here](https://gitlab.ewi.tudelft.nl/cse1105/2021-2022/activity-bank))
+- Import the activities, by going to this URL: `localhost:8080/api/activity/importActivities`
 
 #### Play with someone playing from another computer
 
